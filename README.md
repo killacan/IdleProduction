@@ -10,7 +10,23 @@ Idle Factory Game
 	I want the game to be dynamic in that prices will change over time(if I have extra time). Electricity will be required to run the buildings. Using the earned money the player will be able to expand their base. The end goal would be to have complex product trees where the player has to balance their production in order to make more complicated projects. 
 	Ideally this would allow the player to purchase plots of land, and the more land you own the more expensive the transport. 
 	As far as game modes go, I could have a timed mode where the player tries to set up a profitable factory as fast as possible, a tiny mode (the mode for this week) that makes a pretty short game very limited in scope. 
-	Each building will have its own little icon distinguishing it from other buildings, when you click on it, a line will be drawn between buildings to visualize the transport of resources from one building to the other. 	
+	Each building will have its own little icon distinguishing it from other buildings, when you click on it, a line will be drawn between buildings to visualize the transport of resources from one building to the other. 
+
+UI – Probably going to end up looking like this [ https://wireframe.cc/IfVjw1 ]
+
+
+4 core features - 
+
+- Player controlled construction of buildings
+- Automatic resource transport between buildings
+- New products being created from old products
+- The selling of those products on the market for profit.
+
+2 Additional features - 
+
+- Electricity is needed to be produced to run buildings
+- fuel is needed to be burned in order to transport goods from one building to another.
+
 
 Tech notes
 
@@ -30,3 +46,21 @@ Fuel: [wood, coal, oil]
 
 Buildings : [iron ore mine, Iron Smelter (smelter?), steel mill], [Copper Ore Mine, Copper Smelter(smelter), Copper Extruder] [tool factory], [market]
 
+building example: 
+
+Building : {
+	Game: 
+	Resources: { Iron Ore: 100, Iron Ingot: 20 }
+	Location: [0,0] 
+	Parent Nodes: [Farm, Farm]
+	Child Nodes: [Smeltery, Smeltery]
+}
+
+Resource Conversions 
+	Iron
+	2 Iron Ore = 1 Iron Ingot
+	5 Iron Ingot = 1 Steel Ingot (possible alternative/upgrade, 5 Iron + 1 Coal = 2 Steel
+
+	Copper
+	2 Copper Ore = 1 Copper Ingot
+	1 Copper Ingot
