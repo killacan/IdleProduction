@@ -1,0 +1,17 @@
+.main-nav {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+}
+
+.main-nav > ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: flex-end;
+
+}
+
+.div-box {
+    width: 208px;
+}

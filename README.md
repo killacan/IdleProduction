@@ -4,8 +4,6 @@ Hello, and welcome to my project. This is going to be my first forrey into build
 
 Planned features/outline: 
 
-# Idle Production
-
 The proposal is an idle factory game in which the player with gather resources. Those resources will be transported using some sort of fuel between buildings. Each product will be able to be transported to a hub to be sold.
 
 I want the game to be dynamic in that prices will change over time(if I have extra time). Electricity will be required to run the buildings. Using the earned money the player will be able to expand their base. The end goal would be to have complex product trees where the player has to balance their production in order to make more complicated projects.

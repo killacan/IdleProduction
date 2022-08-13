@@ -1,9 +1,9 @@
 class Node {
 
-    constructor(pos, parent, child) {
+    constructor(pos, parents, children) {
         this.pos = pos
-        this.parent = parent
-        this.child = child
+        this.parents = parents
+        this.children = children
         // save a list of distances from parents and children?
         this.resources = {}
     }
@@ -12,7 +12,4 @@ class Node {
         return this.pos
     }
 
-    calcDistance () {
-        // going to calculate the distance between two nodes here. 
-    }
 }
