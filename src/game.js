@@ -1,8 +1,8 @@
 class Game {
 
-    constructor () {
+    constructor (el) {
         this.money = 1000
-        this.map = new Map
+        this.map = new Map(el)
         // initial money value
         // map
         // initial resources

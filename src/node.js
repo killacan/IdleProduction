@@ -12,4 +12,6 @@ class Node {
         return this.pos
     }
 
+    
+
 }

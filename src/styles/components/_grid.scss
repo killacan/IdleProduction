@@ -1,0 +1,24 @@
+#game-canvas {
+    background-color: rgb(38, 38, 38);
+    // display: flex;
+    // grid-template-columns: 65px 1fr 65px;
+    // grid-template-rows: 100px 100px 100px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+#game-canvas > ul {
+    width: 600px;
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+}
+
+#game-canvas li {
+    width: 60px;
+    height: 60px;
+    justify-content: center;
+}
