@@ -14,7 +14,7 @@ window.IronMine = IronMine;
 document.addEventListener("DOMContentLoaded", function () {
     let canvas = document.getElementById('game-canvas')
 
-    let el = document.querySelector(".game-canvas")
+    let el = document.querySelector(".grid")
     // let ctx = canvas.getContext("2d")
 
     // ctx.moveTo(0, 0);
@@ -46,7 +46,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     drawBoard();
 
-    let game = new Game(el)
+    let gamev = new Game(el)
+    console.log(document.getElementById("total_money"))
+    gamev.updateTotalMoney()
 
-    game.map.setupBoard()
 })

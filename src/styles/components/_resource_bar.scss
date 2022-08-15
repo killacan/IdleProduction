@@ -1,0 +1,14 @@
+.resource-bar {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+}
+
+.resource-bar > ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: flex-end;
+
+}
+

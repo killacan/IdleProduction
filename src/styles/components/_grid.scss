@@ -8,17 +8,40 @@
 .container {
     display: flex;
     justify-content: center;
+    position: absolute;
+    width: 620px;
+    left: 0;
+    right: 0;
+    margin: auto;
 }
 
-#game-canvas > ul {
-    width: 600px;
+.grid {
+    display: flex;
+    position: relative;
+    width: 620px;
+    left: 0;
+    right: 0;
+    margin: auto;
+
+}
+
+.grid > ul {
+    width: 620px;
     display: flex;
     flex-wrap: wrap;
     list-style: none;
+    padding: 0%;
+    margin-top: 10px;
+    margin-left: 10px;
+    // position: absolute;
 }
 
-#game-canvas li {
+.grid li {
     width: 60px;
     height: 60px;
     justify-content: center;
+}
+
+li:hover {
+    background-color: gray;
 }
