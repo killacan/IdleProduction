@@ -15,6 +15,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let canvas = document.getElementById('game-canvas')
 
     let el = document.querySelector(".grid")
+    let rss = document.querySelector(".rss-left")
+    let num = document.getElementById('total-money')
     // let ctx = canvas.getContext("2d")
 
     // ctx.moveTo(0, 0);
@@ -22,21 +24,21 @@ document.addEventListener("DOMContentLoaded", function () {
     // ctx.stroke();
     // Box width
     
-    var bw = 600;
+    let bw = 600;
     // Box height
-    var bh = 600;
+    let bh = 600;
     // Padding
-    var p = 10;
+    let p = 10;
 
-    // var canvas = document.getElementById("canvas");
-    var context = canvas.getContext("2d");
+    // let canvas = document.getElementById("canvas");
+    let context = canvas.getContext("2d");
     function drawBoard(){
-    for (var x = 0; x <= bw; x += 60) {
+    for (let x = 0; x <= bw; x += 60) {
         context.moveTo(0.5 + x + p, p);
         context.lineTo(0.5 + x + p, bh + p);
     }
 
-    for (var x = 0; x <= bh; x += 60) {
+    for (let x = 0; x <= bh; x += 60) {
         context.moveTo(p, 0.5 + x + p);
         context.lineTo(bw + p, 0.5 + x + p);
     }
@@ -46,8 +48,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     drawBoard();
 
-    let gamev = new Game(el)
-    console.log(document.getElementById("total_money"))
-    gamev.updateTotalMoney()
+    // console.log(rss)
+
+    console.log(num)
+    let gamev = new Game(el, rss, num)
+    // gamev.updateTotalMoney(num)
 
 })

@@ -1,4 +1,4 @@
-#game-canvas {
+#game-canvas, #builder-canvas, #info-canvas {
     background-color: rgb(38, 38, 38);
     // display: flex;
     // grid-template-columns: 65px 1fr 65px;
@@ -7,7 +7,20 @@
 
 .container {
     display: flex;
+    // justify-content: space-between;
+    // position: absolute;
+    // width: 100%;
+    // left: 0;
+    // right: 0;
+    // margin: auto;
+}
+
+.grid-container {
+    display: flex;
     justify-content: center;
+}
+
+#game-canvas {
     position: absolute;
     width: 620px;
     left: 0;
@@ -15,6 +28,27 @@
     margin: auto;
 }
 
+.builder-menu {
+    display: flex;
+    #builder-canvas {
+        display: flex;
+        position: absolute;
+    
+    }
+    h3 {
+        display: flex;
+        position: relative;
+        z-index: 1;
+        // -webkit-text-stroke: 1px;
+        // -webkit-text-stroke-color: white;
+        left: 0%;
+        right: 0%;
+        padding-top: 10px;
+        margin: auto;
+
+    }
+
+}
 .grid {
     display: flex;
     position: relative;
@@ -22,6 +56,7 @@
     left: 0;
     right: 0;
     margin: auto;
+    margin-top: 0px;
 
 }
 

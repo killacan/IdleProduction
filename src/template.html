@@ -27,12 +27,15 @@
             <div class="rss-left">
                 <ul>
                     <li>Money: <span id="total-money">0</span></li>
+                    <li>Iron Ore: <span>0</span></li>
                 </ul>
             </div>
     
             <div class="rss-right">
                 <ul>
-    
+                    <ul>
+                        <li>Tuna:</li>
+                    </ul>
                 </ul>
             </div>
         </nav>
@@ -40,15 +43,26 @@
     </header>
 
     <div class="container">
-        <canvas id="game-canvas" width="620px" height="620px">
+        <div class="builder-menu">
+            <h3>Build</h3>
+            <canvas id="builder-canvas" width="180px" height="620px"></canvas>
+        </div>
+        <div class="grid-container" width="620px"height="620px">
+            <canvas id="game-canvas" width="620px" height="620px">
 
-        </canvas>
+            </canvas>
+            <div class="grid">
+
+
+            </div>
+        </div>
+        <div class="info-panel">
+            <h3>Info</h3>
+            <canvas id="info-canvas" width="180px" height="620px"></canvas>
+        </div>
     </div>
 
-    <div class="grid">
-
-
-    </div>
+    
 
     <div>
         <ul>

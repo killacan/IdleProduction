@@ -2,15 +2,18 @@ const Map = require("./map")
 
 class Game {
 
-    constructor (el) {
+    constructor (el, rss, num) {
         this.money = 1000
-        this.map = new Map(el)
+        this.map = new Map(el, rss)
         this.el = el
+        this.num = num
         // initial money value
         // map
         // initial resources
         // all buildings
         this.bindEvents(); 
+        this.tick()
+        this.updateTotalMoney(num)
 
     }
 
@@ -29,15 +32,17 @@ class Game {
 
     tick () {
         setInterval(() => {
-            //this.update_total_money() -- for later
+            this.updateTotalMoney(this.num)
+            console.log("tick")
+            console.log(this.money)
             //call production
             //call transport
             // totals up resources
+            this.money = this.money += 1
         }, 1000)
     }
 
-    updateTotalMoney () {
-        let e = document.getElementById("total_money");
+    updateTotalMoney (e) {
         e.innerHTML = this.money
     }
 }

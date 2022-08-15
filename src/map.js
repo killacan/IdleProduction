@@ -1,11 +1,14 @@
 class Map {
 
-    constructor (el) {
+    constructor (el, rss) {
         // going to set up the grid. 
         this.grid = this.setupGrid();
         this.el = el
+        this.rss = rss
         this.setupBoard()
-        // drawBoard();
+        // this.setupRSS()
+        this.selectedBuilding = null
+  
         
     }
 
@@ -23,6 +26,7 @@ class Map {
         return grid
     }
 
+    
     setupBoard() {
         let ul = document.createElement('ul');
         for (let i = 0; i < 10; i++) {
@@ -37,7 +41,16 @@ class Map {
     
     }
 
+    // setupRSS() {
+    //     let ul = document.createElement('ul');
+    //     for (let i = 0; i < 1; i++) {
+    //         let li = document.createElement('li');
+    //         ul.append(li);
+            
+    //     }
 
+    //     this.rss.append(ul);
+    // }
 
       
       
