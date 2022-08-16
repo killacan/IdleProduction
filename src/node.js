@@ -1,11 +1,12 @@
 class Node {
 
-    constructor(pos, parents, children) {
-        this.pos = pos
-        this.parents = parents
-        this.children = children
+    constructor(pos) {
+        // this.pos = pos
         // save a list of distances from parents and children?
+        // description
         this.resources = {}
+        // this.map = map
+        // this.tuna = "tuna"
     }
 
     get pos () {
@@ -15,3 +16,5 @@ class Node {
     
 
 }
+
+module.exports = Node

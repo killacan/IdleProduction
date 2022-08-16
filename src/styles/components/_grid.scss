@@ -6,7 +6,8 @@
 }
 
 .container {
-    display: flex;
+    display: grid;
+    grid-template-columns: 180px 1fr 620px 1fr 180px;
     // justify-content: space-between;
     // position: absolute;
     // width: 100%;
@@ -16,48 +17,97 @@
 }
 
 .grid-container {
-    display: flex;
-    justify-content: center;
+    display: grid;
+    width: 620px;
+    grid-column: 3;
+    // justify-content: center;
+    grid-template-columns: 20% 20% 20% 20% 20%;
+    grid-template-rows: 20% 20% 20% 20% 20%;
 }
 
 #game-canvas {
-    position: absolute;
-    width: 620px;
-    left: 0;
-    right: 0;
-    margin: auto;
+    grid-column: 1;
+    grid-row: 1;
+    // grid-column-end: 3;
+    // position: absolute;
+    // width: 620px;
+    // left: 0;
+    // right: 0;
+    // margin: auto;
+}
+
+.info-panel {
+    display: grid;
+    grid-column: 5;
+    grid-template-columns: 33% 33% 33%;
+    #info-canvas {
+        grid-column: 1/1;
+        grid-row: 1;
+        width: 180px;
+    }
+    h3 {
+        grid-column: 2;
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        padding-top: 10px;
+    }
 }
 
 .builder-menu {
-    display: flex;
+    display: grid;
+    grid-column: 1 / 1;
+    grid-template-columns: 33% 33% 33%;
     #builder-canvas {
-        display: flex;
-        position: absolute;
-    
+        grid-column: 1 / 1;
+        grid-row: 1;
+        width: 180px;
     }
     h3 {
-        display: flex;
-        position: relative;
+        grid-column: 2;
         z-index: 1;
         // -webkit-text-stroke: 1px;
         // -webkit-text-stroke-color: white;
-        left: 0%;
-        right: 0%;
+        display: flex;
+        justify-content: center;
         padding-top: 10px;
-        margin: auto;
+        height: 20px;
+    }
 
+    ul {
+        grid-column: 1;
+        grid-row: 1;
+        width: 180px;
+        display: flex;
+        flex-wrap: wrap;
+        list-style: none;
+        padding-top: 30px;
+        padding-left: 0px;
+        z-index: 1;
+
+        li {
+            margin: 15px;
+            width: 60px;
+            height: 60px;
+            border-style: solid;
+            border: 1px solid white;
+            z-index: 2;
+        }
     }
 
 }
-.grid {
-    display: flex;
-    position: relative;
-    width: 620px;
-    left: 0;
-    right: 0;
-    margin: auto;
-    margin-top: 0px;
 
+.grid {
+    // display: flex;
+    // position: relative;
+    // width: 620px;
+    // left: 0;
+    // right: 0;
+    // margin: auto;
+    // margin-top: 0px;
+    grid-column: 1;
+    grid-row: 1;
+    // grid-column-end: 4;
 }
 
 .grid > ul {
