@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let el = document.querySelector(".grid");
     let iro = document.getElementById('total-iron-ore');
     let iroing = document.getElementById('total-iron-ingots');
+    let steing = document.getElementById('total-steel-ingots')
     let num = document.getElementById('total-money');
     let bui = document.querySelector('.builder-menu');
     let info = document.querySelector('.info-panel');
@@ -55,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // console.log(rss)
 
     console.log(iroing)
-    let gamev = new Game(el, iro, num, bui, info, sell, iroing)
+    let gamev = new Game(el, iro, num, bui, info, sell, iroing, steing)
     // gamev.map.startingMarket()
     // gamev.updateTotalMoney(num)
 

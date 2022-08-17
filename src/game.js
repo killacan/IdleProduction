@@ -2,16 +2,18 @@ const Map = require("./map")
 const IronMine = require("./ironMine")
 const Market = require("./market")
 const IronSmelter = require("./ironSmelter")
+const SteelMill = require("./steelMill")
 
 class Game {
 
-    constructor (el, iro, num, build, info, sell, iroing) {
+    constructor (el, iro, num, build, info, sell, iroing, steing) {
         this.map = new Map(el, iro, num, build, info)
         this.el = el
         this.iro = iro
         this.build = build
         this.sell = sell 
         this.iroing = iroing
+        this.steing = steing
         this.toggle = false
         this.handleClickGrid = this.handleClickGrid.bind(this)
         this.handleClickBuild = this.handleClickBuild.bind(this)
@@ -52,7 +54,7 @@ class Game {
                 console.log(this.map.allBuildings)
 
             } else if (JSON.parse(this.map.selectedBuilding) === "SteelMill") {
-                
+                this.map.placeBuilding(pos, new SteelMill(pos))
             } else if (JSON.parse(this.map.selectedBuilding) === "CopperOreMine") {
                 
             } else if (JSON.parse(this.map.selectedBuilding) === "CopperSmelter") {
@@ -115,6 +117,7 @@ class Game {
         }
 
         !this.map.allRSS["ironIngots"] ? this.iroing.innerHTML = 0 : this.iroing.innerHTML = this.map.allRSS["ironIngots"]
+        !this.map.allRSS["steelIngots"] ? this.steing.innerHTML = 0 : this.steing.innerHTML = this.map.allRSS["steelIngots"]
     }
 
     transferToMarket () {
@@ -129,6 +132,9 @@ class Game {
                     } else if (sub[0] === "ironIngots") {
                         building.resources["ironIngots"] = 0; 
                         this.map.money += (sub[1] * 6)
+                    } else if (sub[0] === "steelIngots") {
+                        building.resources["steelIngots"] = 0;
+                        this.map.money += (sub[1] * 70)
                     }
                 });
                 // iterate through building rss, and subtract from total in building. 

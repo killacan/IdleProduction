@@ -21,8 +21,10 @@ var Market = __webpack_require__(/*! ./market */ "./src/market.js");
 
 var IronSmelter = __webpack_require__(/*! ./ironSmelter */ "./src/ironSmelter.js");
 
+var SteelMill = __webpack_require__(/*! ./steelMill */ "./src/steelMill.js");
+
 var Game = /*#__PURE__*/function () {
-  function Game(el, iro, num, build, info, sell, iroing) {
+  function Game(el, iro, num, build, info, sell, iroing, steing) {
     _classCallCheck(this, Game);
 
     this.map = new Map(el, iro, num, build, info);
@@ -31,6 +33,7 @@ var Game = /*#__PURE__*/function () {
     this.build = build;
     this.sell = sell;
     this.iroing = iroing;
+    this.steing = steing;
     this.toggle = false;
     this.handleClickGrid = this.handleClickGrid.bind(this);
     this.handleClickBuild = this.handleClickBuild.bind(this);
@@ -71,7 +74,9 @@ var Game = /*#__PURE__*/function () {
 
           console.log(this.map.getBuilding(pos));
           console.log(this.map.allBuildings);
-        } else if (JSON.parse(this.map.selectedBuilding) === "SteelMill") {} else if (JSON.parse(this.map.selectedBuilding) === "CopperOreMine") {} else if (JSON.parse(this.map.selectedBuilding) === "CopperSmelter") {} else if (JSON.parse(this.map.selectedBuilding) === "CopperExtruder") {} else if (JSON.parse(this.map.selectedBuilding) === "ToolFactory") {} else if (JSON.parse(this.map.selectedBuilding) === "Market") {
+        } else if (JSON.parse(this.map.selectedBuilding) === "SteelMill") {
+          this.map.placeBuilding(pos, new SteelMill(pos));
+        } else if (JSON.parse(this.map.selectedBuilding) === "CopperOreMine") {} else if (JSON.parse(this.map.selectedBuilding) === "CopperSmelter") {} else if (JSON.parse(this.map.selectedBuilding) === "CopperExtruder") {} else if (JSON.parse(this.map.selectedBuilding) === "ToolFactory") {} else if (JSON.parse(this.map.selectedBuilding) === "Market") {
           this.map.placeBuilding(pos, new Market(pos));
           console.log(that.map.getBuilding(pos));
           console.log(that.map.allBuildings);
@@ -140,6 +145,7 @@ var Game = /*#__PURE__*/function () {
       }
 
       !this.map.allRSS["ironIngots"] ? this.iroing.innerHTML = 0 : this.iroing.innerHTML = this.map.allRSS["ironIngots"];
+      !this.map.allRSS["steelIngots"] ? this.steing.innerHTML = 0 : this.steing.innerHTML = this.map.allRSS["steelIngots"];
     }
   }, {
     key: "transferToMarket",
@@ -157,6 +163,9 @@ var Game = /*#__PURE__*/function () {
             } else if (sub[0] === "ironIngots") {
               building.resources["ironIngots"] = 0;
               _this2.map.money += sub[1] * 6;
+            } else if (sub[0] === "steelIngots") {
+              building.resources["steelIngots"] = 0;
+              _this2.map.money += sub[1] * 70;
             }
           }); // iterate through building rss, and subtract from total in building. 
           // calculate distance from the market. 
@@ -361,7 +370,7 @@ module.exports = IronSmelter;
 /*!********************!*\
   !*** ./src/map.js ***!
   \********************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module) => {
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -369,15 +378,11 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
-var IronMine = __webpack_require__(/*! ./ironMine */ "./src/ironMine.js");
-
-var Market = __webpack_require__(/*! ./market */ "./src/market.js");
-
 var Map = /*#__PURE__*/function () {
   function Map(el, iro, num, build, info) {
     _classCallCheck(this, Map);
 
-    this.money = 1500;
+    this.money = 15000;
     this.num = num;
     this.el = el;
     this.iro = iro;
@@ -638,6 +643,82 @@ var Node = /*#__PURE__*/function () {
 }();
 
 module.exports = Node;
+
+/***/ }),
+
+/***/ "./src/steelMill.js":
+/*!**************************!*\
+  !*** ./src/steelMill.js ***!
+  \**************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var Node = __webpack_require__(/*! ./node */ "./src/node.js");
+
+var SteelMill = /*#__PURE__*/function (_Node) {
+  _inherits(SteelMill, _Node);
+
+  var _super = _createSuper(SteelMill);
+
+  function SteelMill(pos) {
+    var _this;
+
+    _classCallCheck(this, SteelMill);
+
+    _this = _super.call(this, pos);
+    _this.nodepos = pos;
+    _this.name = "SteelMill";
+    _this.cost = 1000;
+    _this.description = "A Steel Mill will turn your Iron Ingots into valuable Steel!";
+    _this.parentName = "IronSmelter";
+    _this.childName = "ToolFactory";
+    _this.receivable = ["ironIngots"];
+    _this.requestTotal = {
+      ironIngots: 10
+    };
+    return _this;
+  }
+
+  _createClass(SteelMill, [{
+    key: "updateRSS",
+    value: function updateRSS() {
+      var _this$resources, _steelIngots;
+
+      console.log(this.resources, "I am inside the steel mill");
+      (_this$resources = this.resources)[_steelIngots = "steelIngots"] || (_this$resources[_steelIngots] = this.resources["steelIngots"] = 0);
+
+      if (this.resources["ironIngots"] >= 10) {
+        this.resources["ironIngots"] -= 10;
+        this.resources["steelIngots"] += 1;
+      }
+    }
+  }]);
+
+  return SteelMill;
+}(Node);
+
+module.exports = SteelMill;
 
 /***/ }),
 
@@ -1277,6 +1358,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var el = document.querySelector(".grid");
   var iro = document.getElementById('total-iron-ore');
   var iroing = document.getElementById('total-iron-ingots');
+  var steing = document.getElementById('total-steel-ingots');
   var num = document.getElementById('total-money');
   var bui = document.querySelector('.builder-menu');
   var info = document.querySelector('.info-panel');
@@ -1312,7 +1394,7 @@ document.addEventListener("DOMContentLoaded", function () {
   drawBoard(); // console.log(rss)
 
   console.log(iroing);
-  var gamev = new Game(el, iro, num, bui, info, sell, iroing); // gamev.map.startingMarket()
+  var gamev = new Game(el, iro, num, bui, info, sell, iroing, steing); // gamev.map.startingMarket()
   // gamev.updateTotalMoney(num)
 });
 })();

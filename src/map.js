@@ -1,10 +1,7 @@
-const IronMine = require("./ironMine");
-const Market = require("./market")
-
 class Map {
 
     constructor (el, iro, num, build, info) {
-        this.money = 1500
+        this.money = 15000
         this.num = num
         this.el = el;
         this.iro = iro;
