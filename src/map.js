@@ -13,7 +13,7 @@ class Map {
         this.selectedBuilding = null;
         this.allBuildings = {};
         this.possibleBuildings = ["IronMine", "IronSmelter", "SteelMill", "CopperOreMine", "CopperSmelter", "CopperExtruder", "ToolFactory", "Market"]
-        this.imgPaths = ["ironMine2.png", "src/assets/ironIngot2.png", "src/assets/Smelter.png"]
+        this.imgPaths = {"IronMine": "src/assets/ironMine2.png", "IronSmelter": "src/assets/ironIngot2.png", "SteelMill": "src/assets/Smelter.png", "CopperOreMine": "", "CopperSmelter": "", "CopperExtruder": "", "ToolFactory": "", "Market": ""}
         this.allRSS = {};
         this.grid = this.setupGrid();
         this.setupBoard()
@@ -60,6 +60,13 @@ class Map {
                 let li = document.createElement('li');
                 li.dataset.pos = JSON.stringify([i,j]);
                 li.dataset.building = JSON.stringify(this.grid[i][j]);
+                if (this.getBuilding([i,j])) {
+                    let img = new Image();
+                    img.src = this.imgPaths[this.getBuilding([i,j]).name]
+                    li.append(img)
+                    // console.log([i,j], this.imgPaths[this.getBuilding([i,j]).name] , "see meeeeee")
+                }
+                // console.log(li.dataset.building)
                 ul.append(li);
             }
         }
@@ -76,8 +83,8 @@ class Map {
             let li = document.createElement('li');
             li.dataset.build = JSON.stringify(this.possibleBuildings[i]);
             let img = new Image(); 
-            img.src = "./ironIngot2.png"
-            this.build.append(img)
+            img.src = Object.values(this.imgPaths)[i];
+            li.append(img);
             ul.append(li);
         }
         
@@ -92,11 +99,11 @@ class Map {
         if (Object.values(this.allBuildings).flat().length > 0) {
             for (let i = 0; i < Object.values(this.allBuildings).flat().length ; i++) {
                 let obRSS = Object.entries(Object.values(this.allBuildings).flat()[i].resources)
-                // console.log(obRSS)
+                console.log(obRSS, "obRSS")
                 if (obRSS)
                 for (let k = 0; k < obRSS.length; k++) {
-                    if (!this.allRSS[obRSS[0][0]]) this.allRSS[obRSS[0][0]] = 0
-                    this.allRSS[obRSS[0][0]] += parseInt(obRSS[0][1])
+                    if (!this.allRSS[obRSS[k][0]]) this.allRSS[obRSS[k][0]] = 0
+                    this.allRSS[obRSS[k][0]] += parseInt(obRSS[k][1])
                 }
                 
                 

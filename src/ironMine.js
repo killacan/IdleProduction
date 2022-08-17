@@ -14,9 +14,9 @@ class IronMine extends Node {
 
 
     updateRSS () {
-        this.resources["ironOre"] ||=  this.resources["ironOre"] = 1
+        this.resources["ironOre"] ||=  this.resources["ironOre"] = 0
         this.resources["ironOre"]++
-        // console.log(this.resources["ironOre"])
+        console.log(this.resources["ironOre"], "working in the mine")
         // console.log(this.map)
     }
 }

@@ -7,9 +7,9 @@ module.exports = {
         bundle: path.resolve(__dirname, 'src/index.js'),
     },
     output: {
-        path: path.resolve(__dirname),
-        filename: '[name][contenthash].js',
-        clean: false,
+        path: path.resolve(__dirname, "dist"),
+        filename: '[name].js',
+        clean: true,
         assetModuleFilename: '[name][ext]'
     }, 
     devtool: 'source-map',
@@ -46,11 +46,11 @@ module.exports = {
             }
         ]
     },
-    plugins: [
-        new HtmlWebpackPlugin({
-            title: 'Idle Production',
-            filename: 'index.html',
-            template: 'src/template.html',
-        }),
-    ]
+    // plugins: [
+    //     new HtmlWebpackPlugin({
+    //         title: 'Idle Production',
+    //         filename: 'index.html',
+    //         template: 'src/template.html',
+    //     }),
+    // ]
 }

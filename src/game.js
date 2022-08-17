@@ -31,7 +31,7 @@ class Game {
     handleClickGrid(e) {
         const ele = e.target; 
         that = this
-        
+        console.log(ele)
         console.log(ele.tagName.toLowerCase() === 'li');
         if (ele.tagName.toLowerCase() === 'li'&& this.map.selectedBuilding) {
             // we have a pos and a name of building. building name is a string. 
@@ -72,9 +72,9 @@ class Game {
 
     handleClickBuild(e) {
         const ele = e.target;
-
-        if (ele.tagName.toLowerCase() === 'li') {
-            this.map.selectedBuilding = ele.dataset.build
+        console.log(e.target.parentNode)
+        if (ele.tagName.toLowerCase() === 'img') {
+            this.map.selectedBuilding = ele.parentNode.dataset.build
             console.log(this.map.selectedBuilding)
         }
     }
@@ -126,6 +126,9 @@ class Game {
                     if (sub[0] === "ironOre") {
                         building.resources["ironOre"] = 0;
                         this.map.money += sub[1];
+                    } else if (sub[0] === "ironIngots") {
+                        building.resources["ironIngots"] = 0; 
+                        this.map.money += (sub[1] * 6)
                     }
                 });
                 // iterate through building rss, and subtract from total in building. 
