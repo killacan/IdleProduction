@@ -13,7 +13,7 @@ class Map {
         this.selectedBuilding = null;
         this.allBuildings = {};
         this.possibleBuildings = ["IronMine", "IronSmelter", "SteelMill", "CopperOreMine", "CopperSmelter", "CopperExtruder", "ToolFactory", "Market"]
-        this.imgPaths = ["assets/ironMine2.png", "src/assets/ironIngot2.png", "src/assets/Smelter.png"]
+        this.imgPaths = ["ironMine2.png", "src/assets/ironIngot2.png", "src/assets/Smelter.png"]
         this.allRSS = {};
         this.grid = this.setupGrid();
         this.setupBoard()
@@ -76,7 +76,7 @@ class Map {
             let li = document.createElement('li');
             li.dataset.build = JSON.stringify(this.possibleBuildings[i]);
             let img = new Image(); 
-            img.src = "../src/ironIngot2.png"
+            img.src = "./ironIngot2.png"
             this.build.append(img)
             ul.append(li);
         }
