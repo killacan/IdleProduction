@@ -4,7 +4,7 @@ const Market = require("./market")
 class Map {
 
     constructor (el, iro, num, build, info) {
-        this.money = 1000
+        this.money = 1500
         this.num = num
         this.el = el;
         this.iro = iro;
@@ -13,6 +13,7 @@ class Map {
         this.selectedBuilding = null;
         this.allBuildings = {};
         this.possibleBuildings = ["IronMine", "IronSmelter", "SteelMill", "CopperOreMine", "CopperSmelter", "CopperExtruder", "ToolFactory", "Market"]
+        this.imgPaths = ["assets/ironMine2.png", "src/assets/ironIngot2.png", "src/assets/Smelter.png"]
         this.allRSS = {};
         this.grid = this.setupGrid();
         this.setupBoard()
@@ -68,11 +69,15 @@ class Map {
     }
 
     setupBuild() {
+
         // console.log(this.build);
         let ul = document.createElement('ul');
         for (let i = 0; i < this.possibleBuildings.length; i++) {
             let li = document.createElement('li');
             li.dataset.build = JSON.stringify(this.possibleBuildings[i]);
+            let img = new Image(); 
+            img.src = "../src/ironIngot2.png"
+            this.build.append(img)
             ul.append(li);
         }
         
@@ -82,12 +87,12 @@ class Map {
     updateRSS () {
         // console.log(this.allBuildings.length > 0)
         this.allRSS = {}
-        console.log(Object.values(this.allBuildings))
+        // console.log(Object.values(this.allBuildings))
 
         if (Object.values(this.allBuildings).flat().length > 0) {
             for (let i = 0; i < Object.values(this.allBuildings).flat().length ; i++) {
                 let obRSS = Object.entries(Object.values(this.allBuildings).flat()[i].resources)
-                console.log(obRSS)
+                // console.log(obRSS)
                 if (obRSS)
                 for (let k = 0; k < obRSS.length; k++) {
                     if (!this.allRSS[obRSS[0][0]]) this.allRSS[obRSS[0][0]] = 0

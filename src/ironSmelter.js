@@ -11,12 +11,14 @@ class IronSmelter extends Node {
         this.parentName = "IronMine"
         this.childName = "SteelMill"
         this.receivable = ["ironOre"]
+        this.requestTotal = {ironOre: 5}
     }
 
 
     updateRSS () {
+        // console.log(this.resources, "inside RSS update Iron Smelter")
         this.resources["ironIngots"] ||=  this.resources["ironIngots"] = 1
-        if (this.resources["ironOre"] > 5) {
+        if (this.resources["ironOre"] >= 5) {
             this.resources["ironOre"] -= 5
             this.resources["ironIngots"]++
         }

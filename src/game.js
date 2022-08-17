@@ -62,7 +62,7 @@ class Game {
             } else if (JSON.parse(this.map.selectedBuilding) === "ToolFactory") {
                 
             } else if (JSON.parse(this.map.selectedBuilding) === "Market") {
-                this.map.placeBuilding(pos, new Market(pos, [], []))
+                this.map.placeBuilding(pos, new Market(pos))
                 console.log(that.map.getBuilding(pos))
                 console.log(that.map.allBuildings)
             }
@@ -96,8 +96,9 @@ class Game {
             Object.values(this.map.allBuildings).flat().forEach((ele) => ele.updateRSS())
             this.map.updateRSS()
             this.transferToMarket()
+            this.transferToChildren()
             // console.log(this.map.allRSS["ironOre"])
-            // console.log(this.map.allRSS)
+            console.log(this.map.allRSS)
             //call production
             //call transport
             // totals up resources
@@ -135,14 +136,30 @@ class Game {
     }
 
     transferToChildren() {
-        // iterate through buildings. check parents (later in order of proximity) and subtract resources until requirements met. 
+        // iterate through buildings(buildArr). check parents (parA) (later in order of proximity) and subtract resources until requirements met. 
         let bldgArr = Object.values(this.map.allBuildings).flat()
-        bldgArr.forEach(outerBuilding => {
-            let parA = this.map.allBuildings[outerBuilding.parent]
+        bldgArr.forEach(building => {
+            let parA = this.map.allBuildings[building.parentName]
+            // console.log(parA, building)
+            if (!parA) { return }
             for (let i = 0; i < parA.length; i++) {
-                
+                let requestTotal = Object.entries(building.requestTotal).flat()
+                let requestRSS = requestTotal[0]
+                if (!building.resources[requestRSS]) {building.resources[requestRSS] = 0}
+                let requestAmount = requestTotal[1] - building.resources[requestRSS]
+                // console.log(requestTotal[1], requestTotal[0] , "requestChecker ")
+                // debugger
 
-
+                if (!parA[i].resources[requestRSS]) {
+                    // console.log("check1")
+                } else if (parA[i].resources[requestRSS] < requestAmount) {
+                    // console.log("check2")
+                    building.resources[requestRSS] += parA[i].resources[requestRSS]
+                    parA[i].resources[requestRSS] = 0
+                } else if (parA[i].resources[requestRSS] > requestAmount) {
+                    building.resources[requestRSS] += requestAmount
+                    parA[i].resources[requestRSS] -= requestAmount
+                }
             }
         })  
     }
