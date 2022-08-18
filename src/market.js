@@ -8,7 +8,7 @@ class Market extends Node {
         // this.map = super.map
         this.name = "Market"
         this.cost = 500
-        this.description = "having a market makes your goods more valuable"
+        this.description = "Having a market makes your goods 20% more valuable."
         // this.map = this.updateRSS.bind(this)
     }
 

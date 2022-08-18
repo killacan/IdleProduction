@@ -42,7 +42,7 @@
     grid-column: 5;
     grid-row: 1;
     grid-template-columns: 33% 33% 33%;
-    grid-template-rows: 50px 250px;
+    grid-template-rows: 50px 250px 50px;
     #info-canvas {
         grid-column: 1/1;
         grid-row: 1;
@@ -55,10 +55,17 @@
         justify-content: center;
         padding-top: 10px;
     }
-    p {
+    .description-holder {
         grid-column: 1/4;
         grid-row: 2/2;
         padding: 30px;
+        padding-left: 10px;
+        padding-right: 10px;
+        background-color: grey;
+    }
+    .cost-holder {
+        grid-column: 1/4;
+        grid-row: 3;
         padding-left: 10px;
         padding-right: 10px;
         background-color: grey;

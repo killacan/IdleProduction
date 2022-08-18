@@ -10,7 +10,7 @@ const ToolFactory = require("./toolFactory")
 
 class Game {
 
-    constructor (el, iro, num, build, info, sell, iroing, steing, music, copore, coping, copwire, toolsnum) {
+    constructor (el, iro, num, build, info, sell, iroing, steing, music, copore, coping, copwire, toolsnum, buildcost) {
         this.map = new Map(el, iro, num, build)
         this.el = el
         this.iro = iro
@@ -24,9 +24,10 @@ class Game {
         this.coping = coping
         this.copwire = copwire
         this.toolsnum = toolsnum
+        this.buildcost = buildcost
         this.toggle = false
         this.toggleMusic = false
-        this.descriptions = {IronMine: new IronMine().description, IronSmelter: new IronSmelter().description, SteelMill: new SteelMill().description, CopperMine: new CopperMine().description, CopperSmelter: new CopperSmelter().description, CopperExtruder: new CopperExtruder().description, ToolFactory: new ToolFactory().description, Market: new Market().description}
+        this.descriptions = {IronMine: new IronMine(), IronSmelter: new IronSmelter(), SteelMill: new SteelMill(), CopperMine: new CopperMine(), CopperSmelter: new CopperSmelter(), CopperExtruder: new CopperExtruder(), ToolFactory: new ToolFactory(), Market: new Market()}
         this.handleClickGrid = this.handleClickGrid.bind(this)
         this.handleClickBuild = this.handleClickBuild.bind(this)
         this.handleClickSell = this.handleClickSell.bind(this)
@@ -101,6 +102,8 @@ class Game {
                 console.log(that.map.allBuildings)
             }
             
+        } else if (ele.tagName.toLowerCase() === "img") {
+            this.map.removeBuilding(JSON.parse(ele.parentNode.dataset.pos))
         }
     }
 
@@ -143,7 +146,7 @@ class Game {
             this.transferToMarket()
             this.transferToChildren()
             // console.log(this.map.allRSS["ironOre"])
-            console.log(this.map.allRSS)
+            // console.log(this.map.allRSS)
             //call production
             //call transport
             // totals up resources
@@ -161,7 +164,10 @@ class Game {
         // console.log(new IronMine().description)
 
         if (!!this.map.selectedBuilding) {
-            this.info.innerHTML =  this.descriptions[JSON.parse(this.map.selectedBuilding)]
+            this.info.innerHTML =  this.descriptions[JSON.parse(this.map.selectedBuilding)].description
+        }
+        if (!!this.map.selectedBuilding) {
+            this.buildcost.innerHTML =  this.descriptions[JSON.parse(this.map.selectedBuilding)].cost
         }
         
         !this.map.allRSS["ironIngots"] ? this.iroing.innerHTML = 0 : this.iroing.innerHTML = this.map.allRSS["ironIngots"]
@@ -178,8 +184,8 @@ class Game {
                 let rssArr = Object.entries(building.resources);
                 // console.log(rssArr, "rssArr");
                 let marketfactor = 1;
-                if (this.map.allBuildings["market"]) {
-                    marketfactor += this.map.allBuildings["market"].length;
+                if (this.map.allBuildings["Market"]) {
+                    marketfactor += (this.map.allBuildings["Market"].length / 5);
                 }
                 console.log(marketfactor, "marketfactor");
                 rssArr.forEach((sub) => {

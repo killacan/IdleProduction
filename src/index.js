@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let toolsnum = document.getElementById('total-tools')
     let tutbutton = document.getElementById('tut-button')
     let tutbox = document.querySelector('.tutorial-holder')
+    let buildcost = document.getElementById('build-cost');
     // let ctx = canvas.getContext("2d")
 
     // ctx.moveTo(0, 0);
@@ -69,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // console.log(rss)
 
     console.log(music)
-    let gamev = new Game(el, iro, num, bui, info, sell, iroing, steing, music, copOre, copIng, copwire, toolsnum);
+    let gamev = new Game(el, iro, num, bui, info, sell, iroing, steing, music, copOre, copIng, copwire, toolsnum, buildcost);
     // gamev.map.startingMarket()
     // gamev.updateTotalMoney(num)
 
