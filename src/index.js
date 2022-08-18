@@ -27,6 +27,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let copIng = document.getElementById('total-copper-ingots');
     let copwire = document.getElementById('total-copper-wire')
     let toolsnum = document.getElementById('total-tools')
+    let tutbutton = document.getElementById('tut-button')
+    let tutbox = document.querySelector('.tutorial-holder')
     // let ctx = canvas.getContext("2d")
 
     // ctx.moveTo(0, 0);
@@ -56,13 +58,18 @@ document.addEventListener("DOMContentLoaded", function () {
         context.stroke();
     }
 
-
     drawBoard();
+
+    tutbutton.addEventListener("click", closeBox)
+
+    function closeBox () {
+        tutbox.classList.add("hidden")
+    }
 
     // console.log(rss)
 
     console.log(music)
-    let gamev = new Game(el, iro, num, bui, info, sell, iroing, steing, music, copOre, copIng, copwire, toolsnum)
+    let gamev = new Game(el, iro, num, bui, info, sell, iroing, steing, music, copOre, copIng, copwire, toolsnum);
     // gamev.map.startingMarket()
     // gamev.updateTotalMoney(num)
 

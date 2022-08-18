@@ -9,16 +9,32 @@
     
     #box-wrap {
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
         padding-top: 10px;
         height: 20px;
         min-width: 300px;
         max-width: 620px;
         min-height: 250px;
         background: #fff;
+
+        p {
+            margin: 30px;
+        }
+
+        #tut-button {
+            height: 40px;
+            width: 80px;
+            justify-content: center;
+            margin-bottom: 10px;
+
+        }
     }
 
 }
 
-
+.hidden {
+    display: none;
+}
 

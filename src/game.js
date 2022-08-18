@@ -176,7 +176,12 @@ class Game {
         if (this.toggle) {
             Object.values(this.map.allBuildings).flat().forEach ((building) => {
                 let rssArr = Object.entries(building.resources);
-                console.log(rssArr, "rssArr");
+                // console.log(rssArr, "rssArr");
+                let marketfactor = 1;
+                if (this.map.allBuildings["market"]) {
+                    marketfactor += this.map.allBuildings["market"].length;
+                }
+                console.log(marketfactor, "marketfactor");
                 rssArr.forEach((sub) => {
                     if (sub[0] === "ironOre") {
                         building.resources["ironOre"] = 0;
