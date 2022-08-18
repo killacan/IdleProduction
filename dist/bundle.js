@@ -46,8 +46,8 @@ var CopperExtruder = /*#__PURE__*/function (_Node) {
     _this.name = "CopperExtruder";
     _this.cost = 2000;
     _this.description = "A Copper Extruder will turn 5 of your Iron Ingots into 3 Copper Wire every 10 seconds!";
-    _this.parentName = "CopperSmelter";
-    _this.childName = "ToolFactory";
+    _this.parentNames = ["CopperSmelter"];
+    _this.childNames = ["ToolFactory"];
     _this.receivable = ["copperIngots"];
     _this.requestTotal = {
       copperIngots: 10
@@ -59,7 +59,7 @@ var CopperExtruder = /*#__PURE__*/function (_Node) {
   _createClass(CopperExtruder, [{
     key: "updateRSS",
     value: function updateRSS() {
-      console.log(this.resources, "I am inside the steel mill");
+      // console.log(this.resources, "I am inside the steel mill")
       this.loops++;
 
       if (this.loops > 10) {
@@ -128,7 +128,7 @@ var CopperMine = /*#__PURE__*/function (_Node) {
     _this.name = "CopperMine";
     _this.cost = 400;
     _this.description = "A copper mine can be placed anywhere, it will continually make 1 Copper Ore per 5 seconds. Copper is much more valuable than Iron.";
-    _this.childName = "CopperSmelter";
+    _this.childNames = ["CopperSmelter"];
     _this.receivable = [];
     _this.loops = 0;
     return _this;
@@ -144,8 +144,8 @@ var CopperMine = /*#__PURE__*/function (_Node) {
 
         this.loops = 0;
         (_this$resources = this.resources)[_copperOre = "copperOre"] || (_this$resources[_copperOre] = this.resources["copperOre"] = 0);
-        this.resources["copperOre"]++;
-        console.log(this.resources["copperOre"], "working in the mine"); // console.log(this.map)
+        this.resources["copperOre"]++; // console.log(this.resources["copperOre"], "working in the mine")
+        // console.log(this.map)
       }
     }
   }]);
@@ -202,8 +202,8 @@ var CopperSmelter = /*#__PURE__*/function (_Node) {
     _this.name = "CopperSmelter";
     _this.cost = 500;
     _this.description = "Copper Smelter will take Copper Ore at 5 copper Ore per 5 seconds, and convert it to Copper Ingots. Copper Ingots are much more valuable than Iron Ingots.";
-    _this.parentName = "CopperMine";
-    _this.childName = "Copper Extruder";
+    _this.parentNames = ["CopperMine"];
+    _this.childNames = ["Copper Extruder"];
     _this.receivable = ["copperOre"];
     _this.requestTotal = {
       copperOre: 5
@@ -215,7 +215,7 @@ var CopperSmelter = /*#__PURE__*/function (_Node) {
   _createClass(CopperSmelter, [{
     key: "updateRSS",
     value: function updateRSS() {
-      console.log(this.resources, "inside RSS update Copper Smelter");
+      // console.log(this.resources, "inside RSS update Copper Smelter")
       this.loops++;
 
       if (this.loops > 5) {
@@ -296,7 +296,9 @@ var Game = /*#__PURE__*/function () {
       SteelMill: new SteelMill().description,
       CopperMine: new CopperMine().description,
       CopperSmelter: new CopperSmelter().description,
-      CopperExtruder: new CopperExtruder().description
+      CopperExtruder: new CopperExtruder().description,
+      ToolFactory: new ToolFactory().description,
+      Market: new Market().description
     };
     this.handleClickGrid = this.handleClickGrid.bind(this);
     this.handleClickBuild = this.handleClickBuild.bind(this);
@@ -364,7 +366,8 @@ var Game = /*#__PURE__*/function () {
           this.map.placeBuilding(pos, new CopperSmelter(pos));
         } else if (JSON.parse(this.map.selectedBuilding) === "CopperExtruder") {
           this.map.placeBuilding(pos, new CopperExtruder(pos));
-        } else if (JSON.parse(this.map.selectedBuilding) === "ToolFactory") {// this.map.placeBuilding(pos, new ToolFactory(pos))
+        } else if (JSON.parse(this.map.selectedBuilding) === "ToolFactory") {
+          this.map.placeBuilding(pos, new ToolFactory(pos));
         } else if (JSON.parse(this.map.selectedBuilding) === "Market") {
           this.map.placeBuilding(pos, new Market(pos));
           console.log(that.map.getBuilding(pos));
@@ -425,12 +428,12 @@ var Game = /*#__PURE__*/function () {
         _this.transferToMarket();
 
         _this.transferToChildren(); // console.log(this.map.allRSS["ironOre"])
-        // console.log(this.map.allRSS)
-        //call production
+
+
+        console.log(_this.map.allRSS); //call production
         //call transport
         // totals up resources
         // this.map.money = this.map.money += 1
-
       }, 1000);
     }
   }, {
@@ -484,6 +487,9 @@ var Game = /*#__PURE__*/function () {
             } else if (sub[0] === "copperWire") {
               building.resources["copperWire"] = 0;
               _this2.map.money += sub[1] * 480;
+            } else if (sub[0] === "tools") {
+              building.resources["tools"] = 0;
+              _this2.map.money += sub[1] * 425;
             }
           }); // iterate through building rss, and subtract from total in building. 
           // calculate distance from the market. 
@@ -500,32 +506,46 @@ var Game = /*#__PURE__*/function () {
       // iterate through buildings(buildArr). check parents (parA) (later in order of proximity) and subtract resources until requirements met. 
       var bldgArr = Object.values(this.map.allBuildings).flat();
       bldgArr.forEach(function (building) {
-        var parA = _this3.map.allBuildings[building.parentName]; // console.log(parA, building)
+        var parents = [];
+
+        if (building.parentNames) {
+          building.parentNames.forEach(function (par) {
+            parents = parents.concat(_this3.map.allBuildings[par]);
+          }); // console.log(parents, building.name)
+        }
+
+        var parA = parents; // console.log(parA, building)
 
         if (!parA) {
           return;
         }
 
+        var _loop = function _loop(i) {
+          var requestTotal = Object.entries(building.requestTotal);
+          requestTotal.forEach(function (req) {
+            var requestRSS = req[0];
+
+            if (!building.resources[requestRSS]) {
+              building.resources[requestRSS] = 0;
+            }
+
+            var requestAmount = req[1] - building.resources[requestRSS]; // console.log(requestTotal[1], requestTotal[0] , "requestChecker ")
+            // debugger
+
+            if (!parA[i].resources[requestRSS]) {// console.log("check1")
+            } else if (parA[i].resources[requestRSS] < requestAmount) {
+              // console.log("check2")
+              building.resources[requestRSS] += parA[i].resources[requestRSS];
+              parA[i].resources[requestRSS] = 0;
+            } else if (parA[i].resources[requestRSS] > requestAmount) {
+              building.resources[requestRSS] += requestAmount;
+              parA[i].resources[requestRSS] -= requestAmount;
+            }
+          });
+        };
+
         for (var i = 0; i < parA.length; i++) {
-          var requestTotal = Object.entries(building.requestTotal).flat();
-          var requestRSS = requestTotal[0];
-
-          if (!building.resources[requestRSS]) {
-            building.resources[requestRSS] = 0;
-          }
-
-          var requestAmount = requestTotal[1] - building.resources[requestRSS]; // console.log(requestTotal[1], requestTotal[0] , "requestChecker ")
-          // debugger
-
-          if (!parA[i].resources[requestRSS]) {// console.log("check1")
-          } else if (parA[i].resources[requestRSS] < requestAmount) {
-            // console.log("check2")
-            building.resources[requestRSS] += parA[i].resources[requestRSS];
-            parA[i].resources[requestRSS] = 0;
-          } else if (parA[i].resources[requestRSS] > requestAmount) {
-            building.resources[requestRSS] += requestAmount;
-            parA[i].resources[requestRSS] -= requestAmount;
-          }
+          _loop(i);
         }
       });
     }
@@ -583,7 +603,7 @@ var IronMine = /*#__PURE__*/function (_Node) {
     _this.name = "IronMine";
     _this.cost = 200;
     _this.description = "An Iron mine can be placed anywhere, it will continually make 1 Iron Ore per second";
-    _this.childName = "IronSmelter";
+    _this.childNames = ["IronSmelter"];
     _this.receivable = [];
     return _this;
   }
@@ -594,8 +614,8 @@ var IronMine = /*#__PURE__*/function (_Node) {
       var _this$resources, _ironOre;
 
       (_this$resources = this.resources)[_ironOre = "ironOre"] || (_this$resources[_ironOre] = this.resources["ironOre"] = 0);
-      this.resources["ironOre"]++;
-      console.log(this.resources["ironOre"], "working in the mine"); // console.log(this.map)
+      this.resources["ironOre"]++; // console.log(this.resources["ironOre"], "working in the mine")
+      // console.log(this.map)
     }
   }]);
 
@@ -651,8 +671,8 @@ var IronSmelter = /*#__PURE__*/function (_Node) {
     _this.name = "IronSmelter";
     _this.cost = 500;
     _this.description = "Iron Smelter will take Iron Ore at 5 iron Ore per second, and convert it to Iron Ingots";
-    _this.parentName = "IronMine";
-    _this.childName = "SteelMill";
+    _this.parentNames = ["IronMine"];
+    _this.childNames = ["SteelMill"];
     _this.receivable = ["ironOre"];
     _this.requestTotal = {
       ironOre: 5
@@ -665,7 +685,7 @@ var IronSmelter = /*#__PURE__*/function (_Node) {
     value: function updateRSS() {
       var _this$resources, _ironIngots;
 
-      console.log(this.resources, "inside RSS update Iron Smelter");
+      // console.log(this.resources, "inside RSS update Iron Smelter")
       (_this$resources = this.resources)[_ironIngots = "ironIngots"] || (_this$resources[_ironIngots] = this.resources["ironIngots"] = 0);
 
       if (this.resources["ironOre"] >= 5) {
@@ -700,7 +720,7 @@ var Map = /*#__PURE__*/function () {
   function Map(el, iro, num, build) {
     _classCallCheck(this, Map);
 
-    this.money = 15000;
+    this.money = 150000;
     this.num = num;
     this.el = el;
     this.iro = iro;
@@ -806,8 +826,8 @@ var Map = /*#__PURE__*/function () {
 
       if (Object.values(this.allBuildings).flat().length > 0) {
         for (var i = 0; i < Object.values(this.allBuildings).flat().length; i++) {
-          var obRSS = Object.entries(Object.values(this.allBuildings).flat()[i].resources); // console.log(obRSS, "obRSS")
-
+          var obRSS = Object.entries(Object.values(this.allBuildings).flat()[i].resources);
+          console.log(obRSS, "obRSS");
           if (obRSS) for (var k = 0; k < obRSS.length; k++) {
             if (!this.allRSS[obRSS[k][0]]) this.allRSS[obRSS[k][0]] = 0;
             this.allRSS[obRSS[k][0]] += parseInt(obRSS[k][1]);
@@ -1008,8 +1028,8 @@ var SteelMill = /*#__PURE__*/function (_Node) {
     _this.name = "SteelMill";
     _this.cost = 1000;
     _this.description = "A Steel Mill will turn 10 of your Iron Ingots into valuable Steel!";
-    _this.parentName = "IronSmelter";
-    _this.childName = "ToolFactory";
+    _this.parentNames = ["IronSmelter"];
+    _this.childNames = ["ToolFactory"];
     _this.receivable = ["ironIngots"];
     _this.requestTotal = {
       ironIngots: 10
@@ -1084,8 +1104,7 @@ var ToolFactory = /*#__PURE__*/function (_Node) {
     _this.name = "ToolFactory";
     _this.cost = 10000;
     _this.description = "The Tool Factory will take in Copper Ingots and Steel and turn it into tools. Tools are very valuable, but take a long time to make.";
-    _this.parentName = "CopperSmelter";
-    _this.childName = "";
+    _this.parentNames = ["CopperSmelter", "SteelMill"];
     _this.receivable = ["copperIngots", "steelIngots"];
     _this.requestTotal = {
       copperIngots: 10,
@@ -1102,15 +1121,15 @@ var ToolFactory = /*#__PURE__*/function (_Node) {
       this.loops++;
 
       if (this.loops > 10) {
-        var _this$resources, _Tool;
+        var _this$resources, _tools;
 
         this.loops = 0;
-        (_this$resources = this.resources)[_Tool = "Tool"] || (_this$resources[_Tool] = this.resources["Tool"] = 0);
+        (_this$resources = this.resources)[_tools = "tools"] || (_this$resources[_tools] = this.resources["tools"] = 0);
 
         if (this.resources["copperIngots"] >= 10 && this.resources["steelIngots"] >= 10) {
           this.resources["copperIngots"] -= 10;
           this.resources["steelIngots"] -= 10;
-          this.resources["Tool"] += 4;
+          this.resources["tools"] += 4;
         }
       }
     }

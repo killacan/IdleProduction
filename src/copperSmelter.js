@@ -8,8 +8,8 @@ class CopperSmelter extends Node {
         this.name = "CopperSmelter"
         this.cost = 500
         this.description = "Copper Smelter will take Copper Ore at 5 copper Ore per 5 seconds, and convert it to Copper Ingots. Copper Ingots are much more valuable than Iron Ingots."
-        this.parentName = "CopperMine"
-        this.childName = "Copper Extruder"
+        this.parentNames = ["CopperMine"]
+        this.childNames = ["Copper Extruder"]
         this.receivable = ["copperOre"]
         this.requestTotal = {copperOre: 5}
         this.loops = 0
@@ -17,7 +17,7 @@ class CopperSmelter extends Node {
 
 
     updateRSS () {
-        console.log(this.resources, "inside RSS update Copper Smelter")
+        // console.log(this.resources, "inside RSS update Copper Smelter")
         this.loops++
         if (this.loops > 5) {
             this.loops = 0

@@ -8,7 +8,7 @@ class IronMine extends Node {
         this.name = "IronMine"
         this.cost = 200
         this.description = "An Iron mine can be placed anywhere, it will continually make 1 Iron Ore per second"
-        this.childName = "IronSmelter"
+        this.childNames = ["IronSmelter"]
         this.receivable = []
     }
 
@@ -16,7 +16,7 @@ class IronMine extends Node {
     updateRSS () {
         this.resources["ironOre"] ||=  this.resources["ironOre"] = 0
         this.resources["ironOre"]++
-        console.log(this.resources["ironOre"], "working in the mine")
+        // console.log(this.resources["ironOre"], "working in the mine")
         // console.log(this.map)
     }
 }

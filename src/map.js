@@ -1,7 +1,7 @@
 class Map {
 
     constructor (el, iro, num, build) {
-        this.money = 15000
+        this.money = 150000
         this.num = num
         this.el = el;
         this.iro = iro;
@@ -95,7 +95,7 @@ class Map {
         if (Object.values(this.allBuildings).flat().length > 0) {
             for (let i = 0; i < Object.values(this.allBuildings).flat().length ; i++) {
                 let obRSS = Object.entries(Object.values(this.allBuildings).flat()[i].resources)
-                // console.log(obRSS, "obRSS")
+                console.log(obRSS, "obRSS")
                 if (obRSS)
                 for (let k = 0; k < obRSS.length; k++) {
                     if (!this.allRSS[obRSS[k][0]]) this.allRSS[obRSS[k][0]] = 0

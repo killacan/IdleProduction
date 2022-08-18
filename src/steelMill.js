@@ -8,8 +8,8 @@ class SteelMill extends Node {
         this.name = "SteelMill"
         this.cost = 1000
         this.description = "A Steel Mill will turn 10 of your Iron Ingots into valuable Steel!"
-        this.parentName = "IronSmelter"
-        this.childName = "ToolFactory"
+        this.parentNames = ["IronSmelter"]
+        this.childNames = ["ToolFactory"]
         this.receivable = ["ironIngots"]
         this.requestTotal = {ironIngots: 10}
     }
