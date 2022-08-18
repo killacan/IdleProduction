@@ -56,6 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
         context.stroke();
     }
 
+
     drawBoard();
 
     // console.log(rss)

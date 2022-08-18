@@ -9,7 +9,7 @@ class Map {
         this.selectedBuilding = null;
         this.allBuildings = {};
         this.possibleBuildings = ["IronMine", "IronSmelter", "SteelMill", "CopperMine", "CopperSmelter", "CopperExtruder", "ToolFactory", "Market"]
-        this.imgPaths = {"IronMine": "src/assets/ironMine2.png", "IronSmelter": "src/assets/ironIngot2.png", "SteelMill": "src/assets/Smelter.png", "CopperMine": "", "CopperSmelter": "", "CopperExtruder": "", "ToolFactory": "", "Market": ""}
+        this.imgPaths = {"IronMine": "src/assets/ironMine3.png", "IronSmelter": "src/assets/ironIngot2.png", "SteelMill": "src/assets/Smelter2.png", "CopperMine": "src/assets/CopperIHardlyKnowHer.png", "CopperSmelter": "src/assets/CopperIngot.png", "CopperExtruder": "src/assets/CopperWireIHardlyKnonwHer.png", "ToolFactory": "src/assets/Wrench.png", "Market": ""}
         this.allRSS = {};
         this.grid = this.setupGrid();
         this.setupBoard()
@@ -95,7 +95,7 @@ class Map {
         if (Object.values(this.allBuildings).flat().length > 0) {
             for (let i = 0; i < Object.values(this.allBuildings).flat().length ; i++) {
                 let obRSS = Object.entries(Object.values(this.allBuildings).flat()[i].resources)
-                console.log(obRSS, "obRSS")
+                // console.log(obRSS, "obRSS")
                 if (obRSS)
                 for (let k = 0; k < obRSS.length; k++) {
                     if (!this.allRSS[obRSS[k][0]]) this.allRSS[obRSS[k][0]] = 0

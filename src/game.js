@@ -26,7 +26,7 @@ class Game {
         this.toolsnum = toolsnum
         this.toggle = false
         this.toggleMusic = false
-        this.descriptions = {IronMine: new IronMine().description, IronSmelter: new IronSmelter().description, SteelMill: new SteelMill().description }
+        this.descriptions = {IronMine: new IronMine().description, IronSmelter: new IronSmelter().description, SteelMill: new SteelMill().description, CopperMine: new CopperMine().description, CopperSmelter: new CopperSmelter().description, CopperExtruder: new CopperExtruder().description }
         this.handleClickGrid = this.handleClickGrid.bind(this)
         this.handleClickBuild = this.handleClickBuild.bind(this)
         this.handleClickSell = this.handleClickSell.bind(this)
@@ -48,6 +48,7 @@ class Game {
         let backgroundMusic = new Audio(); 
         backgroundMusic.src = "src/assets/4Harris Heller-Not-Enough-Movement.wav"
         backgroundMusic.loop = true;
+        backgroundMusic.volume = 0.5;
         let backgroundOn = false;
         this.music.addEventListener("click",function() {
             if (backgroundOn === false) {
@@ -86,14 +87,14 @@ class Game {
 
             } else if (JSON.parse(this.map.selectedBuilding) === "SteelMill") {
                 this.map.placeBuilding(pos, new SteelMill(pos))
-            } else if (JSON.parse(this.map.selectedBuilding) === "CopperOreMine") {
+            } else if (JSON.parse(this.map.selectedBuilding) === "CopperMine") {
                 this.map.placeBuilding(pos, new CopperMine(pos))
             } else if (JSON.parse(this.map.selectedBuilding) === "CopperSmelter") {
                 this.map.placeBuilding(pos, new CopperSmelter(pos))
             } else if (JSON.parse(this.map.selectedBuilding) === "CopperExtruder") {
                 this.map.placeBuilding(pos, new CopperExtruder(pos))
             } else if (JSON.parse(this.map.selectedBuilding) === "ToolFactory") {
-                this.map.placeBuilding(pos, new ToolFactory(pos))
+                // this.map.placeBuilding(pos, new ToolFactory(pos))
             } else if (JSON.parse(this.map.selectedBuilding) === "Market") {
                 this.map.placeBuilding(pos, new Market(pos))
                 console.log(that.map.getBuilding(pos))
@@ -167,6 +168,8 @@ class Game {
         !this.map.allRSS["steelIngots"] ? this.steing.innerHTML = 0 : this.steing.innerHTML = this.map.allRSS["steelIngots"]
         !this.map.allRSS["copperIngots"] ? this.coping.innerHTML = 0 : this.coping.innerHTML = this.map.allRSS["copperIngots"]
         !this.map.allRSS["copperOre"] ? this.copore.innerHTML = 0 : this.copore.innerHTML = this.map.allRSS["copperOre"]
+        !this.map.allRSS["copperWire"] ? this.copwire.innerHTML = 0 : this.copwire.innerHTML = this.map.allRSS["copperWire"]
+        !this.map.allRSS["tools"] ? this.toolsnum.innerHTML = 0 : this.toolsnum.innerHTML = this.map.allRSS["tools"]
     }
 
     transferToMarket () {
