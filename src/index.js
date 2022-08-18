@@ -23,6 +23,10 @@ document.addEventListener("DOMContentLoaded", function () {
     let info = document.getElementById('description');
     let sell = document.querySelector('.sell');
     let music = document.querySelector('.music')
+    let copOre = document.getElementById('total-copper-ore');
+    let copIng = document.getElementById('total-copper-ingots');
+    let copwire = document.getElementById('total-copper-wire')
+    let toolsnum = document.getElementById('total-tools')
     // let ctx = canvas.getContext("2d")
 
     // ctx.moveTo(0, 0);
@@ -57,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // console.log(rss)
 
     console.log(music)
-    let gamev = new Game(el, iro, num, bui, info, sell, iroing, steing, music)
+    let gamev = new Game(el, iro, num, bui, info, sell, iroing, steing, music, copOre, copIng, copwire, toolsnum)
     // gamev.map.startingMarket()
     // gamev.updateTotalMoney(num)
 

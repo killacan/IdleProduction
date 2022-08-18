@@ -8,8 +8,8 @@ class Map {
         this.build = build;
         this.selectedBuilding = null;
         this.allBuildings = {};
-        this.possibleBuildings = ["IronMine", "IronSmelter", "SteelMill", "CopperOreMine", "CopperSmelter", "CopperExtruder", "ToolFactory", "Market"]
-        this.imgPaths = {"IronMine": "src/assets/ironMine2.png", "IronSmelter": "src/assets/ironIngot2.png", "SteelMill": "src/assets/Smelter.png", "CopperOreMine": "", "CopperSmelter": "", "CopperExtruder": "", "ToolFactory": "", "Market": ""}
+        this.possibleBuildings = ["IronMine", "IronSmelter", "SteelMill", "CopperMine", "CopperSmelter", "CopperExtruder", "ToolFactory", "Market"]
+        this.imgPaths = {"IronMine": "src/assets/ironMine2.png", "IronSmelter": "src/assets/ironIngot2.png", "SteelMill": "src/assets/Smelter.png", "CopperMine": "", "CopperSmelter": "", "CopperExtruder": "", "ToolFactory": "", "Market": ""}
         this.allRSS = {};
         this.grid = this.setupGrid();
         this.setupBoard()

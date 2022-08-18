@@ -3,10 +3,14 @@ const IronMine = require("./ironMine")
 const Market = require("./market")
 const IronSmelter = require("./ironSmelter")
 const SteelMill = require("./steelMill")
+const CopperMine = require("./copperMine")
+const CopperSmelter = require("./copperSmelter")
+const CopperExtruder = require("./copperExtruder")
+const ToolFactory = require("./toolFactory")
 
 class Game {
 
-    constructor (el, iro, num, build, info, sell, iroing, steing, music) {
+    constructor (el, iro, num, build, info, sell, iroing, steing, music, copore, coping, copwire, toolsnum) {
         this.map = new Map(el, iro, num, build)
         this.el = el
         this.iro = iro
@@ -16,6 +20,10 @@ class Game {
         this.steing = steing
         this.info = info
         this.music = music
+        this.copore = copore
+        this.coping = coping
+        this.copwire = copwire
+        this.toolsnum = toolsnum
         this.toggle = false
         this.toggleMusic = false
         this.descriptions = {IronMine: new IronMine().description, IronSmelter: new IronSmelter().description, SteelMill: new SteelMill().description }
@@ -39,14 +47,16 @@ class Game {
     musicHandler() {
         let backgroundMusic = new Audio(); 
         backgroundMusic.src = "src/assets/4Harris Heller-Not-Enough-Movement.wav"
-        let backgroundOn = false
+        backgroundMusic.loop = true;
+        let backgroundOn = false;
         this.music.addEventListener("click",function() {
             if (backgroundOn === false) {
-                backgroundOn = true
-                backgroundMusic.play()
+                backgroundOn = true;
+                backgroundMusic.play();
+
             } else {
-                backgroundOn = false
-                backgroundMusic.pause()
+                backgroundOn = false;
+                backgroundMusic.pause();
             }
         })
     }
@@ -77,13 +87,13 @@ class Game {
             } else if (JSON.parse(this.map.selectedBuilding) === "SteelMill") {
                 this.map.placeBuilding(pos, new SteelMill(pos))
             } else if (JSON.parse(this.map.selectedBuilding) === "CopperOreMine") {
-                
+                this.map.placeBuilding(pos, new CopperMine(pos))
             } else if (JSON.parse(this.map.selectedBuilding) === "CopperSmelter") {
-                
+                this.map.placeBuilding(pos, new CopperSmelter(pos))
             } else if (JSON.parse(this.map.selectedBuilding) === "CopperExtruder") {
-                
+                this.map.placeBuilding(pos, new CopperExtruder(pos))
             } else if (JSON.parse(this.map.selectedBuilding) === "ToolFactory") {
-                
+                this.map.placeBuilding(pos, new ToolFactory(pos))
             } else if (JSON.parse(this.map.selectedBuilding) === "Market") {
                 this.map.placeBuilding(pos, new Market(pos))
                 console.log(that.map.getBuilding(pos))
@@ -155,6 +165,8 @@ class Game {
         
         !this.map.allRSS["ironIngots"] ? this.iroing.innerHTML = 0 : this.iroing.innerHTML = this.map.allRSS["ironIngots"]
         !this.map.allRSS["steelIngots"] ? this.steing.innerHTML = 0 : this.steing.innerHTML = this.map.allRSS["steelIngots"]
+        !this.map.allRSS["copperIngots"] ? this.coping.innerHTML = 0 : this.coping.innerHTML = this.map.allRSS["copperIngots"]
+        !this.map.allRSS["copperOre"] ? this.copore.innerHTML = 0 : this.copore.innerHTML = this.map.allRSS["copperOre"]
     }
 
     transferToMarket () {
@@ -172,6 +184,15 @@ class Game {
                     } else if (sub[0] === "steelIngots") {
                         building.resources["steelIngots"] = 0;
                         this.map.money += (sub[1] * 70)
+                    } else if (sub[0] === "copperOre") {
+                        building.resources["copperOre"] = 0;
+                        this.map.money += (sub[1] * 8);
+                    } else if (sub[0] === "copperIngots") {
+                        building.resources["copperIngots"] = 0;
+                        this.map.money += (sub[1] * 80);
+                    } else if (sub[0] === "copperWire") {
+                        building.resources["copperWire"] = 0;
+                        this.map.money += (sub[1] * 480);
                     }
                 });
                 // iterate through building rss, and subtract from total in building. 
