@@ -4,9 +4,9 @@ Hello, and welcome to my project. This is going to be my first forrey into build
 
 Planned features/outline: 
 
-The proposal is an idle factory game in which the player with gather resources. Those resources will be transported using some sort of fuel between buildings. Each product will be able to be transported to a hub to be sold.
+The proposal is an idle factory game in which the player with gather resources. Those resources will be transported using some sort of fuel between buildings (in progress). Each product will be able to be transported to a hub to be sold (in progress).
 
-I want the game to be dynamic in that prices will change over time(if I have extra time). Electricity will be required to run the buildings. Using the earned money the player will be able to expand their base. The end goal would be to have complex product trees where the player has to balance their production in order to make more complicated projects.
+I want the game to be dynamic in that prices will change over time(in progress). Electricity will be required to run the buildings (in progress). Using the earned money the player will be able to expand their base. The end goal would be to have complex product trees where the player has to balance their production in order to make more complicated projects.
 
 Ideally this would allow the player to purchase plots of land, and the more land you own the more expensive the transport.
 
@@ -31,9 +31,9 @@ Each building will have its own little icon distinguishing it from other buildin
 
 ## 2 Additional features -
 
-- Electricity is needed to be produced to run buildings
+- Electricity is needed to be produced to run buildings (in progress)
 
-- fuel is needed to be burned in order to transport goods from one building to another.
+- fuel is needed to be burned in order to transport goods from one building to another. (in progress)
 
 ## Timeline
 
@@ -49,22 +49,22 @@ Each building will have its own little icon distinguishing it from other buildin
 
 ## Tech notes
 
-- building would be nodes, and parent nodes would be the “provider” building, having the raw good that need to be sent to the child nodes, the “consumer” building. Each of these buildings are going to have a position, and distance between buildings will cause the “fuel” cost to go up. There is also going to be a hash that holds what resources each building has. When a resource gets transported, ideally there would be a little dot that moves from one building to another one to visualize the transport of resources.
+- buildings are nodes, and parent nodes are the provider buildings, having the raw good that need to be sent to the child nodes, the “consumer” building. Each of these buildings are going to have a position, and distance between buildings will cause the “fuel” cost to go up. There is also going to be an object that holds what resources each building has. When a resource gets transported, ideally there would be a little dot that moves from one building to another one to visualize the transport of resources. (visual resource transport in progress)
 
-- When resources go below a certain amount, (2x production?) it will do a request. When requesting it will iterate through the Provider buildings
+- When resources go below the amount needed, it will do a request for those resources. When requesting it will iterate through the Provider buildings
 
-- Power is just going to be a global resource that gets subtracted from if sufficient power is available.
+- Power is just going to be a global resource that gets subtracted from if sufficient power is available. (in progress)
 
-- first implementation of game is going to have 1 input and 1 output, if I get the framework down through I should be able to make more complicated products accepting multiple inputs.
+- Each building can request multiple resources from multiple different buildings.
 
-- A global count for resources will be visible at the top of the screen. The ability to build will be on the bottom or left.
+- A global count for resources is visible at the top of the screen. The ability to build will be on the bottom or left.
 
 - Early production chain:
-	- Iron Ore -> Iron -> Steel
+	- Iron Ore -> Iron Ingots -> Steel Ingots
 	- Copper Ore -> Copper Ingot -> Copper Wire/Cable
-	- Steel + Copper Wire → tools?
+	- Steel Ingots + Copper Ingots → tools
 
-- Fuel: 
+- Fuel: (in progress)
 	- wood
 		- Going to be the worst fuel. Goes into a biomass generator. 
 	- coal
@@ -87,25 +87,13 @@ Each building will have its own little icon distinguishing it from other buildin
 	- Tool Factory:
 		- Tool factory is going to combine steel and copper to make generic tools. These tools will be valuable for the market. 
 	- market: 
-		- Where all the goods go to be automatically sold. 
-
-building example:
-
-```javascript 
-Building : {
-	Game: Game,
-	Resources: { Iron Ore: 100, Iron Ingot: 20 },
-	Location: [0,0],
-	Parent Nodes: [Farm, Farm],
-	Child Nodes: [Smeltery, Smeltery]
-}
-```
-
+		- Increases the value of goods sold by 20%. 
 
 - Resource Conversions
 	- Iron
-		- 2 Iron Ore = 1 Iron Ingot
-		- 5 Iron Ingot = 1 Steel Ingot (possible alternative/upgrade, 5 Iron + 1 Coal = 2 Steel
+		- 5 Iron Ore = 1 Iron Ingot
+		- 10 Iron Ingot = 1 Steel Ingot (possible alternative/upgrade, 5 Iron + 1 Coal = 2 Steel
 	- Copper
-		- 2 Copper Ore = 1 Copper Ingot
-		- 1 Copper Ingot
+		- 5 Copper Ore = 1 Copper Ingot
+		- 5 Copper Ingot = 3 Copper Wire
+        - 10 Copper Ingots + 10 Steel Ingots = 4 Tools
