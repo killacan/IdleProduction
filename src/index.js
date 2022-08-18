@@ -20,8 +20,9 @@ document.addEventListener("DOMContentLoaded", function () {
     let steing = document.getElementById('total-steel-ingots')
     let num = document.getElementById('total-money');
     let bui = document.querySelector('.builder-menu');
-    let info = document.querySelector('.info-panel');
+    let info = document.getElementById('description');
     let sell = document.querySelector('.sell');
+    let music = document.querySelector('.music')
     // let ctx = canvas.getContext("2d")
 
     // ctx.moveTo(0, 0);
@@ -55,8 +56,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // console.log(rss)
 
-    console.log(iroing)
-    let gamev = new Game(el, iro, num, bui, info, sell, iroing, steing)
+    console.log(music)
+    let gamev = new Game(el, iro, num, bui, info, sell, iroing, steing, music)
     // gamev.map.startingMarket()
     // gamev.updateTotalMoney(num)
 

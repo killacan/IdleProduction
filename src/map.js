@@ -1,12 +1,11 @@
 class Map {
 
-    constructor (el, iro, num, build, info) {
+    constructor (el, iro, num, build) {
         this.money = 15000
         this.num = num
         this.el = el;
         this.iro = iro;
         this.build = build;
-        this.info = info;
         this.selectedBuilding = null;
         this.allBuildings = {};
         this.possibleBuildings = ["IronMine", "IronSmelter", "SteelMill", "CopperOreMine", "CopperSmelter", "CopperExtruder", "ToolFactory", "Market"]

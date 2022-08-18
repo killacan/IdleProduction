@@ -24,23 +24,32 @@ var IronSmelter = __webpack_require__(/*! ./ironSmelter */ "./src/ironSmelter.js
 var SteelMill = __webpack_require__(/*! ./steelMill */ "./src/steelMill.js");
 
 var Game = /*#__PURE__*/function () {
-  function Game(el, iro, num, build, info, sell, iroing, steing) {
+  function Game(el, iro, num, build, info, sell, iroing, steing, music) {
     _classCallCheck(this, Game);
 
-    this.map = new Map(el, iro, num, build, info);
+    this.map = new Map(el, iro, num, build);
     this.el = el;
     this.iro = iro;
     this.build = build;
     this.sell = sell;
     this.iroing = iroing;
     this.steing = steing;
+    this.info = info;
+    this.music = music;
     this.toggle = false;
+    this.toggleMusic = false;
+    this.descriptions = {
+      IronMine: new IronMine().description,
+      IronSmelter: new IronSmelter().description,
+      SteelMill: new SteelMill().description
+    };
     this.handleClickGrid = this.handleClickGrid.bind(this);
     this.handleClickBuild = this.handleClickBuild.bind(this);
     this.handleClickSell = this.handleClickSell.bind(this);
     this.bindEvents();
     this.tick();
     this.updateTotalMoney(num, this.map.iro);
+    this.musicHandler();
   }
 
   _createClass(Game, [{
@@ -49,6 +58,22 @@ var Game = /*#__PURE__*/function () {
       this.el.addEventListener("click", this.handleClickGrid);
       this.build.addEventListener("click", this.handleClickBuild);
       this.sell.addEventListener("click", this.handleClickSell);
+    }
+  }, {
+    key: "musicHandler",
+    value: function musicHandler() {
+      var backgroundMusic = new Audio();
+      backgroundMusic.src = "src/assets/4Harris Heller-Not-Enough-Movement.wav";
+      var backgroundOn = false;
+      this.music.addEventListener("click", function () {
+        if (backgroundOn === false) {
+          backgroundOn = true;
+          backgroundMusic.play();
+        } else {
+          backgroundOn = false;
+          backgroundMusic.pause();
+        }
+      });
     }
   }, {
     key: "handleClickGrid",
@@ -105,6 +130,18 @@ var Game = /*#__PURE__*/function () {
       }
     }
   }, {
+    key: "handleClickMusic",
+    value: function handleClickMusic(e) {
+      var ele = e.target;
+      console.log(ele.tagName);
+
+      if (ele.tagName.toLowerCase() === "button" && this.toggleMusic) {
+        this.toggleMusic = false;
+      } else {
+        this.toggleMusic = true;
+      }
+    }
+  }, {
     key: "tick",
     value: function tick() {
       var _this = this;
@@ -124,13 +161,12 @@ var Game = /*#__PURE__*/function () {
         _this.transferToMarket();
 
         _this.transferToChildren(); // console.log(this.map.allRSS["ironOre"])
-
-
-        console.log(_this.map.allRSS); //call production
+        // console.log(this.map.allRSS)
+        //call production
         //call transport
         // totals up resources
+        // this.map.money = this.map.money += 1
 
-        _this.map.money = _this.map.money += 1;
       }, 1000);
     }
   }, {
@@ -142,6 +178,11 @@ var Game = /*#__PURE__*/function () {
         this.map.iro.innerHTML = 0;
       } else {
         this.map.iro.innerHTML = this.map.allRSS["ironOre"];
+      } // console.log(new IronMine().description)
+
+
+      if (!!this.map.selectedBuilding) {
+        this.info.innerHTML = this.descriptions[JSON.parse(this.map.selectedBuilding)];
       }
 
       !this.map.allRSS["ironIngots"] ? this.iroing.innerHTML = 0 : this.iroing.innerHTML = this.map.allRSS["ironIngots"];
@@ -264,7 +305,7 @@ var IronMine = /*#__PURE__*/function (_Node) {
     _this.nodepos = pos;
     _this.name = "IronMine";
     _this.cost = 200;
-    _this.description = "an Iron mine can be placed anywhere, it will continually make 1 Iron Ore per second";
+    _this.description = "An Iron mine can be placed anywhere, it will continually make 1 Iron Ore per second";
     _this.childName = "IronSmelter";
     _this.receivable = [];
     return _this;
@@ -379,7 +420,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
 var Map = /*#__PURE__*/function () {
-  function Map(el, iro, num, build, info) {
+  function Map(el, iro, num, build) {
     _classCallCheck(this, Map);
 
     this.money = 15000;
@@ -387,7 +428,6 @@ var Map = /*#__PURE__*/function () {
     this.el = el;
     this.iro = iro;
     this.build = build;
-    this.info = info;
     this.selectedBuilding = null;
     this.allBuildings = {};
     this.possibleBuildings = ["IronMine", "IronSmelter", "SteelMill", "CopperOreMine", "CopperSmelter", "CopperExtruder", "ToolFactory", "Market"];
@@ -690,7 +730,7 @@ var SteelMill = /*#__PURE__*/function (_Node) {
     _this.nodepos = pos;
     _this.name = "SteelMill";
     _this.cost = 1000;
-    _this.description = "A Steel Mill will turn your Iron Ingots into valuable Steel!";
+    _this.description = "A Steel Mill will turn 10 of your Iron Ingots into valuable Steel!";
     _this.parentName = "IronSmelter";
     _this.childName = "ToolFactory";
     _this.receivable = ["ironIngots"];
@@ -743,7 +783,7 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 ___CSS_LOADER_EXPORT___.push([module.id, "@import url(https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap);"]);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "/* Box sizing rules */\n*,\n*::before,\n*::after {\n  box-sizing: border-box;\n}\n\n/* Remove default margin */\nbody,\nh1,\nh2,\nh3,\nh4,\np,\nfigure,\nblockquote,\ndl,\ndd {\n  margin: 0;\n}\n\n/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */\nul,\nol {\n  list-style: none;\n}\n\n/* Set core body defaults */\nbody {\n  min-height: 100vh;\n  text-rendering: optimizeSpeed;\n  line-height: 1.5;\n}\n\n/* A elements that don't have a class get default styles */\na:not([class]) {\n  text-decoration-skip-ink: auto;\n}\n\n/* Make images easier to work with */\nimg,\npicture {\n  max-width: 100%;\n  display: block;\n}\n\n/* Inherit fonts for inputs and buttons */\ninput,\nbutton,\ntextarea,\nselect {\n  font: inherit;\n}\n\n/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */\n@media (prefers-reduced-motion: reduce) {\n  html:focus-within {\n    scroll-behavior: auto;\n  }\n  *,\n*::before,\n*::after {\n    animation-duration: 0.01ms !important;\n    animation-iteration-count: 1 !important;\n    transition-duration: 0.01ms !important;\n    scroll-behavior: auto !important;\n  }\n}\n.main-nav {\n  display: flex;\n  justify-content: space-between;\n  margin: 0 auto;\n}\n\n.main-nav > ul {\n  display: flex;\n  flex-direction: row;\n  justify-content: end;\n  align-items: flex-end;\n}\n\n.div-box {\n  width: 268px;\n}\n\n.main-nav li {\n  margin: 10px;\n}\n\n.main-nav h2 {\n  margin: 20px;\n}\n\n.resources-bar {\n  display: flex;\n  justify-content: space-between;\n  margin: 0 auto;\n}\n\n.resources-bar > ul {\n  flex-direction: row;\n  justify-content: end;\n  align-items: flex-end;\n}\n\n.rss-left {\n  width: 45%;\n}\n\n.rss-right {\n  width: 45%;\n}\n\n.rss-left > ul {\n  display: flex;\n  flex-direction: row;\n}\n.rss-left > ul li {\n  padding: 10px;\n}\n\n.rss-right > ul {\n  display: flex;\n  flex-direction: row;\n  justify-content: end;\n}\n.rss-right > ul li {\n  padding: 10px;\n}\n\n#game-canvas, #builder-canvas, #info-canvas {\n  background-color: rgb(38, 38, 38);\n}\n\n.container {\n  display: grid;\n  grid-template-columns: 180px 1fr 620px 1fr 180px;\n}\n\n.grid-container {\n  display: grid;\n  width: 620px;\n  grid-column: 3;\n  grid-template-columns: 20% 20% 20% 20% 20%;\n  grid-template-rows: 20% 20% 20% 20% 20%;\n}\n\n#game-canvas {\n  grid-column: 1;\n  grid-row: 1;\n}\n\n.info-panel {\n  display: grid;\n  grid-column: 5;\n  grid-template-columns: 33% 33% 33%;\n}\n.info-panel #info-canvas {\n  grid-column: 1/1;\n  grid-row: 1;\n  width: 180px;\n}\n.info-panel h3 {\n  grid-column: 2;\n  z-index: 1;\n  display: flex;\n  justify-content: center;\n  padding-top: 10px;\n}\n\n.builder-menu {\n  display: grid;\n  grid-column: 1/1;\n  grid-template-columns: 33% 33% 33%;\n}\n.builder-menu #builder-canvas {\n  grid-column: 1/1;\n  grid-row: 1;\n  width: 180px;\n}\n.builder-menu h3 {\n  grid-column: 2;\n  z-index: 1;\n  display: flex;\n  justify-content: center;\n  padding-top: 10px;\n  height: 20px;\n}\n.builder-menu ul {\n  grid-column: 1;\n  grid-row: 1;\n  width: 180px;\n  display: flex;\n  flex-wrap: wrap;\n  list-style: none;\n  padding-top: 30px;\n  padding-left: 0px;\n  z-index: 1;\n}\n.builder-menu ul li {\n  margin: 15px;\n  width: 60px;\n  height: 60px;\n  border-style: solid;\n  border: 1px solid white;\n  z-index: 2;\n}\n\n.grid {\n  grid-column: 1;\n  grid-row: 1;\n}\n\n.grid > ul {\n  width: 620px;\n  display: flex;\n  flex-wrap: wrap;\n  list-style: none;\n  padding: 0%;\n  margin-top: 10px;\n  margin-left: 10px;\n}\n\n.grid li {\n  width: 60px;\n  height: 60px;\n  justify-content: center;\n}\n\nli:hover {\n  background-color: gray;\n}\n\nbody {\n  background-color: rgb(110, 110, 110);\n  font-family: \"Roboto\", sans-serif;\n}", "",{"version":3,"sources":["webpack://./src/styles/main.scss","webpack://./src/styles/base/reset.scss","webpack://./src/styles/components/_main_nav.scss","webpack://./src/styles/components/_resource_bar.scss","webpack://./src/styles/components/_grid.scss"],"names":[],"mappings":"AAAQ,qBAAA;ACCR;;;EAGE,sBAAA;ADCF;;ACEA,0BAAA;AACA;;;;;;;;;;EAUE,SAAA;ADCF;;ACEA,2GAAA;AACA;;EAEE,gBAAA;ADCF;;ACEA,2BAAA;AACA;EACE,iBAAA;EACA,6BAAA;EACA,gBAAA;ADCF;;ACEA,0DAAA;AACA;EACE,8BAAA;ADCF;;ACEA,oCAAA;AACA;;EAEE,eAAA;EACA,cAAA;ADCF;;ACEA,yCAAA;AACA;;;;EAIE,aAAA;ADCF;;ACEA,gGAAA;AACA;EACE;IACC,qBAAA;EDCD;ECEA;;;IAGE,qCAAA;IACA,uCAAA;IACA,sCAAA;IACA,gCAAA;EDAF;AACF;AEnEA;EACI,aAAA;EACA,8BAAA;EACA,cAAA;AFqEJ;;AElEA;EACI,aAAA;EACA,mBAAA;EACA,oBAAA;EACA,qBAAA;AFqEJ;;AEjEA;EACI,YAAA;AFoEJ;;AEjEA;EACI,YAAA;AFoEJ;;AEjEA;EACI,YAAA;AFoEJ;;AG3FA;EACI,aAAA;EACA,8BAAA;EACA,cAAA;AH8FJ;;AG3FA;EAEI,mBAAA;EACA,oBAAA;EACA,qBAAA;AH6FJ;;AGzFA;EAEI,UAAA;AH2FJ;;AGxFA;EAEI,UAAA;AH0FJ;;AGvFA;EACI,aAAA;EACA,mBAAA;AH0FJ;AGxFI;EACI,aAAA;AH0FR;;AGrFA;EACI,aAAA;EACA,mBAAA;EACA,oBAAA;AHwFJ;AGtFI;EACI,aAAA;AHwFR;;AIhIA;EACI,iCAAA;AJmIJ;;AI7HA;EACI,aAAA;EACA,gDAAA;AJgIJ;;AIvHA;EACI,aAAA;EACA,YAAA;EACA,cAAA;EAEA,0CAAA;EACA,uCAAA;AJyHJ;;AItHA;EACI,cAAA;EACA,WAAA;AJyHJ;;AIhHA;EACI,aAAA;EACA,cAAA;EACA,kCAAA;AJmHJ;AIlHI;EACI,gBAAA;EACA,WAAA;EACA,YAAA;AJoHR;AIlHI;EACI,cAAA;EACA,UAAA;EACA,aAAA;EACA,uBAAA;EACA,iBAAA;AJoHR;;AIhHA;EACI,aAAA;EACA,gBAAA;EACA,kCAAA;AJmHJ;AIlHI;EACI,gBAAA;EACA,WAAA;EACA,YAAA;AJoHR;AIlHI;EACI,cAAA;EACA,UAAA;EAGA,aAAA;EACA,uBAAA;EACA,iBAAA;EACA,YAAA;AJkHR;AI/GI;EACI,cAAA;EACA,WAAA;EACA,YAAA;EACA,aAAA;EACA,eAAA;EACA,gBAAA;EACA,iBAAA;EACA,iBAAA;EACA,UAAA;AJiHR;AI/GQ;EACI,YAAA;EACA,WAAA;EACA,YAAA;EACA,mBAAA;EACA,uBAAA;EACA,UAAA;AJiHZ;;AI3GA;EAQI,cAAA;EACA,WAAA;AJuGJ;;AInGA;EACI,YAAA;EACA,aAAA;EACA,eAAA;EACA,gBAAA;EACA,WAAA;EACA,gBAAA;EACA,iBAAA;AJsGJ;;AIlGA;EACI,WAAA;EACA,YAAA;EACA,uBAAA;AJqGJ;;AIlGA;EACI,sBAAA;AJqGJ;;AAtNA;EACE,oCATc;EAUd,iCAAA;AAyNF","sourcesContent":["@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');\n\n@import \"base/reset.scss\";\n\n@import \"components/_main_nav.scss\";\n@import \"components/resource_bar.scss\";\n@import \"components/build_bar.scss\";\n@import \"components/grid.scss\";\n\n$primary-color: rgb(110, 110, 110);\n$secondary-color: #f4f4f4;\n// $box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);\n\n// * {\n//   box-sizing: border-box;\n// }\n\nbody {\n  background-color: $primary-color;\n  font-family: 'Roboto', sans-serif;\n//   display: flex;\n//   flex-direction: column;\n//   align-items: center;\n//   justify-content: center;\n//   height: 100vh;\n//   overflow: hidden;\n//   margin: 0;\n//   padding: 20px;\n}\n\n// .container {\n//   background-color: $secondary-color;\n//   border-radius: 10px;\n//   box-shadow: $box-shadow;\n//   padding: 50px 20px;\n//   text-align: center;\n//   max-width: 100%;\n//   width: 800px;\n// }\n\n// h2 {\n//   margin: 0;\n//   opacity: 0.5;\n//   letter-spacing: 2px;\n// }\n\n// img {\n//   width: 100px;\n//   margin-bottom: 20px;\n// }\n\n// .joke {\n//   font-size: 30px;\n//   letter-spacing: 1px;\n//   line-height: 40px;\n//   margin: 50px auto;\n//   max-width: 600px;\n// }\n\n// .btn {\n//   background-color: $primary-color;\n//   color: $secondary-color;\n//   border: 0;\n//   border-radius: 10px;\n//   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);\n//   padding: 14px 40px;\n//   font-size: 16px;\n//   cursor: pointer;\n\n//   &:active {\n//     transform: scale(0.98);\n//   }\n\n//   &:focus {\n//     outline: 0;\n//   }\n// }\n\n","/* Box sizing rules */\n*,\n*::before,\n*::after {\n  box-sizing: border-box;\n}\n\n/* Remove default margin */\nbody,\nh1,\nh2,\nh3,\nh4,\np,\nfigure,\nblockquote,\ndl,\ndd {\n  margin: 0;\n}\n\n/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */\nul,\nol {\n  list-style: none;\n}\n\n/* Set core body defaults */\nbody {\n  min-height: 100vh;\n  text-rendering: optimizeSpeed;\n  line-height: 1.5;\n}\n\n/* A elements that don't have a class get default styles */\na:not([class]) {\n  text-decoration-skip-ink: auto;\n}\n\n/* Make images easier to work with */\nimg,\npicture {\n  max-width: 100%;\n  display: block;\n}\n\n/* Inherit fonts for inputs and buttons */\ninput,\nbutton,\ntextarea,\nselect {\n  font: inherit;\n}\n\n/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */\n@media (prefers-reduced-motion: reduce) {\n  html:focus-within {\n   scroll-behavior: auto;\n  }\n  \n  *,\n  *::before,\n  *::after {\n    animation-duration: 0.01ms !important;\n    animation-iteration-count: 1 !important;\n    transition-duration: 0.01ms !important;\n    scroll-behavior: auto !important;\n  }\n}\n",".main-nav {\n    display: flex;\n    justify-content: space-between;\n    margin: 0 auto;\n}\n\n.main-nav > ul {\n    display: flex;\n    flex-direction: row;\n    justify-content: end;\n    align-items: flex-end;\n\n}\n\n.div-box {\n    width: 268px;\n}\n\n.main-nav li {\n    margin: 10px;\n}\n\n.main-nav h2 {\n    margin: 20px;\n}",".resources-bar {\n    display: flex;\n    justify-content: space-between;\n    margin: 0 auto;\n}\n\n.resources-bar > ul {\n    // display: flex;\n    flex-direction: row;\n    justify-content: end;\n    align-items: flex-end;\n\n}\n\n.rss-left {\n    // justify-content: space-between;\n    width: 45%;\n}\n\n.rss-right {\n    // justify-content: end;\n    width: 45%;\n}\n\n.rss-left > ul {\n    display: flex;\n    flex-direction: row;\n\n    li {\n        padding: 10px;\n    }\n\n}\n\n.rss-right > ul {\n    display: flex;\n    flex-direction: row;\n    justify-content: end;\n\n    li {\n        padding: 10px;\n    }\n\n}\n","#game-canvas, #builder-canvas, #info-canvas {\n    background-color: rgb(38, 38, 38);\n    // display: flex;\n    // grid-template-columns: 65px 1fr 65px;\n    // grid-template-rows: 100px 100px 100px;\n}\n\n.container {\n    display: grid;\n    grid-template-columns: 180px 1fr 620px 1fr 180px;\n    // justify-content: space-between;\n    // position: absolute;\n    // width: 100%;\n    // left: 0;\n    // right: 0;\n    // margin: auto;\n}\n\n.grid-container {\n    display: grid;\n    width: 620px;\n    grid-column: 3;\n    // justify-content: center;\n    grid-template-columns: 20% 20% 20% 20% 20%;\n    grid-template-rows: 20% 20% 20% 20% 20%;\n}\n\n#game-canvas {\n    grid-column: 1;\n    grid-row: 1;\n    // grid-column-end: 3;\n    // position: absolute;\n    // width: 620px;\n    // left: 0;\n    // right: 0;\n    // margin: auto;\n}\n\n.info-panel {\n    display: grid;\n    grid-column: 5;\n    grid-template-columns: 33% 33% 33%;\n    #info-canvas {\n        grid-column: 1/1;\n        grid-row: 1;\n        width: 180px;\n    }\n    h3 {\n        grid-column: 2;\n        z-index: 1;\n        display: flex;\n        justify-content: center;\n        padding-top: 10px;\n    }\n}\n\n.builder-menu {\n    display: grid;\n    grid-column: 1 / 1;\n    grid-template-columns: 33% 33% 33%;\n    #builder-canvas {\n        grid-column: 1 / 1;\n        grid-row: 1;\n        width: 180px;\n    }\n    h3 {\n        grid-column: 2;\n        z-index: 1;\n        // -webkit-text-stroke: 1px;\n        // -webkit-text-stroke-color: white;\n        display: flex;\n        justify-content: center;\n        padding-top: 10px;\n        height: 20px;\n    }\n\n    ul {\n        grid-column: 1;\n        grid-row: 1;\n        width: 180px;\n        display: flex;\n        flex-wrap: wrap;\n        list-style: none;\n        padding-top: 30px;\n        padding-left: 0px;\n        z-index: 1;\n\n        li {\n            margin: 15px;\n            width: 60px;\n            height: 60px;\n            border-style: solid;\n            border: 1px solid white;\n            z-index: 2;\n        }\n    }\n\n}\n\n.grid {\n    // display: flex;\n    // position: relative;\n    // width: 620px;\n    // left: 0;\n    // right: 0;\n    // margin: auto;\n    // margin-top: 0px;\n    grid-column: 1;\n    grid-row: 1;\n    // grid-column-end: 4;\n}\n\n.grid > ul {\n    width: 620px;\n    display: flex;\n    flex-wrap: wrap;\n    list-style: none;\n    padding: 0%;\n    margin-top: 10px;\n    margin-left: 10px;\n    // position: absolute;\n}\n\n.grid li {\n    width: 60px;\n    height: 60px;\n    justify-content: center;\n}\n\nli:hover {\n    background-color: gray;\n}"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "/* Box sizing rules */\n*,\n*::before,\n*::after {\n  box-sizing: border-box;\n}\n\n/* Remove default margin */\nbody,\nh1,\nh2,\nh3,\nh4,\np,\nfigure,\nblockquote,\ndl,\ndd {\n  margin: 0;\n}\n\n/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */\nul,\nol {\n  list-style: none;\n}\n\n/* Set core body defaults */\nbody {\n  min-height: 100vh;\n  text-rendering: optimizeSpeed;\n  line-height: 1.5;\n}\n\n/* A elements that don't have a class get default styles */\na:not([class]) {\n  text-decoration-skip-ink: auto;\n}\n\n/* Make images easier to work with */\nimg,\npicture {\n  max-width: 100%;\n  display: block;\n}\n\n/* Inherit fonts for inputs and buttons */\ninput,\nbutton,\ntextarea,\nselect {\n  font: inherit;\n}\n\n/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */\n@media (prefers-reduced-motion: reduce) {\n  html:focus-within {\n    scroll-behavior: auto;\n  }\n  *,\n*::before,\n*::after {\n    animation-duration: 0.01ms !important;\n    animation-iteration-count: 1 !important;\n    transition-duration: 0.01ms !important;\n    scroll-behavior: auto !important;\n  }\n}\n.main-nav {\n  display: flex;\n  justify-content: space-between;\n  margin: 0 auto;\n}\n\n.main-nav > ul {\n  display: flex;\n  flex-direction: row;\n  justify-content: end;\n  align-items: flex-end;\n}\n\n.div-box {\n  width: 268px;\n}\n.div-box button {\n  margin: 20px;\n}\n\n.main-nav li {\n  margin: 10px;\n}\n\n.main-nav h2 {\n  margin: 20px;\n}\n\n.resources-bar {\n  display: flex;\n  justify-content: space-between;\n  margin: 0 auto;\n}\n\n.resources-bar > ul {\n  flex-direction: row;\n  justify-content: end;\n  align-items: flex-end;\n}\n\n.rss-left {\n  width: 55%;\n}\n\n.rss-right {\n  width: 45%;\n}\n\n.rss-left > ul {\n  display: flex;\n  flex-direction: row;\n}\n.rss-left > ul li {\n  padding: 10px;\n}\n\n.rss-right > ul {\n  display: flex;\n  flex-direction: row;\n  justify-content: end;\n}\n.rss-right > ul li {\n  padding: 10px;\n}\n\n#game-canvas, #builder-canvas, #info-canvas {\n  background-color: rgb(38, 38, 38);\n}\n\n.container {\n  display: grid;\n  grid-template-columns: 180px 1fr 620px 1fr 180px;\n}\n\n.grid-container {\n  display: grid;\n  width: 620px;\n  grid-column: 3;\n  grid-template-columns: 20% 20% 20% 20% 20%;\n  grid-template-rows: 20% 20% 20% 20% 20%;\n}\n\n#game-canvas {\n  grid-column: 1;\n  grid-row: 1;\n}\n\n.info-panel {\n  display: grid;\n  grid-column: 5;\n  grid-template-columns: 33% 33% 33%;\n  grid-template-rows: 50px 200px;\n}\n.info-panel #info-canvas {\n  grid-column: 1/1;\n  grid-row: 1;\n  width: 180px;\n}\n.info-panel h3 {\n  grid-column: 2;\n  z-index: 1;\n  display: flex;\n  justify-content: center;\n  padding-top: 10px;\n}\n.info-panel p {\n  grid-column: 1/4;\n  grid-row: 2/2;\n  padding: 30px;\n  background-color: grey;\n}\n\n.builder-menu {\n  display: grid;\n  grid-column: 1/1;\n  grid-template-columns: 33% 33% 33%;\n}\n.builder-menu #builder-canvas {\n  grid-column: 1/1;\n  grid-row: 1;\n  width: 180px;\n}\n.builder-menu h3 {\n  grid-column: 2;\n  z-index: 1;\n  display: flex;\n  justify-content: center;\n  padding-top: 10px;\n  height: 20px;\n}\n.builder-menu ul {\n  grid-column: 1;\n  grid-row: 1;\n  width: 180px;\n  display: flex;\n  flex-wrap: wrap;\n  list-style: none;\n  padding-top: 30px;\n  padding-left: 0px;\n  z-index: 1;\n}\n.builder-menu ul li {\n  margin: 15px;\n  width: 60px;\n  height: 60px;\n  border-style: solid;\n  border: 1px solid white;\n  z-index: 2;\n}\n\n.grid {\n  grid-column: 1;\n  grid-row: 1;\n}\n\n.grid > ul {\n  width: 620px;\n  display: flex;\n  flex-wrap: wrap;\n  list-style: none;\n  padding: 0%;\n  margin-top: 10px;\n  margin-left: 10px;\n}\n\n.grid li {\n  width: 60px;\n  height: 60px;\n  justify-content: center;\n}\n\nli:hover {\n  background-color: gray;\n}\n\nbody {\n  background-color: rgb(110, 110, 110);\n  font-family: \"Roboto\", sans-serif;\n}", "",{"version":3,"sources":["webpack://./src/styles/main.scss","webpack://./src/styles/base/reset.scss","webpack://./src/styles/components/_main_nav.scss","webpack://./src/styles/components/_resource_bar.scss","webpack://./src/styles/components/_grid.scss"],"names":[],"mappings":"AAAQ,qBAAA;ACCR;;;EAGE,sBAAA;ADCF;;ACEA,0BAAA;AACA;;;;;;;;;;EAUE,SAAA;ADCF;;ACEA,2GAAA;AACA;;EAEE,gBAAA;ADCF;;ACEA,2BAAA;AACA;EACE,iBAAA;EACA,6BAAA;EACA,gBAAA;ADCF;;ACEA,0DAAA;AACA;EACE,8BAAA;ADCF;;ACEA,oCAAA;AACA;;EAEE,eAAA;EACA,cAAA;ADCF;;ACEA,yCAAA;AACA;;;;EAIE,aAAA;ADCF;;ACEA,gGAAA;AACA;EACE;IACC,qBAAA;EDCD;ECEA;;;IAGE,qCAAA;IACA,uCAAA;IACA,sCAAA;IACA,gCAAA;EDAF;AACF;AEnEA;EACI,aAAA;EACA,8BAAA;EACA,cAAA;AFqEJ;;AElEA;EACI,aAAA;EACA,mBAAA;EACA,oBAAA;EACA,qBAAA;AFqEJ;;AEjEA;EACI,YAAA;AFoEJ;AEnEI;EACI,YAAA;AFqER;;AEjEA;EACI,YAAA;AFoEJ;;AEjEA;EACI,YAAA;AFoEJ;;AG9FA;EACI,aAAA;EACA,8BAAA;EACA,cAAA;AHiGJ;;AG9FA;EAEI,mBAAA;EACA,oBAAA;EACA,qBAAA;AHgGJ;;AG5FA;EAEI,UAAA;AH8FJ;;AG3FA;EAEI,UAAA;AH6FJ;;AG1FA;EACI,aAAA;EACA,mBAAA;AH6FJ;AG3FI;EACI,aAAA;AH6FR;;AGxFA;EACI,aAAA;EACA,mBAAA;EACA,oBAAA;AH2FJ;AGzFI;EACI,aAAA;AH2FR;;AInIA;EACI,iCAAA;AJsIJ;;AIhIA;EACI,aAAA;EACA,gDAAA;AJmIJ;;AI1HA;EACI,aAAA;EACA,YAAA;EACA,cAAA;EAEA,0CAAA;EACA,uCAAA;AJ4HJ;;AIzHA;EACI,cAAA;EACA,WAAA;AJ4HJ;;AInHA;EACI,aAAA;EACA,cAAA;EACA,kCAAA;EACA,8BAAA;AJsHJ;AIrHI;EACI,gBAAA;EACA,WAAA;EACA,YAAA;AJuHR;AIrHI;EACI,cAAA;EACA,UAAA;EACA,aAAA;EACA,uBAAA;EACA,iBAAA;AJuHR;AIrHI;EACI,gBAAA;EACA,aAAA;EACA,aAAA;EACA,sBAAA;AJuHR;;AInHA;EACI,aAAA;EACA,gBAAA;EACA,kCAAA;AJsHJ;AIrHI;EACI,gBAAA;EACA,WAAA;EACA,YAAA;AJuHR;AIrHI;EACI,cAAA;EACA,UAAA;EAGA,aAAA;EACA,uBAAA;EACA,iBAAA;EACA,YAAA;AJqHR;AIlHI;EACI,cAAA;EACA,WAAA;EACA,YAAA;EACA,aAAA;EACA,eAAA;EACA,gBAAA;EACA,iBAAA;EACA,iBAAA;EACA,UAAA;AJoHR;AIlHQ;EACI,YAAA;EACA,WAAA;EACA,YAAA;EACA,mBAAA;EACA,uBAAA;EACA,UAAA;AJoHZ;;AI9GA;EAQI,cAAA;EACA,WAAA;AJ0GJ;;AItGA;EACI,YAAA;EACA,aAAA;EACA,eAAA;EACA,gBAAA;EACA,WAAA;EACA,gBAAA;EACA,iBAAA;AJyGJ;;AIrGA;EACI,WAAA;EACA,YAAA;EACA,uBAAA;AJwGJ;;AIrGA;EACI,sBAAA;AJwGJ;;AAhOA;EACE,oCATc;EAUd,iCAAA;AAmOF","sourcesContent":["@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');\n\n@import \"base/reset.scss\";\n\n@import \"components/_main_nav.scss\";\n@import \"components/resource_bar.scss\";\n@import \"components/build_bar.scss\";\n@import \"components/grid.scss\";\n\n$primary-color: rgb(110, 110, 110);\n$secondary-color: #f4f4f4;\n// $box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);\n\n// * {\n//   box-sizing: border-box;\n// }\n\nbody {\n  background-color: $primary-color;\n  font-family: 'Roboto', sans-serif;\n//   display: flex;\n//   flex-direction: column;\n//   align-items: center;\n//   justify-content: center;\n//   height: 100vh;\n//   overflow: hidden;\n//   margin: 0;\n//   padding: 20px;\n}\n\n// .container {\n//   background-color: $secondary-color;\n//   border-radius: 10px;\n//   box-shadow: $box-shadow;\n//   padding: 50px 20px;\n//   text-align: center;\n//   max-width: 100%;\n//   width: 800px;\n// }\n\n// h2 {\n//   margin: 0;\n//   opacity: 0.5;\n//   letter-spacing: 2px;\n// }\n\n// img {\n//   width: 100px;\n//   margin-bottom: 20px;\n// }\n\n// .joke {\n//   font-size: 30px;\n//   letter-spacing: 1px;\n//   line-height: 40px;\n//   margin: 50px auto;\n//   max-width: 600px;\n// }\n\n// .btn {\n//   background-color: $primary-color;\n//   color: $secondary-color;\n//   border: 0;\n//   border-radius: 10px;\n//   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);\n//   padding: 14px 40px;\n//   font-size: 16px;\n//   cursor: pointer;\n\n//   &:active {\n//     transform: scale(0.98);\n//   }\n\n//   &:focus {\n//     outline: 0;\n//   }\n// }\n\n","/* Box sizing rules */\n*,\n*::before,\n*::after {\n  box-sizing: border-box;\n}\n\n/* Remove default margin */\nbody,\nh1,\nh2,\nh3,\nh4,\np,\nfigure,\nblockquote,\ndl,\ndd {\n  margin: 0;\n}\n\n/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */\nul,\nol {\n  list-style: none;\n}\n\n/* Set core body defaults */\nbody {\n  min-height: 100vh;\n  text-rendering: optimizeSpeed;\n  line-height: 1.5;\n}\n\n/* A elements that don't have a class get default styles */\na:not([class]) {\n  text-decoration-skip-ink: auto;\n}\n\n/* Make images easier to work with */\nimg,\npicture {\n  max-width: 100%;\n  display: block;\n}\n\n/* Inherit fonts for inputs and buttons */\ninput,\nbutton,\ntextarea,\nselect {\n  font: inherit;\n}\n\n/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */\n@media (prefers-reduced-motion: reduce) {\n  html:focus-within {\n   scroll-behavior: auto;\n  }\n  \n  *,\n  *::before,\n  *::after {\n    animation-duration: 0.01ms !important;\n    animation-iteration-count: 1 !important;\n    transition-duration: 0.01ms !important;\n    scroll-behavior: auto !important;\n  }\n}\n",".main-nav {\n    display: flex;\n    justify-content: space-between;\n    margin: 0 auto;\n}\n\n.main-nav > ul {\n    display: flex;\n    flex-direction: row;\n    justify-content: end;\n    align-items: flex-end;\n\n}\n\n.div-box {\n    width: 268px;\n    button {\n        margin: 20px; \n    }\n}\n\n.main-nav li {\n    margin: 10px;\n}\n\n.main-nav h2 {\n    margin: 20px;\n}",".resources-bar {\n    display: flex;\n    justify-content: space-between;\n    margin: 0 auto;\n}\n\n.resources-bar > ul {\n    // display: flex;\n    flex-direction: row;\n    justify-content: end;\n    align-items: flex-end;\n\n}\n\n.rss-left {\n    // justify-content: space-between;\n    width: 55%;\n}\n\n.rss-right {\n    // justify-content: end;\n    width: 45%;\n}\n\n.rss-left > ul {\n    display: flex;\n    flex-direction: row;\n\n    li {\n        padding: 10px;\n    }\n\n}\n\n.rss-right > ul {\n    display: flex;\n    flex-direction: row;\n    justify-content: end;\n\n    li {\n        padding: 10px;\n    }\n\n}\n","#game-canvas, #builder-canvas, #info-canvas {\n    background-color: rgb(38, 38, 38);\n    // display: flex;\n    // grid-template-columns: 65px 1fr 65px;\n    // grid-template-rows: 100px 100px 100px;\n}\n\n.container {\n    display: grid;\n    grid-template-columns: 180px 1fr 620px 1fr 180px;\n    // justify-content: space-between;\n    // position: absolute;\n    // width: 100%;\n    // left: 0;\n    // right: 0;\n    // margin: auto;\n}\n\n.grid-container {\n    display: grid;\n    width: 620px;\n    grid-column: 3;\n    // justify-content: center;\n    grid-template-columns: 20% 20% 20% 20% 20%;\n    grid-template-rows: 20% 20% 20% 20% 20%;\n}\n\n#game-canvas {\n    grid-column: 1;\n    grid-row: 1;\n    // grid-column-end: 3;\n    // position: absolute;\n    // width: 620px;\n    // left: 0;\n    // right: 0;\n    // margin: auto;\n}\n\n.info-panel {\n    display: grid;\n    grid-column: 5;\n    grid-template-columns: 33% 33% 33%;\n    grid-template-rows: 50px 200px;\n    #info-canvas {\n        grid-column: 1/1;\n        grid-row: 1;\n        width: 180px;\n    }\n    h3 {\n        grid-column: 2;\n        z-index: 1;\n        display: flex;\n        justify-content: center;\n        padding-top: 10px;\n    }\n    p {\n        grid-column: 1/4;\n        grid-row: 2/2;\n        padding: 30px;\n        background-color: grey;\n    }\n}\n\n.builder-menu {\n    display: grid;\n    grid-column: 1 / 1;\n    grid-template-columns: 33% 33% 33%;\n    #builder-canvas {\n        grid-column: 1 / 1;\n        grid-row: 1;\n        width: 180px;\n    }\n    h3 {\n        grid-column: 2;\n        z-index: 1;\n        // -webkit-text-stroke: 1px;\n        // -webkit-text-stroke-color: white;\n        display: flex;\n        justify-content: center;\n        padding-top: 10px;\n        height: 20px;\n    }\n\n    ul {\n        grid-column: 1;\n        grid-row: 1;\n        width: 180px;\n        display: flex;\n        flex-wrap: wrap;\n        list-style: none;\n        padding-top: 30px;\n        padding-left: 0px;\n        z-index: 1;\n\n        li {\n            margin: 15px;\n            width: 60px;\n            height: 60px;\n            border-style: solid;\n            border: 1px solid white;\n            z-index: 2;\n        }\n    }\n\n}\n\n.grid {\n    // display: flex;\n    // position: relative;\n    // width: 620px;\n    // left: 0;\n    // right: 0;\n    // margin: auto;\n    // margin-top: 0px;\n    grid-column: 1;\n    grid-row: 1;\n    // grid-column-end: 4;\n}\n\n.grid > ul {\n    width: 620px;\n    display: flex;\n    flex-wrap: wrap;\n    list-style: none;\n    padding: 0%;\n    margin-top: 10px;\n    margin-left: 10px;\n    // position: absolute;\n}\n\n.grid li {\n    width: 60px;\n    height: 60px;\n    justify-content: center;\n}\n\nli:hover {\n    background-color: gray;\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1361,8 +1401,9 @@ document.addEventListener("DOMContentLoaded", function () {
   var steing = document.getElementById('total-steel-ingots');
   var num = document.getElementById('total-money');
   var bui = document.querySelector('.builder-menu');
-  var info = document.querySelector('.info-panel');
-  var sell = document.querySelector('.sell'); // let ctx = canvas.getContext("2d")
+  var info = document.getElementById('description');
+  var sell = document.querySelector('.sell');
+  var music = document.querySelector('.music'); // let ctx = canvas.getContext("2d")
   // ctx.moveTo(0, 0);
   // ctx.lineTo(200, 100);
   // ctx.stroke();
@@ -1393,8 +1434,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   drawBoard(); // console.log(rss)
 
-  console.log(iroing);
-  var gamev = new Game(el, iro, num, bui, info, sell, iroing, steing); // gamev.map.startingMarket()
+  console.log(music);
+  var gamev = new Game(el, iro, num, bui, info, sell, iroing, steing, music); // gamev.map.startingMarket()
   // gamev.updateTotalMoney(num)
 });
 })();

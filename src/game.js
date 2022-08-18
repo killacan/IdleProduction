@@ -6,21 +6,27 @@ const SteelMill = require("./steelMill")
 
 class Game {
 
-    constructor (el, iro, num, build, info, sell, iroing, steing) {
-        this.map = new Map(el, iro, num, build, info)
+    constructor (el, iro, num, build, info, sell, iroing, steing, music) {
+        this.map = new Map(el, iro, num, build)
         this.el = el
         this.iro = iro
         this.build = build
         this.sell = sell 
         this.iroing = iroing
         this.steing = steing
+        this.info = info
+        this.music = music
         this.toggle = false
+        this.toggleMusic = false
+        this.descriptions = {IronMine: new IronMine().description, IronSmelter: new IronSmelter().description, SteelMill: new SteelMill().description }
         this.handleClickGrid = this.handleClickGrid.bind(this)
         this.handleClickBuild = this.handleClickBuild.bind(this)
         this.handleClickSell = this.handleClickSell.bind(this)
         this.bindEvents(); 
         this.tick()
         this.updateTotalMoney(num, this.map.iro)
+        this.musicHandler()
+        
 
     }
 
@@ -28,6 +34,21 @@ class Game {
         this.el.addEventListener("click", this.handleClickGrid)
         this.build.addEventListener("click", this.handleClickBuild)
         this.sell.addEventListener("click", this.handleClickSell)
+    }
+
+    musicHandler() {
+        let backgroundMusic = new Audio(); 
+        backgroundMusic.src = "src/assets/4Harris Heller-Not-Enough-Movement.wav"
+        let backgroundOn = false
+        this.music.addEventListener("click",function() {
+            if (backgroundOn === false) {
+                backgroundOn = true
+                backgroundMusic.play()
+            } else {
+                backgroundOn = false
+                backgroundMusic.pause()
+            }
+        })
     }
 
     handleClickGrid(e) {
@@ -90,6 +111,17 @@ class Game {
         }
     }
 
+    handleClickMusic(e) {
+        const ele = e.target;
+        console.log(ele.tagName)
+
+        if (ele.tagName.toLowerCase() === "button" && this.toggleMusic) {
+            this.toggleMusic = false
+        } else {
+            this.toggleMusic = true
+        }
+    }
+
     tick () {
         setInterval(() => {
             this.updateTotalMoney(this.map.num, this.map.iro)
@@ -100,11 +132,11 @@ class Game {
             this.transferToMarket()
             this.transferToChildren()
             // console.log(this.map.allRSS["ironOre"])
-            console.log(this.map.allRSS)
+            // console.log(this.map.allRSS)
             //call production
             //call transport
             // totals up resources
-            this.map.money = this.map.money += 1
+            // this.map.money = this.map.money += 1
         }, 1000)
     }
 
@@ -115,7 +147,12 @@ class Game {
         } else {
             this.map.iro.innerHTML = this.map.allRSS["ironOre"]
         }
+        // console.log(new IronMine().description)
 
+        if (!!this.map.selectedBuilding) {
+            this.info.innerHTML = this.descriptions[JSON.parse(this.map.selectedBuilding)]
+        }
+        
         !this.map.allRSS["ironIngots"] ? this.iroing.innerHTML = 0 : this.iroing.innerHTML = this.map.allRSS["ironIngots"]
         !this.map.allRSS["steelIngots"] ? this.steing.innerHTML = 0 : this.steing.innerHTML = this.map.allRSS["steelIngots"]
     }
