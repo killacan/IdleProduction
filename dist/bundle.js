@@ -392,11 +392,11 @@ var Game = /*#__PURE__*/function () {
   }, {
     key: "handleClickSell",
     value: function handleClickSell(e) {
-      var ele = e.target;
-      console.log(ele.tagName);
+      var ele = e.target; // console.log(ele.tagName)
 
       if (ele.tagName.toLowerCase() === "button") {
         this.toggle = true;
+        this.transferToMarket();
       }
     }
   }, {
@@ -417,8 +417,6 @@ var Game = /*#__PURE__*/function () {
       var _this = this;
 
       setInterval(function () {
-        _this.updateTotalMoney(_this.map.num, _this.map.iro);
-
         _this.map.setupBoard(); // console.log(Object.values(this.map.allBuildings))
 
 
@@ -430,7 +428,9 @@ var Game = /*#__PURE__*/function () {
 
         _this.transferToMarket();
 
-        _this.transferToChildren(); // console.log(this.map.allRSS["ironOre"])
+        _this.transferToChildren();
+
+        _this.updateTotalMoney(_this.map.num, _this.map.iro); // console.log(this.map.allRSS["ironOre"])
         // console.log(this.map.allRSS)
         //call production
         //call transport
@@ -479,9 +479,9 @@ var Game = /*#__PURE__*/function () {
 
           if (_this2.map.allBuildings["Market"]) {
             marketfactor += _this2.map.allBuildings["Market"].length / 5;
-          }
+          } // console.log(marketfactor, "marketfactor");
 
-          console.log(marketfactor, "marketfactor");
+
           rssArr.forEach(function (sub) {
             if (sub[0] === "ironOre") {
               building.resources["ironOre"] = 0;

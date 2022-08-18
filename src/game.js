@@ -118,10 +118,11 @@ class Game {
 
     handleClickSell(e) {
         const ele = e.target;
-        console.log(ele.tagName)
+        // console.log(ele.tagName)
 
         if (ele.tagName.toLowerCase() === "button") {
             this.toggle = true
+            this.transferToMarket()
         }
     }
 
@@ -138,13 +139,13 @@ class Game {
 
     tick () {
         setInterval(() => {
-            this.updateTotalMoney(this.map.num, this.map.iro)
             this.map.setupBoard()
             // console.log(Object.values(this.map.allBuildings))
             Object.values(this.map.allBuildings).flat().forEach((ele) => ele.updateRSS())
             this.map.updateRSS()
             this.transferToMarket()
             this.transferToChildren()
+            this.updateTotalMoney(this.map.num, this.map.iro)
             // console.log(this.map.allRSS["ironOre"])
             // console.log(this.map.allRSS)
             //call production
@@ -187,7 +188,7 @@ class Game {
                 if (this.map.allBuildings["Market"]) {
                     marketfactor += (this.map.allBuildings["Market"].length / 5);
                 }
-                console.log(marketfactor, "marketfactor");
+                // console.log(marketfactor, "marketfactor");
                 rssArr.forEach((sub) => {
                     if (sub[0] === "ironOre") {
                         building.resources["ironOre"] = 0;
