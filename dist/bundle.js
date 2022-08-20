@@ -271,6 +271,8 @@ var CopperExtruder = __webpack_require__(/*! ./copperExtruder */ "./src/copperEx
 
 var ToolFactory = __webpack_require__(/*! ./toolFactory */ "./src/toolFactory.js");
 
+var WindMill = __webpack_require__(/*! ./windMill */ "./src/windMill.js");
+
 var Game = /*#__PURE__*/function () {
   function Game(el, iro, num, build, info, sell, iroing, steing, music, copore, coping, copwire, toolsnum, buildcost) {
     _classCallCheck(this, Game);
@@ -299,7 +301,8 @@ var Game = /*#__PURE__*/function () {
       CopperSmelter: new CopperSmelter(),
       CopperExtruder: new CopperExtruder(),
       ToolFactory: new ToolFactory(),
-      Market: new Market()
+      Market: new Market(),
+      WindMill: new WindMill()
     };
     this.handleClickGrid = this.handleClickGrid.bind(this);
     this.handleClickBuild = this.handleClickBuild.bind(this);
@@ -341,10 +344,10 @@ var Game = /*#__PURE__*/function () {
       var ele = e.target;
       that = this;
       console.log(ele);
-      console.log(ele.tagName.toLowerCase() === 'li');
+      console.log(ele.tagName.toLowerCase() === "li");
 
-      if (ele.tagName.toLowerCase() === 'li' && this.map.selectedBuilding) {
-        // we have a pos and a name of building. building name is a string. 
+      if (ele.tagName.toLowerCase() === "li" && this.map.selectedBuilding) {
+        // we have a pos and a name of building. building name is a string.
         var pos = JSON.parse(ele.dataset.pos); // this.updateParentsAndChildren()
         // console.log(JSON.parse(ele.dataset.pos))
         // console.log(JSON.parse(this.map.selectedBuilding))
@@ -370,9 +373,10 @@ var Game = /*#__PURE__*/function () {
         } else if (JSON.parse(this.map.selectedBuilding) === "ToolFactory") {
           this.map.placeBuilding(pos, new ToolFactory(pos));
         } else if (JSON.parse(this.map.selectedBuilding) === "Market") {
-          this.map.placeBuilding(pos, new Market(pos));
-          console.log(that.map.getBuilding(pos));
-          console.log(that.map.allBuildings);
+          this.map.placeBuilding(pos, new Market(pos)); // console.log(that.map.getBuilding(pos))
+          // console.log(that.map.allBuildings)
+        } else if (JSON.parse(this.map.selectedBuilding) === "WindMill") {
+          this.map.placeBuilding(pos, new WindMill(pos));
         }
       } else if (ele.tagName.toLowerCase() === "img") {
         this.map.removeBuilding(JSON.parse(ele.parentNode.dataset.pos));
@@ -384,7 +388,7 @@ var Game = /*#__PURE__*/function () {
       var ele = e.target;
       console.log(e.target.parentNode);
 
-      if (ele.tagName.toLowerCase() === 'img') {
+      if (ele.tagName.toLowerCase() === "img") {
         this.map.selectedBuilding = ele.parentNode.dataset.build;
         console.log(this.map.selectedBuilding);
       }
@@ -420,6 +424,9 @@ var Game = /*#__PURE__*/function () {
         _this.map.setupBoard(); // console.log(Object.values(this.map.allBuildings))
 
 
+        _this.map.updatePower();
+
+        console.log(_this.map.totalPower);
         Object.values(_this.map.allBuildings).flat().forEach(function (ele) {
           return ele.updateRSS();
         });
@@ -485,28 +492,28 @@ var Game = /*#__PURE__*/function () {
           rssArr.forEach(function (sub) {
             if (sub[0] === "ironOre") {
               building.resources["ironOre"] = 0;
-              _this2.map.money += sub[1];
+              _this2.map.money += sub[1] * marketfactor;
             } else if (sub[0] === "ironIngots") {
               building.resources["ironIngots"] = 0;
-              _this2.map.money += sub[1] * 6;
+              _this2.map.money += sub[1] * 6 * marketfactor;
             } else if (sub[0] === "steelIngots") {
               building.resources["steelIngots"] = 0;
-              _this2.map.money += sub[1] * 70;
+              _this2.map.money += sub[1] * 70 * marketfactor;
             } else if (sub[0] === "copperOre") {
               building.resources["copperOre"] = 0;
-              _this2.map.money += sub[1] * 8;
+              _this2.map.money += sub[1] * 8 * marketfactor;
             } else if (sub[0] === "copperIngots") {
               building.resources["copperIngots"] = 0;
-              _this2.map.money += sub[1] * 80;
+              _this2.map.money += sub[1] * 80 * marketfactor;
             } else if (sub[0] === "copperWire") {
               building.resources["copperWire"] = 0;
-              _this2.map.money += sub[1] * 480;
+              _this2.map.money += sub[1] * 480 * marketfactor;
             } else if (sub[0] === "tools") {
               building.resources["tools"] = 0;
-              _this2.map.money += sub[1] * 425;
+              _this2.map.money += sub[1] * 425 * marketfactor;
             }
-          }); // iterate through building rss, and subtract from total in building. 
-          // calculate distance from the market. 
+          }); // iterate through building rss, and subtract from total in building.
+          // calculate distance from the market.
         });
       }
 
@@ -517,7 +524,7 @@ var Game = /*#__PURE__*/function () {
     value: function transferToChildren() {
       var _this3 = this;
 
-      // iterate through buildings(buildArr). check parents (parA) (later in order of proximity) and subtract resources until requirements met. 
+      // iterate through buildings(buildArr). check parents (parA) (later in order of proximity) and subtract resources until requirements met.
       var bldgArr = Object.values(this.map.allBuildings).flat();
       bldgArr.forEach(function (building) {
         var parents = [];
@@ -741,16 +748,18 @@ var Map = /*#__PURE__*/function () {
     this.build = build;
     this.selectedBuilding = null;
     this.allBuildings = {};
-    this.possibleBuildings = ["IronMine", "IronSmelter", "SteelMill", "CopperMine", "CopperSmelter", "CopperExtruder", "ToolFactory", "Market"];
+    this.totalPower = 0;
+    this.possibleBuildings = ["IronMine", "IronSmelter", "SteelMill", "CopperMine", "CopperSmelter", "CopperExtruder", "ToolFactory", "Market", "WindMill"];
     this.imgPaths = {
-      "IronMine": "src/assets/ironMine3.png",
-      "IronSmelter": "src/assets/ironIngot2.png",
-      "SteelMill": "src/assets/Smelter2.png",
-      "CopperMine": "src/assets/CopperIHardlyKnowHer.png",
-      "CopperSmelter": "src/assets/CopperIngot.png",
-      "CopperExtruder": "src/assets/CopperWireIHardlyKnonwHer.png",
-      "ToolFactory": "src/assets/Wrench.png",
-      "Market": "src/assets/Market.png"
+      IronMine: "src/assets/ironMine3.png",
+      IronSmelter: "src/assets/ironIngot2.png",
+      SteelMill: "src/assets/Smelter2.png",
+      CopperMine: "src/assets/CopperIHardlyKnowHer.png",
+      CopperSmelter: "src/assets/CopperIngot.png",
+      CopperExtruder: "src/assets/CopperWireIHardlyKnonwHer.png",
+      ToolFactory: "src/assets/Wrench.png",
+      Market: "src/assets/Market1.png",
+      WindMill: "src/assets/WindMill1.png"
     };
     this.allRSS = {};
     this.grid = this.setupGrid();
@@ -782,7 +791,7 @@ var Map = /*#__PURE__*/function () {
     } // startingMarket () {
     //     this.placeBuilding([5,5], new Market([5,5], this))
     // }
-    // put in a building checker. 
+    // put in a building checker.
 
   }, {
     key: "setupBoard",
@@ -793,12 +802,12 @@ var Map = /*#__PURE__*/function () {
         testBox.remove();
       }
 
-      var ul = document.createElement('ul');
-      ul.classList.add('grid-boxes');
+      var ul = document.createElement("ul");
+      ul.classList.add("grid-boxes");
 
       for (var i = 0; i < 10; i++) {
         for (var j = 0; j < 10; j++) {
-          var li = document.createElement('li');
+          var li = document.createElement("li");
           li.dataset.pos = JSON.stringify([i, j]);
           li.dataset.building = JSON.stringify(this.grid[i][j]);
 
@@ -819,10 +828,10 @@ var Map = /*#__PURE__*/function () {
     key: "setupBuild",
     value: function setupBuild() {
       // console.log(this.build);
-      var ul = document.createElement('ul');
+      var ul = document.createElement("ul");
 
       for (var i = 0; i < this.possibleBuildings.length; i++) {
-        var li = document.createElement('li');
+        var li = document.createElement("li");
         li.dataset.build = JSON.stringify(this.possibleBuildings[i]);
         var img = new Image();
         img.src = Object.values(this.imgPaths)[i];
@@ -850,13 +859,23 @@ var Map = /*#__PURE__*/function () {
       }
     }
   }, {
+    key: "updatePower",
+    value: function updatePower() {
+      var _this = this;
+
+      this.totalPower = 0;
+      this.allBuildings["WindMill"].forEach(function (powerplant) {
+        _this.totalPower += powerplant.power;
+      });
+    }
+  }, {
     key: "placeBuilding",
     value: function placeBuilding(pos, type) {
       // take in the type of building. Create the building and place it on the map.
       if (!this.isEmptyPos(pos)) {
-        throw new BuildError('Not an empty spot!');
+        throw new BuildError("Not an empty spot!");
       } else if (this.money < type.cost) {
-        throw new BuildError('Not Enough Money!');
+        throw new BuildError("Not Enough Money!");
       } else {
         this.grid[pos[0]][pos[1]] = type;
         this.allBuildings[type.name].push(type);
@@ -867,7 +886,7 @@ var Map = /*#__PURE__*/function () {
     key: "removeBuilding",
     value: function removeBuilding(pos) {
       if (this.isEmptyPos(pos)) {
-        throw new BuildError('Empty spot!');
+        throw new BuildError("Empty spot!");
       } else {
         var type = this.getBuilding(pos);
         this.money += type.cost;
@@ -889,7 +908,7 @@ var Map = /*#__PURE__*/function () {
     key: "isEmptyPos",
     value: function isEmptyPos(pos) {
       if (!this.isValidPos(pos)) {
-        throw new BuildError('Is not a valid spot!');
+        throw new BuildError("Is not a valid spot!");
       }
 
       return this.grid[pos[0]][pos[1]] === null;
@@ -957,7 +976,7 @@ var Market = /*#__PURE__*/function (_Node) {
     _this.nodepos = pos; // this.map = super.map
 
     _this.name = "Market";
-    _this.cost = 500;
+    _this.cost = 5000;
     _this.description = "Having a market makes your goods 20% more valuable."; // this.map = this.updateRSS.bind(this)
 
     return _this;
@@ -1073,7 +1092,7 @@ var SteelMill = /*#__PURE__*/function (_Node) {
     value: function updateRSS() {
       var _this$resources, _steelIngots;
 
-      console.log(this.resources, "I am inside the steel mill");
+      // console.log(this.resources, "I am inside the steel mill")
       (_this$resources = this.resources)[_steelIngots = "steelIngots"] || (_this$resources[_steelIngots] = this.resources["steelIngots"] = 0);
 
       if (this.resources["ironIngots"] >= 10) {
@@ -1148,7 +1167,7 @@ var ToolFactory = /*#__PURE__*/function (_Node) {
   _createClass(ToolFactory, [{
     key: "updateRSS",
     value: function updateRSS() {
-      console.log(this.resources, "I am inside the Tool Factory");
+      // console.log(this.resources, "I am inside the Tool Factory")
       this.loops++;
 
       if (this.loops > 10) {
@@ -1173,6 +1192,67 @@ module.exports = ToolFactory;
 
 /***/ }),
 
+/***/ "./src/windMill.js":
+/*!*************************!*\
+  !*** ./src/windMill.js ***!
+  \*************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var Node = __webpack_require__(/*! ./node */ "./src/node.js");
+
+var WindMill = /*#__PURE__*/function (_Node) {
+  _inherits(WindMill, _Node);
+
+  var _super = _createSuper(WindMill);
+
+  function WindMill(pos) {
+    var _this;
+
+    _classCallCheck(this, WindMill);
+
+    _this = _super.call(this, pos);
+    _this.nodepos = pos;
+    _this.name = "WindMill";
+    _this.cost = 100;
+    _this.description = "basic power production, does not require a fuel input.";
+    _this.power = 100;
+    return _this;
+  }
+
+  _createClass(WindMill, [{
+    key: "updateRSS",
+    value: function updateRSS() {}
+  }]);
+
+  return WindMill;
+}(Node);
+
+module.exports = WindMill;
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/styles/main.scss":
 /*!***********************************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/styles/main.scss ***!
@@ -1194,7 +1274,7 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 ___CSS_LOADER_EXPORT___.push([module.id, "@import url(https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap);"]);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "/* Box sizing rules */\n*,\n*::before,\n*::after {\n  box-sizing: border-box;\n}\n\n/* Remove default margin */\nbody,\nh1,\nh2,\nh3,\nh4,\np,\nfigure,\nblockquote,\ndl,\ndd {\n  margin: 0;\n}\n\n/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */\nul,\nol {\n  list-style: none;\n}\n\n/* Set core body defaults */\nbody {\n  min-height: 100vh;\n  text-rendering: optimizeSpeed;\n  line-height: 1.5;\n}\n\n/* A elements that don't have a class get default styles */\na:not([class]) {\n  text-decoration-skip-ink: auto;\n}\n\n/* Make images easier to work with */\nimg,\npicture {\n  max-width: 100%;\n  display: block;\n}\n\n/* Inherit fonts for inputs and buttons */\ninput,\nbutton,\ntextarea,\nselect {\n  font: inherit;\n}\n\n/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */\n@media (prefers-reduced-motion: reduce) {\n  html:focus-within {\n    scroll-behavior: auto;\n  }\n  *,\n*::before,\n*::after {\n    animation-duration: 0.01ms !important;\n    animation-iteration-count: 1 !important;\n    transition-duration: 0.01ms !important;\n    scroll-behavior: auto !important;\n  }\n}\n.main-nav {\n  display: flex;\n  justify-content: space-between;\n  margin: 0 auto;\n}\n\n.main-nav > ul {\n  display: flex;\n  flex-direction: row;\n  justify-content: end;\n  align-items: flex-end;\n}\n\n.div-box {\n  width: 268px;\n}\n.div-box button {\n  margin: 20px;\n}\n\n.main-nav li {\n  margin: 10px;\n}\n\n.main-nav h2 {\n  margin: 20px;\n}\n\n.resources-bar {\n  display: flex;\n  justify-content: space-between;\n  margin: 0 auto;\n}\n\n.resources-bar > ul {\n  flex-direction: row;\n  justify-content: end;\n  align-items: flex-end;\n}\n\n.rss-left {\n  width: 55%;\n}\n\n.rss-right {\n  width: 45%;\n}\n\n.rss-left > ul {\n  display: flex;\n  flex-direction: row;\n}\n.rss-left > ul li {\n  padding: 10px;\n}\n\n.rss-right > ul {\n  display: flex;\n  flex-direction: row;\n}\n.rss-right > ul li {\n  padding: 10px;\n}\n\n.tutorial-holder {\n  display: flex;\n  justify-content: center;\n  grid-column: 1/6;\n  grid-row: 1;\n  z-index: 2;\n  width: 100%;\n  height: 100%;\n}\n.tutorial-holder #box-wrap {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  flex-direction: column;\n  padding-top: 10px;\n  height: 20px;\n  min-width: 300px;\n  max-width: 620px;\n  min-height: 250px;\n  background: #fff;\n}\n.tutorial-holder #box-wrap p {\n  margin: 30px;\n}\n.tutorial-holder #box-wrap #tut-button {\n  height: 40px;\n  width: 80px;\n  justify-content: center;\n  margin-bottom: 10px;\n}\n\n.hidden {\n  display: none;\n}\n\n#game-canvas, #builder-canvas, #info-canvas {\n  background-color: rgb(38, 38, 38);\n}\n\n.container {\n  display: grid;\n  grid-template-columns: 180px 1fr 620px 1fr 180px;\n}\n\n.grid-container {\n  display: grid;\n  width: 620px;\n  grid-column: 3;\n  grid-row: 1;\n  grid-template-columns: 20% 20% 20% 20% 20%;\n  grid-template-rows: 20% 20% 20% 20% 20%;\n}\n\n#game-canvas {\n  grid-column: 1;\n  grid-row: 1;\n}\n\n.info-panel {\n  display: grid;\n  grid-column: 5;\n  grid-row: 1;\n  grid-template-columns: 33% 33% 33%;\n  grid-template-rows: 50px 250px 50px;\n}\n.info-panel #info-canvas {\n  grid-column: 1/1;\n  grid-row: 1;\n  width: 180px;\n}\n.info-panel h3 {\n  grid-column: 2;\n  z-index: 1;\n  display: flex;\n  justify-content: center;\n  padding-top: 10px;\n}\n.info-panel .description-holder {\n  grid-column: 1/4;\n  grid-row: 2/2;\n  padding: 30px;\n  padding-left: 10px;\n  padding-right: 10px;\n  background-color: grey;\n}\n.info-panel .cost-holder {\n  grid-column: 1/4;\n  grid-row: 3;\n  padding-left: 10px;\n  padding-right: 10px;\n  background-color: grey;\n}\n\n.builder-menu {\n  display: grid;\n  grid-column: 1/1;\n  grid-row: 1;\n  grid-template-columns: 33% 33% 33%;\n}\n.builder-menu #builder-canvas {\n  grid-column: 1/1;\n  grid-row: 1;\n  width: 180px;\n}\n.builder-menu h3 {\n  grid-column: 2;\n  z-index: 1;\n  display: flex;\n  justify-content: center;\n  padding-top: 10px;\n  height: 20px;\n}\n.builder-menu ul {\n  grid-column: 1;\n  grid-row: 1;\n  width: 180px;\n  display: flex;\n  flex-wrap: wrap;\n  list-style: none;\n  padding-top: 30px;\n  padding-left: 0px;\n  z-index: 1;\n}\n.builder-menu ul li {\n  margin: 15px;\n  width: 60px;\n  height: 60px;\n  border-style: solid;\n  border: 1px solid white;\n  z-index: 2;\n}\n\n.grid {\n  grid-column: 1;\n  grid-row: 1;\n}\n\n.grid > ul {\n  width: 620px;\n  display: flex;\n  flex-wrap: wrap;\n  list-style: none;\n  padding: 0%;\n  margin-top: 10px;\n  margin-left: 10px;\n}\n\n.grid li {\n  width: 60px;\n  height: 60px;\n  justify-content: center;\n}\n\nli:hover {\n  background-color: gray;\n}\n\nbody {\n  background-color: rgb(110, 110, 110);\n  font-family: \"Roboto\", sans-serif;\n}", "",{"version":3,"sources":["webpack://./src/styles/main.scss","webpack://./src/styles/base/reset.scss","webpack://./src/styles/components/_main_nav.scss","webpack://./src/styles/components/_resource_bar.scss","webpack://./src/styles/components/_welcome_message.scss","webpack://./src/styles/components/_grid.scss"],"names":[],"mappings":"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","sourcesContent":["@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');\n\n@import \"base/reset.scss\";\n\n@import \"components/_main_nav.scss\";\n@import \"components/resource_bar.scss\";\n@import \"components/_welcome_message.scss\";\n@import \"components/grid.scss\";\n\n$primary-color: rgb(110, 110, 110);\n$secondary-color: #f4f4f4;\n// $box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);\n\n// * {\n//   box-sizing: border-box;\n// }\n\nbody {\n  background-color: $primary-color;\n  font-family: 'Roboto', sans-serif;\n//   display: flex;\n//   flex-direction: column;\n//   align-items: center;\n//   justify-content: center;\n//   height: 100vh;\n//   overflow: hidden;\n//   margin: 0;\n//   padding: 20px;\n}\n\n// .container {\n//   background-color: $secondary-color;\n//   border-radius: 10px;\n//   box-shadow: $box-shadow;\n//   padding: 50px 20px;\n//   text-align: center;\n//   max-width: 100%;\n//   width: 800px;\n// }\n\n// h2 {\n//   margin: 0;\n//   opacity: 0.5;\n//   letter-spacing: 2px;\n// }\n\n// img {\n//   width: 100px;\n//   margin-bottom: 20px;\n// }\n\n// .joke {\n//   font-size: 30px;\n//   letter-spacing: 1px;\n//   line-height: 40px;\n//   margin: 50px auto;\n//   max-width: 600px;\n// }\n\n// .btn {\n//   background-color: $primary-color;\n//   color: $secondary-color;\n//   border: 0;\n//   border-radius: 10px;\n//   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);\n//   padding: 14px 40px;\n//   font-size: 16px;\n//   cursor: pointer;\n\n//   &:active {\n//     transform: scale(0.98);\n//   }\n\n//   &:focus {\n//     outline: 0;\n//   }\n// }\n\n","/* Box sizing rules */\n*,\n*::before,\n*::after {\n  box-sizing: border-box;\n}\n\n/* Remove default margin */\nbody,\nh1,\nh2,\nh3,\nh4,\np,\nfigure,\nblockquote,\ndl,\ndd {\n  margin: 0;\n}\n\n/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */\nul,\nol {\n  list-style: none;\n}\n\n/* Set core body defaults */\nbody {\n  min-height: 100vh;\n  text-rendering: optimizeSpeed;\n  line-height: 1.5;\n}\n\n/* A elements that don't have a class get default styles */\na:not([class]) {\n  text-decoration-skip-ink: auto;\n}\n\n/* Make images easier to work with */\nimg,\npicture {\n  max-width: 100%;\n  display: block;\n}\n\n/* Inherit fonts for inputs and buttons */\ninput,\nbutton,\ntextarea,\nselect {\n  font: inherit;\n}\n\n/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */\n@media (prefers-reduced-motion: reduce) {\n  html:focus-within {\n   scroll-behavior: auto;\n  }\n  \n  *,\n  *::before,\n  *::after {\n    animation-duration: 0.01ms !important;\n    animation-iteration-count: 1 !important;\n    transition-duration: 0.01ms !important;\n    scroll-behavior: auto !important;\n  }\n}\n",".main-nav {\n    display: flex;\n    justify-content: space-between;\n    margin: 0 auto;\n}\n\n.main-nav > ul {\n    display: flex;\n    flex-direction: row;\n    justify-content: end;\n    align-items: flex-end;\n\n}\n\n.div-box {\n    width: 268px;\n    button {\n        margin: 20px; \n    }\n}\n\n.main-nav li {\n    margin: 10px;\n}\n\n.main-nav h2 {\n    margin: 20px;\n}",".resources-bar {\n    display: flex;\n    justify-content: space-between;\n    margin: 0 auto;\n}\n\n.resources-bar > ul {\n    // display: flex;\n    flex-direction: row;\n    justify-content: end;\n    align-items: flex-end;\n\n}\n\n.rss-left {\n    // justify-content: space-between;\n    width: 55%;\n}\n\n.rss-right {\n    // justify-content: end;\n    width: 45%;\n}\n\n.rss-left > ul {\n    display: flex;\n    flex-direction: row;\n\n    li {\n        padding: 10px;\n    }\n\n}\n\n.rss-right > ul {\n    display: flex;\n    flex-direction: row;\n    // justify-content: end;\n\n    li {\n        padding: 10px;\n    }\n\n}\n",".tutorial-holder {\n    display: flex;\n    justify-content: center;\n    grid-column: 1/6;\n    grid-row: 1;\n    z-index: 2;\n    width: 100%;\n    height: 100%;\n    \n    #box-wrap {\n        display: flex;\n        justify-content: space-between;\n        align-items: center;\n        flex-direction: column;\n        padding-top: 10px;\n        height: 20px;\n        min-width: 300px;\n        max-width: 620px;\n        min-height: 250px;\n        background: #fff;\n\n        p {\n            margin: 30px;\n        }\n\n        #tut-button {\n            height: 40px;\n            width: 80px;\n            justify-content: center;\n            margin-bottom: 10px;\n\n        }\n    }\n\n}\n\n.hidden {\n    display: none;\n}\n\n","#game-canvas, #builder-canvas, #info-canvas {\n    background-color: rgb(38, 38, 38);\n    // display: flex;\n    // grid-template-columns: 65px 1fr 65px;\n    // grid-template-rows: 100px 100px 100px;\n}\n\n.container {\n    display: grid;\n    grid-template-columns: 180px 1fr 620px 1fr 180px;\n    // justify-content: space-between;\n    // position: absolute;\n    // width: 100%;\n    // left: 0;\n    // right: 0;\n    // margin: auto;\n}\n\n.grid-container {\n    display: grid;\n    width: 620px;\n    grid-column: 3;\n    grid-row: 1;\n    // justify-content: center;\n    grid-template-columns: 20% 20% 20% 20% 20%;\n    grid-template-rows: 20% 20% 20% 20% 20%;\n}\n\n#game-canvas {\n    grid-column: 1;\n    grid-row: 1;\n    // grid-column-end: 3;\n    // position: absolute;\n    // width: 620px;\n    // left: 0;\n    // right: 0;\n    // margin: auto;\n}\n\n.info-panel {\n    display: grid;\n    grid-column: 5;\n    grid-row: 1;\n    grid-template-columns: 33% 33% 33%;\n    grid-template-rows: 50px 250px 50px;\n    #info-canvas {\n        grid-column: 1/1;\n        grid-row: 1;\n        width: 180px;\n    }\n    h3 {\n        grid-column: 2;\n        z-index: 1;\n        display: flex;\n        justify-content: center;\n        padding-top: 10px;\n    }\n    .description-holder {\n        grid-column: 1/4;\n        grid-row: 2/2;\n        padding: 30px;\n        padding-left: 10px;\n        padding-right: 10px;\n        background-color: grey;\n    }\n    .cost-holder {\n        grid-column: 1/4;\n        grid-row: 3;\n        padding-left: 10px;\n        padding-right: 10px;\n        background-color: grey;\n    }\n}\n\n.builder-menu {\n    display: grid;\n    grid-column: 1 / 1;\n    grid-row: 1;\n    grid-template-columns: 33% 33% 33%;\n    #builder-canvas {\n        grid-column: 1 / 1;\n        grid-row: 1;\n        width: 180px;\n    }\n    h3 {\n        grid-column: 2;\n        z-index: 1;\n        // -webkit-text-stroke: 1px;\n        // -webkit-text-stroke-color: white;\n        display: flex;\n        justify-content: center;\n        padding-top: 10px;\n        height: 20px;\n    }\n\n    ul {\n        grid-column: 1;\n        grid-row: 1;\n        width: 180px;\n        display: flex;\n        flex-wrap: wrap;\n        list-style: none;\n        padding-top: 30px;\n        padding-left: 0px;\n        z-index: 1;\n\n        li {\n            margin: 15px;\n            width: 60px;\n            height: 60px;\n            border-style: solid;\n            border: 1px solid white;\n            z-index: 2;\n        }\n    }\n\n}\n\n.grid {\n    // display: flex;\n    // position: relative;\n    // width: 620px;\n    // left: 0;\n    // right: 0;\n    // margin: auto;\n    // margin-top: 0px;\n    grid-column: 1;\n    grid-row: 1;\n    // grid-column-end: 4;\n}\n\n.grid > ul {\n    width: 620px;\n    display: flex;\n    flex-wrap: wrap;\n    list-style: none;\n    padding: 0%;\n    margin-top: 10px;\n    margin-left: 10px;\n    // position: absolute;\n}\n\n.grid li {\n    width: 60px;\n    height: 60px;\n    justify-content: center;\n}\n\nli:hover {\n    background-color: gray;\n}"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "/* Box sizing rules */\n*,\n*::before,\n*::after {\n  box-sizing: border-box;\n}\n\n/* Remove default margin */\nbody,\nh1,\nh2,\nh3,\nh4,\np,\nfigure,\nblockquote,\ndl,\ndd {\n  margin: 0;\n}\n\n/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */\nul,\nol {\n  list-style: none;\n}\n\n/* Set core body defaults */\nbody {\n  min-height: 100vh;\n  text-rendering: optimizeSpeed;\n  line-height: 1.5;\n}\n\n/* A elements that don't have a class get default styles */\na:not([class]) {\n  text-decoration-skip-ink: auto;\n}\n\n/* Make images easier to work with */\nimg,\npicture {\n  max-width: 100%;\n  display: block;\n}\n\n/* Inherit fonts for inputs and buttons */\ninput,\nbutton,\ntextarea,\nselect {\n  font: inherit;\n}\n\n/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */\n@media (prefers-reduced-motion: reduce) {\n  html:focus-within {\n    scroll-behavior: auto;\n  }\n  *,\n*::before,\n*::after {\n    animation-duration: 0.01ms !important;\n    animation-iteration-count: 1 !important;\n    transition-duration: 0.01ms !important;\n    scroll-behavior: auto !important;\n  }\n}\n.main-nav {\n  display: flex;\n  justify-content: space-between;\n  margin: 0 auto;\n  background-color: #ACBEBE;\n}\n\n.main-nav > ul {\n  display: flex;\n  flex-direction: row;\n  justify-content: end;\n  align-items: flex-end;\n}\n\n.div-box {\n  width: 268px;\n}\n.div-box button {\n  margin: 20px;\n}\n\n.main-nav li {\n  margin: 10px;\n}\n\n.main-nav h2 {\n  margin: 20px;\n}\n\n.resources-bar {\n  display: flex;\n  justify-content: space-between;\n  margin: 0 auto;\n  background-image: -moz-linear-gradient(#ddfafa, #20232A);\n  opacity: 0.7;\n}\n\n.resources-bar > ul {\n  flex-direction: row;\n  justify-content: end;\n  align-items: flex-end;\n}\n\n.rss-left {\n  width: 55%;\n  text-align: center;\n}\n\n.rss-right {\n  width: 45%;\n  text-align: center;\n}\n\n.rss-left > ul {\n  display: flex;\n  flex-direction: row;\n}\n.rss-left > ul li {\n  padding: 10px;\n}\n\n.rss-right > ul {\n  display: flex;\n  flex-direction: row;\n}\n.rss-right > ul li {\n  padding: 10px;\n}\n\n.tutorial-holder {\n  display: flex;\n  justify-content: center;\n  grid-column: 1/6;\n  grid-row: 1;\n  z-index: 2;\n  width: 100%;\n  height: 100%;\n}\n.tutorial-holder #box-wrap {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  flex-direction: column;\n  padding-top: 10px;\n  height: 20px;\n  min-width: 300px;\n  max-width: 620px;\n  min-height: 250px;\n  background: #fff;\n}\n.tutorial-holder #box-wrap p {\n  margin: 30px;\n}\n.tutorial-holder #box-wrap #tut-button {\n  height: 40px;\n  width: 80px;\n  justify-content: center;\n  margin-bottom: 10px;\n}\n\n.hidden {\n  display: none;\n}\n\n#game-canvas, #builder-canvas, #info-canvas {\n  background-color: #ACBEBE;\n}\n\n.container {\n  display: grid;\n  grid-template-columns: 180px 1fr 620px 1fr 180px;\n}\n\n.grid-container {\n  display: grid;\n  width: 620px;\n  grid-column: 3;\n  grid-row: 1;\n  grid-template-columns: 20% 20% 20% 20% 20%;\n  grid-template-rows: 20% 20% 20% 20% 20%;\n}\n\n#game-canvas {\n  grid-column: 1;\n  grid-row: 1;\n}\n\n.info-panel {\n  display: grid;\n  grid-column: 5;\n  grid-row: 1;\n  grid-template-columns: 33% 33% 33%;\n  grid-template-rows: 50px 250px 50px;\n}\n.info-panel #info-canvas {\n  grid-column: 1/1;\n  grid-row: 1;\n  width: 180px;\n}\n.info-panel h3 {\n  grid-column: 2;\n  z-index: 1;\n  display: flex;\n  justify-content: center;\n  padding-top: 10px;\n}\n.info-panel .description-holder {\n  grid-column: 1/4;\n  grid-row: 2/2;\n  padding: 30px;\n  padding-left: 10px;\n  padding-right: 10px;\n  background-color: #D4DDe1;\n}\n.info-panel .cost-holder {\n  grid-column: 1/4;\n  grid-row: 3;\n  padding-left: 10px;\n  padding-right: 10px;\n  background-color: #D4DDe1;\n}\n\n.builder-menu {\n  display: grid;\n  grid-column: 1/1;\n  grid-row: 1;\n  grid-template-columns: 33% 33% 33%;\n}\n.builder-menu #builder-canvas {\n  grid-column: 1/1;\n  grid-row: 1;\n  width: 180px;\n}\n.builder-menu h3 {\n  grid-column: 2;\n  z-index: 1;\n  display: flex;\n  justify-content: center;\n  padding-top: 10px;\n  height: 20px;\n}\n.builder-menu ul {\n  grid-column: 1;\n  grid-row: 1;\n  width: 180px;\n  display: flex;\n  flex-wrap: wrap;\n  list-style: none;\n  padding-top: 30px;\n  padding-left: 0px;\n  z-index: 1;\n}\n.builder-menu ul li {\n  margin: 15px;\n  width: 60px;\n  height: 60px;\n  border-style: solid;\n  border: 1px solid #A01D26;\n  z-index: 2;\n  cursor: pointer;\n}\n\n.grid {\n  grid-column: 1;\n  grid-row: 1;\n}\n\n.grid > ul {\n  width: 620px;\n  display: flex;\n  flex-wrap: wrap;\n  list-style: none;\n  padding: 0%;\n  margin-top: 10px;\n  margin-left: 10px;\n}\n\n.grid li {\n  width: 60px;\n  height: 60px;\n  justify-content: center;\n  cursor: pointer;\n}\n\nli:hover {\n  background-color: gray;\n}\n\nbody {\n  background-color: #20232A;\n  font-family: \"Roboto\", sans-serif;\n}", "",{"version":3,"sources":["webpack://./src/styles/main.scss","webpack://./src/styles/base/reset.scss","webpack://./src/styles/components/_main_nav.scss","webpack://./src/styles/components/_resource_bar.scss","webpack://./src/styles/components/_welcome_message.scss","webpack://./src/styles/components/_grid.scss"],"names":[],"mappings":"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","sourcesContent":["@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');\n\n@import \"base/reset.scss\";\n\n@import \"components/_main_nav.scss\";\n@import \"components/resource_bar.scss\";\n@import \"components/_welcome_message.scss\";\n@import \"components/grid.scss\";\n\n$primary-color: #20232A;\n$secondary-color: #ACBEBE;\n$tertiary-color: #F4F4EF;\n$highlights: #A01D26;\n// $box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);\n\n// * {\n//   box-sizing: border-box;\n// }\n\nbody {\n  background-color: $primary-color;\n  font-family: 'Roboto', sans-serif;\n//   display: flex;\n//   flex-direction: column;\n//   align-items: center;\n//   justify-content: center;\n//   height: 100vh;\n//   overflow: hidden;\n//   margin: 0;\n//   padding: 20px;\n}\n\n// .container {\n//   background-color: $secondary-color;\n//   border-radius: 10px;\n//   box-shadow: $box-shadow;\n//   padding: 50px 20px;\n//   text-align: center;\n//   max-width: 100%;\n//   width: 800px;\n// }\n\n// h2 {\n//   margin: 0;\n//   opacity: 0.5;\n//   letter-spacing: 2px;\n// }\n\n// img {\n//   width: 100px;\n//   margin-bottom: 20px;\n// }\n\n// .joke {\n//   font-size: 30px;\n//   letter-spacing: 1px;\n//   line-height: 40px;\n//   margin: 50px auto;\n//   max-width: 600px;\n// }\n\n// .btn {\n//   background-color: $primary-color;\n//   color: $secondary-color;\n//   border: 0;\n//   border-radius: 10px;\n//   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);\n//   padding: 14px 40px;\n//   font-size: 16px;\n//   cursor: pointer;\n\n//   &:active {\n//     transform: scale(0.98);\n//   }\n\n//   &:focus {\n//     outline: 0;\n//   }\n// }\n\n","/* Box sizing rules */\n*,\n*::before,\n*::after {\n  box-sizing: border-box;\n}\n\n/* Remove default margin */\nbody,\nh1,\nh2,\nh3,\nh4,\np,\nfigure,\nblockquote,\ndl,\ndd {\n  margin: 0;\n}\n\n/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */\nul,\nol {\n  list-style: none;\n}\n\n/* Set core body defaults */\nbody {\n  min-height: 100vh;\n  text-rendering: optimizeSpeed;\n  line-height: 1.5;\n}\n\n/* A elements that don't have a class get default styles */\na:not([class]) {\n  text-decoration-skip-ink: auto;\n}\n\n/* Make images easier to work with */\nimg,\npicture {\n  max-width: 100%;\n  display: block;\n}\n\n/* Inherit fonts for inputs and buttons */\ninput,\nbutton,\ntextarea,\nselect {\n  font: inherit;\n}\n\n/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */\n@media (prefers-reduced-motion: reduce) {\n  html:focus-within {\n   scroll-behavior: auto;\n  }\n  \n  *,\n  *::before,\n  *::after {\n    animation-duration: 0.01ms !important;\n    animation-iteration-count: 1 !important;\n    transition-duration: 0.01ms !important;\n    scroll-behavior: auto !important;\n  }\n}\n","$primary-color: #20232A;\n$secondary-color: #ACBEBE;\n$tertiary-color: #F4F4EF;\n$highlights: #A01D26;\n\n.main-nav {\n    display: flex;\n    justify-content: space-between;\n    margin: 0 auto;\n    background-color: #ACBEBE;\n}\n\n.main-nav > ul {\n    display: flex;\n    flex-direction: row;\n    justify-content: end;\n    align-items: flex-end;\n\n}\n\n.div-box {\n    width: 268px;\n    button {\n        margin: 20px; \n    }\n}\n\n.main-nav li {\n    margin: 10px;\n}\n\n.main-nav h2 {\n    margin: 20px;\n}","$primary-color: #20232A;\n$secondary-color: #ddfafa;\n$tertiary-color: #e4e4da;\n$highlights: #A01D26;\n\n.resources-bar {\n    display: flex;\n    justify-content: space-between;\n    margin: 0 auto;\n    background-image: -moz-linear-gradient($secondary-color,$primary-color);\n    opacity: .7;\n  \n}\n\n.resources-bar > ul {\n    // display: flex;\n    flex-direction: row;\n    justify-content: end;\n    align-items: flex-end;\n\n}\n\n.rss-left {\n    // justify-content: space-between;\n    width: 55%;\n    text-align: center;\n}\n\n.rss-right {\n    // justify-content: end;\n    width: 45%;\n    text-align: center;\n}\n\n.rss-left > ul {\n    display: flex;\n    flex-direction: row;\n\n    li {\n        padding: 10px;\n    }\n\n}\n\n.rss-right > ul {\n    display: flex;\n    flex-direction: row;\n    // justify-content: end;\n\n    li {\n        padding: 10px;\n    }\n\n}\n",".tutorial-holder {\n    display: flex;\n    justify-content: center;\n    grid-column: 1/6;\n    grid-row: 1;\n    z-index: 2;\n    width: 100%;\n    height: 100%;\n    \n    #box-wrap {\n        display: flex;\n        justify-content: space-between;\n        align-items: center;\n        flex-direction: column;\n        padding-top: 10px;\n        height: 20px;\n        min-width: 300px;\n        max-width: 620px;\n        min-height: 250px;\n        background: #fff;\n\n        p {\n            margin: 30px;\n        }\n\n        #tut-button {\n            height: 40px;\n            width: 80px;\n            justify-content: center;\n            margin-bottom: 10px;\n\n        }\n    }\n\n}\n\n.hidden {\n    display: none;\n}\n\n","$primary-color: #20232A;\n$secondary-color: #ACBEBE;\n$tertiary-color: #D4DDe1;\n$highlights: #A01D26;\n\n// Understated and versatile\n// stormy sea   #335252\n// fog          #D4DDe1\n// Rust         #AA4B41\n// Charcoal     #2D3033\n\n// Hazy Grays\n// Blue Green #2c4a52\n// Waterway    #537072\n// Haze    #8E9B97\n// Smog    #F4EBDB\n\n// #20232A Ink\n// #ACBEBE Aluminum\n// #F4F4EF Paper\n// #A01D26 Ruby Red\n\n#game-canvas, #builder-canvas, #info-canvas {\n    background-color: $secondary-color;\n    // display: flex;\n    // grid-template-columns: 65px 1fr 65px;\n    // grid-template-rows: 100px 100px 100px;\n}\n\n.container {\n    display: grid;\n    grid-template-columns: 180px 1fr 620px 1fr 180px;\n    // justify-content: space-between;\n    // position: absolute;\n    // width: 100%;\n    // left: 0;\n    // right: 0;\n    // margin: auto;\n}\n\n.grid-container {\n    display: grid;\n    width: 620px;\n    grid-column: 3;\n    grid-row: 1;\n    // justify-content: center;\n    grid-template-columns: 20% 20% 20% 20% 20%;\n    grid-template-rows: 20% 20% 20% 20% 20%;\n}\n\n#game-canvas {\n    grid-column: 1;\n    grid-row: 1;\n    // grid-column-end: 3;\n    // position: absolute;\n    // width: 620px;\n    // left: 0;\n    // right: 0;\n    // margin: auto;\n}\n\n.info-panel {\n    display: grid;\n    grid-column: 5;\n    grid-row: 1;\n    grid-template-columns: 33% 33% 33%;\n    grid-template-rows: 50px 250px 50px;\n    #info-canvas {\n        grid-column: 1/1;\n        grid-row: 1;\n        width: 180px;\n    }\n    h3 {\n        grid-column: 2;\n        z-index: 1;\n        display: flex;\n        justify-content: center;\n        padding-top: 10px;\n    }\n    .description-holder {\n        grid-column: 1/4;\n        grid-row: 2/2;\n        padding: 30px;\n        padding-left: 10px;\n        padding-right: 10px;\n        background-color: $tertiary-color;\n    }\n    .cost-holder {\n        grid-column: 1/4;\n        grid-row: 3;\n        padding-left: 10px;\n        padding-right: 10px;\n        background-color: $tertiary-color;\n    }\n}\n\n.builder-menu {\n    display: grid;\n    grid-column: 1 / 1;\n    grid-row: 1;\n    grid-template-columns: 33% 33% 33%;\n    #builder-canvas {\n        grid-column: 1 / 1;\n        grid-row: 1;\n        width: 180px;\n    }\n    h3 {\n        grid-column: 2;\n        z-index: 1;\n        // -webkit-text-stroke: 1px;\n        // -webkit-text-stroke-color: white;\n        display: flex;\n        justify-content: center;\n        padding-top: 10px;\n        height: 20px;\n    }\n\n    ul {\n        grid-column: 1;\n        grid-row: 1;\n        width: 180px;\n        display: flex;\n        flex-wrap: wrap;\n        list-style: none;\n        padding-top: 30px;\n        padding-left: 0px;\n        z-index: 1;\n\n        li {\n            margin: 15px;\n            width: 60px;\n            height: 60px;\n            border-style: solid;\n            border: 1px solid #A01D26;\n            z-index: 2;\n            cursor: pointer;\n        }\n    }\n\n}\n\n.grid {\n    // display: flex;\n    // position: relative;\n    // width: 620px;\n    // left: 0;\n    // right: 0;\n    // margin: auto;\n    // margin-top: 0px;\n    grid-column: 1;\n    grid-row: 1;\n    // grid-column-end: 4;\n}\n\n.grid > ul {\n    width: 620px;\n    display: flex;\n    flex-wrap: wrap;\n    list-style: none;\n    padding: 0%;\n    margin-top: 10px;\n    margin-left: 10px;\n    // position: absolute;\n}\n\n.grid li {\n    width: 60px;\n    height: 60px;\n    justify-content: center;\n    cursor: pointer;\n}\n\nli:hover {\n    background-color: gray;\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1846,7 +1926,7 @@ document.addEventListener("DOMContentLoaded", function () {
       context.lineTo(bw + p, 0.5 + _x + p);
     }
 
-    context.strokeStyle = "white";
+    context.strokeStyle = "#A01D26";
     context.stroke();
   }
 

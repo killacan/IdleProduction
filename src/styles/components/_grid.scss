@@ -1,5 +1,27 @@
+$primary-color: #20232A;
+$secondary-color: #ACBEBE;
+$tertiary-color: #D4DDe1;
+$highlights: #A01D26;
+
+// Understated and versatile
+// stormy sea   #335252
+// fog          #D4DDe1
+// Rust         #AA4B41
+// Charcoal     #2D3033
+
+// Hazy Grays
+// Blue Green #2c4a52
+// Waterway    #537072
+// Haze    #8E9B97
+// Smog    #F4EBDB
+
+// #20232A Ink
+// #ACBEBE Aluminum
+// #F4F4EF Paper
+// #A01D26 Ruby Red
+
 #game-canvas, #builder-canvas, #info-canvas {
-    background-color: rgb(38, 38, 38);
+    background-color: $secondary-color;
     // display: flex;
     // grid-template-columns: 65px 1fr 65px;
     // grid-template-rows: 100px 100px 100px;
@@ -61,14 +83,14 @@
         padding: 30px;
         padding-left: 10px;
         padding-right: 10px;
-        background-color: grey;
+        background-color: $tertiary-color;
     }
     .cost-holder {
         grid-column: 1/4;
         grid-row: 3;
         padding-left: 10px;
         padding-right: 10px;
-        background-color: grey;
+        background-color: $tertiary-color;
     }
 }
 
@@ -109,8 +131,9 @@
             width: 60px;
             height: 60px;
             border-style: solid;
-            border: 1px solid white;
+            border: 1px solid #A01D26;
             z-index: 2;
+            cursor: pointer;
         }
     }
 
@@ -144,6 +167,7 @@
     width: 60px;
     height: 60px;
     justify-content: center;
+    cursor: pointer;
 }
 
 li:hover {

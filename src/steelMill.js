@@ -15,7 +15,7 @@ class SteelMill extends Node {
     }
 
     updateRSS() {
-        console.log(this.resources, "I am inside the steel mill")
+        // console.log(this.resources, "I am inside the steel mill")
         this.resources["steelIngots"] ||= this.resources["steelIngots"] = 0
         if (this.resources["ironIngots"] >= 10) {
             this.resources["ironIngots"] -= 10

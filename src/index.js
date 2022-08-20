@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
             context.moveTo(p, 0.5 + x + p);
             context.lineTo(bw + p, 0.5 + x + p);
         }
-        context.strokeStyle = "white";
+        context.strokeStyle = "#A01D26";
         context.stroke();
     }
 

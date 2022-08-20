@@ -1,7 +1,13 @@
+$primary-color: #20232A;
+$secondary-color: #ACBEBE;
+$tertiary-color: #F4F4EF;
+$highlights: #A01D26;
+
 .main-nav {
     display: flex;
     justify-content: space-between;
     margin: 0 auto;
+    background-color: #ACBEBE;
 }
 
 .main-nav > ul {
