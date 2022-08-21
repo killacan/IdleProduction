@@ -142,7 +142,7 @@ $highlights: #A01D26;
 .grid {
     // display: flex;
     // position: relative;
-    // width: 620px;
+    // width: 0px;
     // left: 0;
     // right: 0;
     // margin: auto;
@@ -172,4 +172,12 @@ $highlights: #A01D26;
 
 li:hover {
     background-color: gray;
+}
+
+#circle-canvas {
+    width: 620px;
+    height: 620px;
+    grid-column: 1; 
+    grid-row: 1;
+    pointer-events: none;
 }

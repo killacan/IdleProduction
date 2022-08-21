@@ -24,7 +24,8 @@ class Game {
     coping,
     copwire,
     toolsnum,
-    buildcost
+    buildcost,
+    dots
   ) {
     this.map = new Map(el, iro, num, build);
     this.el = el;
@@ -40,6 +41,7 @@ class Game {
     this.copwire = copwire;
     this.toolsnum = toolsnum;
     this.buildcost = buildcost;
+    this.dots = dots; 
     this.toggle = false;
     this.toggleMusic = false;
     this.descriptions = {
@@ -56,17 +58,65 @@ class Game {
     this.handleClickGrid = this.handleClickGrid.bind(this);
     this.handleClickBuild = this.handleClickBuild.bind(this);
     this.handleClickSell = this.handleClickSell.bind(this);
+    // this.handleCanvasBuild = this.handleCanvasBuild.bind(this);
     this.bindEvents();
     this.tick();
     this.updateTotalMoney(num, this.map.iro);
     this.musicHandler();
+    this.canvasCircleAnimation();
+
   }
 
   bindEvents() {
     this.el.addEventListener("click", this.handleClickGrid);
     this.build.addEventListener("click", this.handleClickBuild);
     this.sell.addEventListener("click", this.handleClickSell);
+    // this.dots.addEventListener("click", this.handleCanvasBuild);
   }
+
+//   handleCanvasBuild(e) {
+//     let context = this.dots.getContext("2d");
+//     let cRect = this.dots.getBoundingClientRect();
+//     const elex = Math.floor(((e.clientX - cRect.left) - 10) / 60);
+//     const eley = Math.floor(((e.clientY - cRect.top) - 10) / 60);
+    
+//     let pos = [eley, elex];
+//     console.log(pos)
+    
+//     if (this.map.selectedBuilding  && !this.map.getBuilding(pos)) {
+//         if (JSON.parse(this.map.selectedBuilding) === "IronMine") {
+//             this.map.placeBuilding(pos, new IronMine(pos));
+//             // this.updateParentsAndChildren()
+//             console.log(this.map.getBuilding(pos));
+//             console.log(this.map.allBuildings);
+//           } else if (JSON.parse(this.map.selectedBuilding) === "IronSmelter") {
+//             this.map.placeBuilding(pos, new IronSmelter(pos));
+//             // this.updateParentsAndChildren()
+//             console.log(this.map.getBuilding(pos));
+//             console.log(this.map.allBuildings);
+//           } else if (JSON.parse(this.map.selectedBuilding) === "SteelMill") {
+//             this.map.placeBuilding(pos, new SteelMill(pos));
+//           } else if (JSON.parse(this.map.selectedBuilding) === "CopperMine") {
+//             this.map.placeBuilding(pos, new CopperMine(pos));
+//           } else if (JSON.parse(this.map.selectedBuilding) === "CopperSmelter") {
+//             this.map.placeBuilding(pos, new CopperSmelter(pos));
+//           } else if (JSON.parse(this.map.selectedBuilding) === "CopperExtruder") {
+//             this.map.placeBuilding(pos, new CopperExtruder(pos));
+//           } else if (JSON.parse(this.map.selectedBuilding) === "ToolFactory") {
+//             this.map.placeBuilding(pos, new ToolFactory(pos));
+//           } else if (JSON.parse(this.map.selectedBuilding) === "Market") {
+//             this.map.placeBuilding(pos, new Market(pos));
+//             // console.log(that.map.getBuilding(pos))
+//             // console.log(that.map.allBuildings)
+//           } else if (JSON.parse(this.map.selectedBuilding) === "WindMill") {
+//             this.map.placeBuilding(pos, new WindMill(pos));
+//           }
+//         } else if (!!this.map.getBuilding(pos)) {
+//           this.map.removeBuilding(pos);
+//         }
+//     }
+
+
 
   musicHandler() {
     let backgroundMusic = new Audio();
@@ -170,8 +220,12 @@ class Game {
       this.map.updateRSS();
       this.transferToMarket();
       this.transferToChildren();
+
+
+        // this.canvasCircleAnimation();
+        
       this.updateTotalMoney(this.map.num, this.map.iro);
-      // console.log(this.map.allRSS["ironOre"])
+      console.log(this.map.movingDots, "all Dots");
       // console.log(this.map.allRSS)
       //call production
       //call transport
@@ -233,25 +287,25 @@ class Game {
           rssArr.forEach((sub) => {
             if (sub[0] === "ironOre") {
               building.resources["ironOre"] = 0;
-              this.map.money += sub[1] * marketfactor;
+              this.map.money += Math.floor(sub[1] * marketfactor);
             } else if (sub[0] === "ironIngots") {
               building.resources["ironIngots"] = 0;
-              this.map.money += sub[1] * 6 * marketfactor;
+              this.map.money += Math.floor(sub[1] * 6 * marketfactor);
             } else if (sub[0] === "steelIngots") {
               building.resources["steelIngots"] = 0;
-              this.map.money += sub[1] * 70 * marketfactor;
+              this.map.money += Math.floor(sub[1] * 70 * marketfactor);
             } else if (sub[0] === "copperOre") {
               building.resources["copperOre"] = 0;
-              this.map.money += sub[1] * 8 * marketfactor;
+              this.map.money += Math.floor(sub[1] * 8 * marketfactor);
             } else if (sub[0] === "copperIngots") {
               building.resources["copperIngots"] = 0;
-              this.map.money += sub[1] * 80 * marketfactor;
+              this.map.money += Math.floor(sub[1] * 80 * marketfactor);
             } else if (sub[0] === "copperWire") {
               building.resources["copperWire"] = 0;
-              this.map.money += sub[1] * 480 * marketfactor;
+              this.map.money += Math.floor(sub[1] * 480 * marketfactor);
             } else if (sub[0] === "tools") {
               building.resources["tools"] = 0;
-              this.map.money += sub[1] * 425 * marketfactor;
+              this.map.money += Math.floor(sub[1] * 425 * marketfactor);
             }
           });
           // iterate through building rss, and subtract from total in building.
@@ -285,23 +339,58 @@ class Game {
             building.resources[requestRSS] = 0;
           }
           let requestAmount = req[1] - building.resources[requestRSS];
-          // console.log(requestTotal[1], requestTotal[0] , "requestChecker ")
+          console.log(parA[i].nodepos, building.nodepos , "requestChecker ")
           // debugger
-
+          
           if (!parA[i].resources[requestRSS]) {
             // console.log("check1")
           } else if (parA[i].resources[requestRSS] < requestAmount) {
             // console.log("check2")
             building.resources[requestRSS] += parA[i].resources[requestRSS];
             parA[i].resources[requestRSS] = 0;
+            this.map.makeDot(toGrid(parA[i].nodepos), toGrid(building.nodepos));
           } else if (parA[i].resources[requestRSS] > requestAmount) {
             building.resources[requestRSS] += requestAmount;
             parA[i].resources[requestRSS] -= requestAmount;
+            this.map.makeDot(toGrid(parA[i].nodepos), toGrid(building.nodepos));
           }
         });
       }
     });
   }
+
+    canvasCircleAnimation() {
+        // this function is going to have to draw a circle on the canvas. the circle should be on the pos1 passed in. the circle should move to the pos2 passed in.
+        let ctx = this.dots.getContext("2d");
+        
+            setInterval(() => {
+                ctx.clearRect(0, 0, innerWidth, innerHeight);
+                this.map.movingDots.forEach((dot) => {
+                    dot.draw(ctx);
+                    dot.move();
+                    if (dot.startPos[0] === dot.endPos[0] && dot.startPos[1] === dot.endPos[1] || dot.startPos[0] > innerWidth || dot.startPos[0] < 0 || dot.startPos[1] > innerHeight || dot.startPos[1] < 0) {
+                        this.map.movingDots.splice(this.map.movingDots.indexOf(dot), 1);
+                    }
+                })
+            }, 120);
+        }
+        
+
+
+    canvasLineAnimation(pos1, pos2) {
+        ctx.beginPath();
+        ctx.moveTo(...pos1)
+        ctx.lineTo(...pos2);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "green";
+        ctx.stroke();
+        ctx.closePath();
+
+    }
+}
+
+function toGrid (pos) {
+    return [(((pos[0] + 1) * 60) - 20), (((pos[1] + 1) * 60) - 20)];
 }
 
 module.exports = Game;

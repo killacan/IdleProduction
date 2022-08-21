@@ -241,11 +241,75 @@ module.exports = CopperSmelter;
 
 /***/ }),
 
+/***/ "./src/dot.js":
+/*!********************!*\
+  !*** ./src/dot.js ***!
+  \********************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+var Node = __webpack_require__(/*! ./node */ "./src/node.js");
+
+var Dot = /*#__PURE__*/function () {
+  function Dot(pos1, pos2) {
+    _classCallCheck(this, Dot);
+
+    this.startPos = pos1;
+    this.endPos = pos2;
+    this.name = "Dot";
+    this.dposX = (this.startPos[0] - this.endPos[0]) / 20;
+    this.dposY = (this.startPos[1] - this.endPos[1]) / 20;
+  }
+
+  _createClass(Dot, [{
+    key: "move",
+    value: function move() {
+      console.log(this.startPos, this.endPos, "inside the move function");
+      this.startPos;
+      this.endPos;
+      this.startPos = [this.startPos[0] - this.dposX, this.startPos[1] - this.dposY];
+    }
+  }, {
+    key: "draw",
+    value: function draw(ctx) {
+      // console.log("inside the draw function")
+      ctx.beginPath();
+      ctx.arc(this.startPos[1], this.startPos[0], 10, 0, 2 * Math.PI);
+      ctx.fillStyle = "grey";
+      ctx.fill();
+      ctx.closePath();
+    }
+  }]);
+
+  return Dot;
+}();
+
+module.exports = Dot;
+
+/***/ }),
+
 /***/ "./src/game.js":
 /*!*********************!*\
   !*** ./src/game.js ***!
   \*********************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -274,7 +338,7 @@ var ToolFactory = __webpack_require__(/*! ./toolFactory */ "./src/toolFactory.js
 var WindMill = __webpack_require__(/*! ./windMill */ "./src/windMill.js");
 
 var Game = /*#__PURE__*/function () {
-  function Game(el, iro, num, build, info, sell, iroing, steing, music, copore, coping, copwire, toolsnum, buildcost) {
+  function Game(el, iro, num, build, info, sell, iroing, steing, music, copore, coping, copwire, toolsnum, buildcost, dots) {
     _classCallCheck(this, Game);
 
     this.map = new Map(el, iro, num, build);
@@ -291,6 +355,7 @@ var Game = /*#__PURE__*/function () {
     this.copwire = copwire;
     this.toolsnum = toolsnum;
     this.buildcost = buildcost;
+    this.dots = dots;
     this.toggle = false;
     this.toggleMusic = false;
     this.descriptions = {
@@ -306,11 +371,13 @@ var Game = /*#__PURE__*/function () {
     };
     this.handleClickGrid = this.handleClickGrid.bind(this);
     this.handleClickBuild = this.handleClickBuild.bind(this);
-    this.handleClickSell = this.handleClickSell.bind(this);
+    this.handleClickSell = this.handleClickSell.bind(this); // this.handleCanvasBuild = this.handleCanvasBuild.bind(this);
+
     this.bindEvents();
     this.tick();
     this.updateTotalMoney(num, this.map.iro);
     this.musicHandler();
+    this.canvasCircleAnimation();
   }
 
   _createClass(Game, [{
@@ -318,8 +385,47 @@ var Game = /*#__PURE__*/function () {
     value: function bindEvents() {
       this.el.addEventListener("click", this.handleClickGrid);
       this.build.addEventListener("click", this.handleClickBuild);
-      this.sell.addEventListener("click", this.handleClickSell);
-    }
+      this.sell.addEventListener("click", this.handleClickSell); // this.dots.addEventListener("click", this.handleCanvasBuild);
+    } //   handleCanvasBuild(e) {
+    //     let context = this.dots.getContext("2d");
+    //     let cRect = this.dots.getBoundingClientRect();
+    //     const elex = Math.floor(((e.clientX - cRect.left) - 10) / 60);
+    //     const eley = Math.floor(((e.clientY - cRect.top) - 10) / 60);
+    //     let pos = [eley, elex];
+    //     console.log(pos)
+    //     if (this.map.selectedBuilding  && !this.map.getBuilding(pos)) {
+    //         if (JSON.parse(this.map.selectedBuilding) === "IronMine") {
+    //             this.map.placeBuilding(pos, new IronMine(pos));
+    //             // this.updateParentsAndChildren()
+    //             console.log(this.map.getBuilding(pos));
+    //             console.log(this.map.allBuildings);
+    //           } else if (JSON.parse(this.map.selectedBuilding) === "IronSmelter") {
+    //             this.map.placeBuilding(pos, new IronSmelter(pos));
+    //             // this.updateParentsAndChildren()
+    //             console.log(this.map.getBuilding(pos));
+    //             console.log(this.map.allBuildings);
+    //           } else if (JSON.parse(this.map.selectedBuilding) === "SteelMill") {
+    //             this.map.placeBuilding(pos, new SteelMill(pos));
+    //           } else if (JSON.parse(this.map.selectedBuilding) === "CopperMine") {
+    //             this.map.placeBuilding(pos, new CopperMine(pos));
+    //           } else if (JSON.parse(this.map.selectedBuilding) === "CopperSmelter") {
+    //             this.map.placeBuilding(pos, new CopperSmelter(pos));
+    //           } else if (JSON.parse(this.map.selectedBuilding) === "CopperExtruder") {
+    //             this.map.placeBuilding(pos, new CopperExtruder(pos));
+    //           } else if (JSON.parse(this.map.selectedBuilding) === "ToolFactory") {
+    //             this.map.placeBuilding(pos, new ToolFactory(pos));
+    //           } else if (JSON.parse(this.map.selectedBuilding) === "Market") {
+    //             this.map.placeBuilding(pos, new Market(pos));
+    //             // console.log(that.map.getBuilding(pos))
+    //             // console.log(that.map.allBuildings)
+    //           } else if (JSON.parse(this.map.selectedBuilding) === "WindMill") {
+    //             this.map.placeBuilding(pos, new WindMill(pos));
+    //           }
+    //         } else if (!!this.map.getBuilding(pos)) {
+    //           this.map.removeBuilding(pos);
+    //         }
+    //     }
+
   }, {
     key: "musicHandler",
     value: function musicHandler() {
@@ -435,15 +541,16 @@ var Game = /*#__PURE__*/function () {
 
         _this.transferToMarket();
 
-        _this.transferToChildren();
+        _this.transferToChildren(); // this.canvasCircleAnimation();
 
-        _this.updateTotalMoney(_this.map.num, _this.map.iro); // console.log(this.map.allRSS["ironOre"])
-        // console.log(this.map.allRSS)
+
+        _this.updateTotalMoney(_this.map.num, _this.map.iro);
+
+        console.log(_this.map.movingDots, "all Dots"); // console.log(this.map.allRSS)
         //call production
         //call transport
         // totals up resources
         // this.map.money = this.map.money += 1
-
       }, 1000);
     }
   }, {
@@ -492,25 +599,25 @@ var Game = /*#__PURE__*/function () {
           rssArr.forEach(function (sub) {
             if (sub[0] === "ironOre") {
               building.resources["ironOre"] = 0;
-              _this2.map.money += sub[1] * marketfactor;
+              _this2.map.money += Math.floor(sub[1] * marketfactor);
             } else if (sub[0] === "ironIngots") {
               building.resources["ironIngots"] = 0;
-              _this2.map.money += sub[1] * 6 * marketfactor;
+              _this2.map.money += Math.floor(sub[1] * 6 * marketfactor);
             } else if (sub[0] === "steelIngots") {
               building.resources["steelIngots"] = 0;
-              _this2.map.money += sub[1] * 70 * marketfactor;
+              _this2.map.money += Math.floor(sub[1] * 70 * marketfactor);
             } else if (sub[0] === "copperOre") {
               building.resources["copperOre"] = 0;
-              _this2.map.money += sub[1] * 8 * marketfactor;
+              _this2.map.money += Math.floor(sub[1] * 8 * marketfactor);
             } else if (sub[0] === "copperIngots") {
               building.resources["copperIngots"] = 0;
-              _this2.map.money += sub[1] * 80 * marketfactor;
+              _this2.map.money += Math.floor(sub[1] * 80 * marketfactor);
             } else if (sub[0] === "copperWire") {
               building.resources["copperWire"] = 0;
-              _this2.map.money += sub[1] * 480 * marketfactor;
+              _this2.map.money += Math.floor(sub[1] * 480 * marketfactor);
             } else if (sub[0] === "tools") {
               building.resources["tools"] = 0;
-              _this2.map.money += sub[1] * 425 * marketfactor;
+              _this2.map.money += Math.floor(sub[1] * 425 * marketfactor);
             }
           }); // iterate through building rss, and subtract from total in building.
           // calculate distance from the market.
@@ -550,17 +657,21 @@ var Game = /*#__PURE__*/function () {
               building.resources[requestRSS] = 0;
             }
 
-            var requestAmount = req[1] - building.resources[requestRSS]; // console.log(requestTotal[1], requestTotal[0] , "requestChecker ")
-            // debugger
+            var requestAmount = req[1] - building.resources[requestRSS];
+            console.log(parA[i].nodepos, building.nodepos, "requestChecker "); // debugger
 
             if (!parA[i].resources[requestRSS]) {// console.log("check1")
             } else if (parA[i].resources[requestRSS] < requestAmount) {
               // console.log("check2")
               building.resources[requestRSS] += parA[i].resources[requestRSS];
               parA[i].resources[requestRSS] = 0;
+
+              _this3.map.makeDot(toGrid(parA[i].nodepos), toGrid(building.nodepos));
             } else if (parA[i].resources[requestRSS] > requestAmount) {
               building.resources[requestRSS] += requestAmount;
               parA[i].resources[requestRSS] -= requestAmount;
+
+              _this3.map.makeDot(toGrid(parA[i].nodepos), toGrid(building.nodepos));
             }
           });
         };
@@ -570,10 +681,50 @@ var Game = /*#__PURE__*/function () {
         }
       });
     }
+  }, {
+    key: "canvasCircleAnimation",
+    value: function canvasCircleAnimation() {
+      var _this4 = this;
+
+      // this function is going to have to draw a circle on the canvas. the circle should be on the pos1 passed in. the circle should move to the pos2 passed in.
+      var ctx = this.dots.getContext("2d");
+      setInterval(function () {
+        ctx.clearRect(0, 0, innerWidth, innerHeight);
+
+        _this4.map.movingDots.forEach(function (dot) {
+          dot.draw(ctx);
+          dot.move();
+
+          if (dot.startPos[0] === dot.endPos[0] && dot.startPos[1] === dot.endPos[1] || dot.startPos[0] > innerWidth || dot.startPos[0] < 0 || dot.startPos[1] > innerHeight || dot.startPos[1] < 0) {
+            _this4.map.movingDots.splice(_this4.map.movingDots.indexOf(dot), 1);
+          }
+        });
+      }, 120);
+    }
+  }, {
+    key: "canvasLineAnimation",
+    value: function canvasLineAnimation(pos1, pos2) {
+      var _ctx, _ctx2;
+
+      ctx.beginPath();
+
+      (_ctx = ctx).moveTo.apply(_ctx, _toConsumableArray(pos1));
+
+      (_ctx2 = ctx).lineTo.apply(_ctx2, _toConsumableArray(pos2));
+
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "green";
+      ctx.stroke();
+      ctx.closePath();
+    }
   }]);
 
   return Game;
 }();
+
+function toGrid(pos) {
+  return [(pos[0] + 1) * 60 - 20, (pos[1] + 1) * 60 - 20];
+}
 
 module.exports = Game;
 
@@ -729,7 +880,7 @@ module.exports = IronSmelter;
 /*!********************!*\
   !*** ./src/map.js ***!
   \********************/
-/***/ ((module) => {
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -737,11 +888,13 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
+var Dot = __webpack_require__(/*! ./dot */ "./src/dot.js");
+
 var Map = /*#__PURE__*/function () {
   function Map(el, iro, num, build) {
     _classCallCheck(this, Map);
 
-    this.money = 500;
+    this.money = 9000;
     this.num = num;
     this.el = el;
     this.iro = iro;
@@ -761,6 +914,7 @@ var Map = /*#__PURE__*/function () {
       Market: "src/assets/Market1.png",
       WindMill: "src/assets/WindMill1.png"
     };
+    this.movingDots = [];
     this.allRSS = {};
     this.grid = this.setupGrid();
     this.setupBoard(); // this.setupRSS()
@@ -917,6 +1071,13 @@ var Map = /*#__PURE__*/function () {
     key: "isValidPos",
     value: function isValidPos(pos) {
       return 0 <= pos[0] && pos[0] < 10 && 0 <= pos[1] && pos[1] < 10;
+    }
+  }, {
+    key: "makeDot",
+    value: function makeDot(pos1, pos2) {
+      var dot = new Dot(pos1, pos2);
+      this.movingDots.push(dot);
+      return dot;
     }
   }]);
 
@@ -1274,7 +1435,7 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 ___CSS_LOADER_EXPORT___.push([module.id, "@import url(https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap);"]);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "/* Box sizing rules */\n*,\n*::before,\n*::after {\n  box-sizing: border-box;\n}\n\n/* Remove default margin */\nbody,\nh1,\nh2,\nh3,\nh4,\np,\nfigure,\nblockquote,\ndl,\ndd {\n  margin: 0;\n}\n\n/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */\nul,\nol {\n  list-style: none;\n}\n\n/* Set core body defaults */\nbody {\n  min-height: 100vh;\n  text-rendering: optimizeSpeed;\n  line-height: 1.5;\n}\n\n/* A elements that don't have a class get default styles */\na:not([class]) {\n  text-decoration-skip-ink: auto;\n}\n\n/* Make images easier to work with */\nimg,\npicture {\n  max-width: 100%;\n  display: block;\n}\n\n/* Inherit fonts for inputs and buttons */\ninput,\nbutton,\ntextarea,\nselect {\n  font: inherit;\n}\n\n/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */\n@media (prefers-reduced-motion: reduce) {\n  html:focus-within {\n    scroll-behavior: auto;\n  }\n  *,\n*::before,\n*::after {\n    animation-duration: 0.01ms !important;\n    animation-iteration-count: 1 !important;\n    transition-duration: 0.01ms !important;\n    scroll-behavior: auto !important;\n  }\n}\n.main-nav {\n  display: flex;\n  justify-content: space-between;\n  margin: 0 auto;\n  background-color: #ACBEBE;\n}\n\n.main-nav > ul {\n  display: flex;\n  flex-direction: row;\n  justify-content: end;\n  align-items: flex-end;\n}\n\n.div-box {\n  width: 268px;\n}\n.div-box button {\n  margin: 20px;\n}\n\n.main-nav li {\n  margin: 10px;\n}\n\n.main-nav h2 {\n  margin: 20px;\n}\n\n.resources-bar {\n  display: flex;\n  justify-content: space-between;\n  margin: 0 auto;\n  background-image: -moz-linear-gradient(#ddfafa, #20232A);\n  opacity: 0.7;\n}\n\n.resources-bar > ul {\n  flex-direction: row;\n  justify-content: end;\n  align-items: flex-end;\n}\n\n.rss-left {\n  width: 55%;\n  text-align: center;\n}\n\n.rss-right {\n  width: 45%;\n  text-align: center;\n}\n\n.rss-left > ul {\n  display: flex;\n  flex-direction: row;\n}\n.rss-left > ul li {\n  padding: 10px;\n}\n\n.rss-right > ul {\n  display: flex;\n  flex-direction: row;\n}\n.rss-right > ul li {\n  padding: 10px;\n}\n\n.tutorial-holder {\n  display: flex;\n  justify-content: center;\n  grid-column: 1/6;\n  grid-row: 1;\n  z-index: 2;\n  width: 100%;\n  height: 100%;\n}\n.tutorial-holder #box-wrap {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  flex-direction: column;\n  padding-top: 10px;\n  height: 20px;\n  min-width: 300px;\n  max-width: 620px;\n  min-height: 250px;\n  background: #fff;\n}\n.tutorial-holder #box-wrap p {\n  margin: 30px;\n}\n.tutorial-holder #box-wrap #tut-button {\n  height: 40px;\n  width: 80px;\n  justify-content: center;\n  margin-bottom: 10px;\n}\n\n.hidden {\n  display: none;\n}\n\n#game-canvas, #builder-canvas, #info-canvas {\n  background-color: #ACBEBE;\n}\n\n.container {\n  display: grid;\n  grid-template-columns: 180px 1fr 620px 1fr 180px;\n}\n\n.grid-container {\n  display: grid;\n  width: 620px;\n  grid-column: 3;\n  grid-row: 1;\n  grid-template-columns: 20% 20% 20% 20% 20%;\n  grid-template-rows: 20% 20% 20% 20% 20%;\n}\n\n#game-canvas {\n  grid-column: 1;\n  grid-row: 1;\n}\n\n.info-panel {\n  display: grid;\n  grid-column: 5;\n  grid-row: 1;\n  grid-template-columns: 33% 33% 33%;\n  grid-template-rows: 50px 250px 50px;\n}\n.info-panel #info-canvas {\n  grid-column: 1/1;\n  grid-row: 1;\n  width: 180px;\n}\n.info-panel h3 {\n  grid-column: 2;\n  z-index: 1;\n  display: flex;\n  justify-content: center;\n  padding-top: 10px;\n}\n.info-panel .description-holder {\n  grid-column: 1/4;\n  grid-row: 2/2;\n  padding: 30px;\n  padding-left: 10px;\n  padding-right: 10px;\n  background-color: #D4DDe1;\n}\n.info-panel .cost-holder {\n  grid-column: 1/4;\n  grid-row: 3;\n  padding-left: 10px;\n  padding-right: 10px;\n  background-color: #D4DDe1;\n}\n\n.builder-menu {\n  display: grid;\n  grid-column: 1/1;\n  grid-row: 1;\n  grid-template-columns: 33% 33% 33%;\n}\n.builder-menu #builder-canvas {\n  grid-column: 1/1;\n  grid-row: 1;\n  width: 180px;\n}\n.builder-menu h3 {\n  grid-column: 2;\n  z-index: 1;\n  display: flex;\n  justify-content: center;\n  padding-top: 10px;\n  height: 20px;\n}\n.builder-menu ul {\n  grid-column: 1;\n  grid-row: 1;\n  width: 180px;\n  display: flex;\n  flex-wrap: wrap;\n  list-style: none;\n  padding-top: 30px;\n  padding-left: 0px;\n  z-index: 1;\n}\n.builder-menu ul li {\n  margin: 15px;\n  width: 60px;\n  height: 60px;\n  border-style: solid;\n  border: 1px solid #A01D26;\n  z-index: 2;\n  cursor: pointer;\n}\n\n.grid {\n  grid-column: 1;\n  grid-row: 1;\n}\n\n.grid > ul {\n  width: 620px;\n  display: flex;\n  flex-wrap: wrap;\n  list-style: none;\n  padding: 0%;\n  margin-top: 10px;\n  margin-left: 10px;\n}\n\n.grid li {\n  width: 60px;\n  height: 60px;\n  justify-content: center;\n  cursor: pointer;\n}\n\nli:hover {\n  background-color: gray;\n}\n\nbody {\n  background-color: #20232A;\n  font-family: \"Roboto\", sans-serif;\n}", "",{"version":3,"sources":["webpack://./src/styles/main.scss","webpack://./src/styles/base/reset.scss","webpack://./src/styles/components/_main_nav.scss","webpack://./src/styles/components/_resource_bar.scss","webpack://./src/styles/components/_welcome_message.scss","webpack://./src/styles/components/_grid.scss"],"names":[],"mappings":"AAAQ,qBAAA;ACCR;;;EAGE,sBAAA;ADCF;;ACEA,0BAAA;AACA;;;;;;;;;;EAUE,SAAA;ADCF;;ACEA,2GAAA;AACA;;EAEE,gBAAA;ADCF;;ACEA,2BAAA;AACA;EACE,iBAAA;EACA,6BAAA;EACA,gBAAA;ADCF;;ACEA,0DAAA;AACA;EACE,8BAAA;ADCF;;ACEA,oCAAA;AACA;;EAEE,eAAA;EACA,cAAA;ADCF;;ACEA,yCAAA;AACA;;;;EAIE,aAAA;ADCF;;ACEA,gGAAA;AACA;EACE;IACC,qBAAA;EDCD;ECEA;;;IAGE,qCAAA;IACA,uCAAA;IACA,sCAAA;IACA,gCAAA;EDAF;AACF;AE9DA;EACI,aAAA;EACA,8BAAA;EACA,cAAA;EACA,yBAAA;AFgEJ;;AE7DA;EACI,aAAA;EACA,mBAAA;EACA,oBAAA;EACA,qBAAA;AFgEJ;;AE5DA;EACI,YAAA;AF+DJ;AE9DI;EACI,YAAA;AFgER;;AE5DA;EACI,YAAA;AF+DJ;;AE5DA;EACI,YAAA;AF+DJ;;AG1FA;EACI,aAAA;EACA,8BAAA;EACA,cAAA;EACA,wDAAA;EACA,YAAA;AH6FJ;;AGzFA;EAEI,mBAAA;EACA,oBAAA;EACA,qBAAA;AH2FJ;;AGvFA;EAEI,UAAA;EACA,kBAAA;AHyFJ;;AGtFA;EAEI,UAAA;EACA,kBAAA;AHwFJ;;AGrFA;EACI,aAAA;EACA,mBAAA;AHwFJ;AGtFI;EACI,aAAA;AHwFR;;AGnFA;EACI,aAAA;EACA,mBAAA;AHsFJ;AGnFI;EACI,aAAA;AHqFR;;AIvIA;EACI,aAAA;EACA,uBAAA;EACA,gBAAA;EACA,WAAA;EACA,UAAA;EACA,WAAA;EACA,YAAA;AJ0IJ;AIxII;EACI,aAAA;EACA,8BAAA;EACA,mBAAA;EACA,sBAAA;EACA,iBAAA;EACA,YAAA;EACA,gBAAA;EACA,gBAAA;EACA,iBAAA;EACA,gBAAA;AJ0IR;AIxIQ;EACI,YAAA;AJ0IZ;AIvIQ;EACI,YAAA;EACA,WAAA;EACA,uBAAA;EACA,mBAAA;AJyIZ;;AIlIA;EACI,aAAA;AJqIJ;;AKpJA;EACI,yBAtBc;AL6KlB;;AKjJA;EACI,aAAA;EACA,gDAAA;ALoJJ;;AK3IA;EACI,aAAA;EACA,YAAA;EACA,cAAA;EACA,WAAA;EAEA,0CAAA;EACA,uCAAA;AL6IJ;;AK1IA;EACI,cAAA;EACA,WAAA;AL6IJ;;AKpIA;EACI,aAAA;EACA,cAAA;EACA,WAAA;EACA,kCAAA;EACA,mCAAA;ALuIJ;AKtII;EACI,gBAAA;EACA,WAAA;EACA,YAAA;ALwIR;AKtII;EACI,cAAA;EACA,UAAA;EACA,aAAA;EACA,uBAAA;EACA,iBAAA;ALwIR;AKtII;EACI,gBAAA;EACA,aAAA;EACA,aAAA;EACA,kBAAA;EACA,mBAAA;EACA,yBAnFS;AL2NjB;AKtII;EACI,gBAAA;EACA,WAAA;EACA,kBAAA;EACA,mBAAA;EACA,yBA1FS;ALkOjB;;AKpIA;EACI,aAAA;EACA,gBAAA;EACA,WAAA;EACA,kCAAA;ALuIJ;AKtII;EACI,gBAAA;EACA,WAAA;EACA,YAAA;ALwIR;AKtII;EACI,cAAA;EACA,UAAA;EAGA,aAAA;EACA,uBAAA;EACA,iBAAA;EACA,YAAA;ALsIR;AKnII;EACI,cAAA;EACA,WAAA;EACA,YAAA;EACA,aAAA;EACA,eAAA;EACA,gBAAA;EACA,iBAAA;EACA,iBAAA;EACA,UAAA;ALqIR;AKnIQ;EACI,YAAA;EACA,WAAA;EACA,YAAA;EACA,mBAAA;EACA,yBAAA;EACA,UAAA;EACA,eAAA;ALqIZ;;AK/HA;EAQI,cAAA;EACA,WAAA;AL2HJ;;AKvHA;EACI,YAAA;EACA,aAAA;EACA,eAAA;EACA,gBAAA;EACA,WAAA;EACA,gBAAA;EACA,iBAAA;AL0HJ;;AKtHA;EACI,WAAA;EACA,YAAA;EACA,uBAAA;EACA,eAAA;ALyHJ;;AKtHA;EACI,sBAAA;ALyHJ;;AAnRA;EACE,yBAXc;EAYd,iCAAA;AAsRF","sourcesContent":["@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');\n\n@import \"base/reset.scss\";\n\n@import \"components/_main_nav.scss\";\n@import \"components/resource_bar.scss\";\n@import \"components/_welcome_message.scss\";\n@import \"components/grid.scss\";\n\n$primary-color: #20232A;\n$secondary-color: #ACBEBE;\n$tertiary-color: #F4F4EF;\n$highlights: #A01D26;\n// $box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);\n\n// * {\n//   box-sizing: border-box;\n// }\n\nbody {\n  background-color: $primary-color;\n  font-family: 'Roboto', sans-serif;\n//   display: flex;\n//   flex-direction: column;\n//   align-items: center;\n//   justify-content: center;\n//   height: 100vh;\n//   overflow: hidden;\n//   margin: 0;\n//   padding: 20px;\n}\n\n// .container {\n//   background-color: $secondary-color;\n//   border-radius: 10px;\n//   box-shadow: $box-shadow;\n//   padding: 50px 20px;\n//   text-align: center;\n//   max-width: 100%;\n//   width: 800px;\n// }\n\n// h2 {\n//   margin: 0;\n//   opacity: 0.5;\n//   letter-spacing: 2px;\n// }\n\n// img {\n//   width: 100px;\n//   margin-bottom: 20px;\n// }\n\n// .joke {\n//   font-size: 30px;\n//   letter-spacing: 1px;\n//   line-height: 40px;\n//   margin: 50px auto;\n//   max-width: 600px;\n// }\n\n// .btn {\n//   background-color: $primary-color;\n//   color: $secondary-color;\n//   border: 0;\n//   border-radius: 10px;\n//   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);\n//   padding: 14px 40px;\n//   font-size: 16px;\n//   cursor: pointer;\n\n//   &:active {\n//     transform: scale(0.98);\n//   }\n\n//   &:focus {\n//     outline: 0;\n//   }\n// }\n\n","/* Box sizing rules */\n*,\n*::before,\n*::after {\n  box-sizing: border-box;\n}\n\n/* Remove default margin */\nbody,\nh1,\nh2,\nh3,\nh4,\np,\nfigure,\nblockquote,\ndl,\ndd {\n  margin: 0;\n}\n\n/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */\nul,\nol {\n  list-style: none;\n}\n\n/* Set core body defaults */\nbody {\n  min-height: 100vh;\n  text-rendering: optimizeSpeed;\n  line-height: 1.5;\n}\n\n/* A elements that don't have a class get default styles */\na:not([class]) {\n  text-decoration-skip-ink: auto;\n}\n\n/* Make images easier to work with */\nimg,\npicture {\n  max-width: 100%;\n  display: block;\n}\n\n/* Inherit fonts for inputs and buttons */\ninput,\nbutton,\ntextarea,\nselect {\n  font: inherit;\n}\n\n/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */\n@media (prefers-reduced-motion: reduce) {\n  html:focus-within {\n   scroll-behavior: auto;\n  }\n  \n  *,\n  *::before,\n  *::after {\n    animation-duration: 0.01ms !important;\n    animation-iteration-count: 1 !important;\n    transition-duration: 0.01ms !important;\n    scroll-behavior: auto !important;\n  }\n}\n","$primary-color: #20232A;\n$secondary-color: #ACBEBE;\n$tertiary-color: #F4F4EF;\n$highlights: #A01D26;\n\n.main-nav {\n    display: flex;\n    justify-content: space-between;\n    margin: 0 auto;\n    background-color: #ACBEBE;\n}\n\n.main-nav > ul {\n    display: flex;\n    flex-direction: row;\n    justify-content: end;\n    align-items: flex-end;\n\n}\n\n.div-box {\n    width: 268px;\n    button {\n        margin: 20px; \n    }\n}\n\n.main-nav li {\n    margin: 10px;\n}\n\n.main-nav h2 {\n    margin: 20px;\n}","$primary-color: #20232A;\n$secondary-color: #ddfafa;\n$tertiary-color: #e4e4da;\n$highlights: #A01D26;\n\n.resources-bar {\n    display: flex;\n    justify-content: space-between;\n    margin: 0 auto;\n    background-image: -moz-linear-gradient($secondary-color,$primary-color);\n    opacity: .7;\n  \n}\n\n.resources-bar > ul {\n    // display: flex;\n    flex-direction: row;\n    justify-content: end;\n    align-items: flex-end;\n\n}\n\n.rss-left {\n    // justify-content: space-between;\n    width: 55%;\n    text-align: center;\n}\n\n.rss-right {\n    // justify-content: end;\n    width: 45%;\n    text-align: center;\n}\n\n.rss-left > ul {\n    display: flex;\n    flex-direction: row;\n\n    li {\n        padding: 10px;\n    }\n\n}\n\n.rss-right > ul {\n    display: flex;\n    flex-direction: row;\n    // justify-content: end;\n\n    li {\n        padding: 10px;\n    }\n\n}\n",".tutorial-holder {\n    display: flex;\n    justify-content: center;\n    grid-column: 1/6;\n    grid-row: 1;\n    z-index: 2;\n    width: 100%;\n    height: 100%;\n    \n    #box-wrap {\n        display: flex;\n        justify-content: space-between;\n        align-items: center;\n        flex-direction: column;\n        padding-top: 10px;\n        height: 20px;\n        min-width: 300px;\n        max-width: 620px;\n        min-height: 250px;\n        background: #fff;\n\n        p {\n            margin: 30px;\n        }\n\n        #tut-button {\n            height: 40px;\n            width: 80px;\n            justify-content: center;\n            margin-bottom: 10px;\n\n        }\n    }\n\n}\n\n.hidden {\n    display: none;\n}\n\n","$primary-color: #20232A;\n$secondary-color: #ACBEBE;\n$tertiary-color: #D4DDe1;\n$highlights: #A01D26;\n\n// Understated and versatile\n// stormy sea   #335252\n// fog          #D4DDe1\n// Rust         #AA4B41\n// Charcoal     #2D3033\n\n// Hazy Grays\n// Blue Green #2c4a52\n// Waterway    #537072\n// Haze    #8E9B97\n// Smog    #F4EBDB\n\n// #20232A Ink\n// #ACBEBE Aluminum\n// #F4F4EF Paper\n// #A01D26 Ruby Red\n\n#game-canvas, #builder-canvas, #info-canvas {\n    background-color: $secondary-color;\n    // display: flex;\n    // grid-template-columns: 65px 1fr 65px;\n    // grid-template-rows: 100px 100px 100px;\n}\n\n.container {\n    display: grid;\n    grid-template-columns: 180px 1fr 620px 1fr 180px;\n    // justify-content: space-between;\n    // position: absolute;\n    // width: 100%;\n    // left: 0;\n    // right: 0;\n    // margin: auto;\n}\n\n.grid-container {\n    display: grid;\n    width: 620px;\n    grid-column: 3;\n    grid-row: 1;\n    // justify-content: center;\n    grid-template-columns: 20% 20% 20% 20% 20%;\n    grid-template-rows: 20% 20% 20% 20% 20%;\n}\n\n#game-canvas {\n    grid-column: 1;\n    grid-row: 1;\n    // grid-column-end: 3;\n    // position: absolute;\n    // width: 620px;\n    // left: 0;\n    // right: 0;\n    // margin: auto;\n}\n\n.info-panel {\n    display: grid;\n    grid-column: 5;\n    grid-row: 1;\n    grid-template-columns: 33% 33% 33%;\n    grid-template-rows: 50px 250px 50px;\n    #info-canvas {\n        grid-column: 1/1;\n        grid-row: 1;\n        width: 180px;\n    }\n    h3 {\n        grid-column: 2;\n        z-index: 1;\n        display: flex;\n        justify-content: center;\n        padding-top: 10px;\n    }\n    .description-holder {\n        grid-column: 1/4;\n        grid-row: 2/2;\n        padding: 30px;\n        padding-left: 10px;\n        padding-right: 10px;\n        background-color: $tertiary-color;\n    }\n    .cost-holder {\n        grid-column: 1/4;\n        grid-row: 3;\n        padding-left: 10px;\n        padding-right: 10px;\n        background-color: $tertiary-color;\n    }\n}\n\n.builder-menu {\n    display: grid;\n    grid-column: 1 / 1;\n    grid-row: 1;\n    grid-template-columns: 33% 33% 33%;\n    #builder-canvas {\n        grid-column: 1 / 1;\n        grid-row: 1;\n        width: 180px;\n    }\n    h3 {\n        grid-column: 2;\n        z-index: 1;\n        // -webkit-text-stroke: 1px;\n        // -webkit-text-stroke-color: white;\n        display: flex;\n        justify-content: center;\n        padding-top: 10px;\n        height: 20px;\n    }\n\n    ul {\n        grid-column: 1;\n        grid-row: 1;\n        width: 180px;\n        display: flex;\n        flex-wrap: wrap;\n        list-style: none;\n        padding-top: 30px;\n        padding-left: 0px;\n        z-index: 1;\n\n        li {\n            margin: 15px;\n            width: 60px;\n            height: 60px;\n            border-style: solid;\n            border: 1px solid #A01D26;\n            z-index: 2;\n            cursor: pointer;\n        }\n    }\n\n}\n\n.grid {\n    // display: flex;\n    // position: relative;\n    // width: 620px;\n    // left: 0;\n    // right: 0;\n    // margin: auto;\n    // margin-top: 0px;\n    grid-column: 1;\n    grid-row: 1;\n    // grid-column-end: 4;\n}\n\n.grid > ul {\n    width: 620px;\n    display: flex;\n    flex-wrap: wrap;\n    list-style: none;\n    padding: 0%;\n    margin-top: 10px;\n    margin-left: 10px;\n    // position: absolute;\n}\n\n.grid li {\n    width: 60px;\n    height: 60px;\n    justify-content: center;\n    cursor: pointer;\n}\n\nli:hover {\n    background-color: gray;\n}"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "/* Box sizing rules */\n*,\n*::before,\n*::after {\n  box-sizing: border-box;\n}\n\n/* Remove default margin */\nbody,\nh1,\nh2,\nh3,\nh4,\np,\nfigure,\nblockquote,\ndl,\ndd {\n  margin: 0;\n}\n\n/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */\nul,\nol {\n  list-style: none;\n}\n\n/* Set core body defaults */\nbody {\n  min-height: 100vh;\n  text-rendering: optimizeSpeed;\n  line-height: 1.5;\n}\n\n/* A elements that don't have a class get default styles */\na:not([class]) {\n  text-decoration-skip-ink: auto;\n}\n\n/* Make images easier to work with */\nimg,\npicture {\n  max-width: 100%;\n  display: block;\n}\n\n/* Inherit fonts for inputs and buttons */\ninput,\nbutton,\ntextarea,\nselect {\n  font: inherit;\n}\n\n/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */\n@media (prefers-reduced-motion: reduce) {\n  html:focus-within {\n    scroll-behavior: auto;\n  }\n  *,\n*::before,\n*::after {\n    animation-duration: 0.01ms !important;\n    animation-iteration-count: 1 !important;\n    transition-duration: 0.01ms !important;\n    scroll-behavior: auto !important;\n  }\n}\n.main-nav {\n  display: flex;\n  justify-content: space-between;\n  margin: 0 auto;\n  background-color: #ACBEBE;\n}\n\n.main-nav > ul {\n  display: flex;\n  flex-direction: row;\n  justify-content: end;\n  align-items: flex-end;\n}\n\n.div-box {\n  width: 268px;\n}\n.div-box button {\n  margin: 20px;\n}\n\n.main-nav li {\n  margin: 10px;\n}\n\n.main-nav h2 {\n  margin: 20px;\n}\n\n.resources-bar {\n  display: flex;\n  justify-content: space-between;\n  margin: 0 auto;\n  background-image: -moz-linear-gradient(#ddfafa, #20232A);\n  opacity: 0.7;\n}\n\n.resources-bar > ul {\n  flex-direction: row;\n  justify-content: end;\n  align-items: flex-end;\n}\n\n.rss-left {\n  width: 55%;\n  text-align: center;\n}\n\n.rss-right {\n  width: 45%;\n  text-align: center;\n}\n\n.rss-left > ul {\n  display: flex;\n  flex-direction: row;\n}\n.rss-left > ul li {\n  padding: 10px;\n}\n\n.rss-right > ul {\n  display: flex;\n  flex-direction: row;\n}\n.rss-right > ul li {\n  padding: 10px;\n}\n\n.tutorial-holder {\n  display: flex;\n  justify-content: center;\n  grid-column: 1/6;\n  grid-row: 1;\n  z-index: 2;\n  width: 100%;\n  height: 100%;\n}\n.tutorial-holder #box-wrap {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  flex-direction: column;\n  padding-top: 10px;\n  height: 20px;\n  min-width: 300px;\n  max-width: 620px;\n  min-height: 250px;\n  background: #fff;\n}\n.tutorial-holder #box-wrap p {\n  margin: 30px;\n}\n.tutorial-holder #box-wrap #tut-button {\n  height: 40px;\n  width: 80px;\n  justify-content: center;\n  margin-bottom: 10px;\n}\n\n.hidden {\n  display: none;\n}\n\n#game-canvas, #builder-canvas, #info-canvas {\n  background-color: #ACBEBE;\n}\n\n.container {\n  display: grid;\n  grid-template-columns: 180px 1fr 620px 1fr 180px;\n}\n\n.grid-container {\n  display: grid;\n  width: 620px;\n  grid-column: 3;\n  grid-row: 1;\n  grid-template-columns: 20% 20% 20% 20% 20%;\n  grid-template-rows: 20% 20% 20% 20% 20%;\n}\n\n#game-canvas {\n  grid-column: 1;\n  grid-row: 1;\n}\n\n.info-panel {\n  display: grid;\n  grid-column: 5;\n  grid-row: 1;\n  grid-template-columns: 33% 33% 33%;\n  grid-template-rows: 50px 250px 50px;\n}\n.info-panel #info-canvas {\n  grid-column: 1/1;\n  grid-row: 1;\n  width: 180px;\n}\n.info-panel h3 {\n  grid-column: 2;\n  z-index: 1;\n  display: flex;\n  justify-content: center;\n  padding-top: 10px;\n}\n.info-panel .description-holder {\n  grid-column: 1/4;\n  grid-row: 2/2;\n  padding: 30px;\n  padding-left: 10px;\n  padding-right: 10px;\n  background-color: #D4DDe1;\n}\n.info-panel .cost-holder {\n  grid-column: 1/4;\n  grid-row: 3;\n  padding-left: 10px;\n  padding-right: 10px;\n  background-color: #D4DDe1;\n}\n\n.builder-menu {\n  display: grid;\n  grid-column: 1/1;\n  grid-row: 1;\n  grid-template-columns: 33% 33% 33%;\n}\n.builder-menu #builder-canvas {\n  grid-column: 1/1;\n  grid-row: 1;\n  width: 180px;\n}\n.builder-menu h3 {\n  grid-column: 2;\n  z-index: 1;\n  display: flex;\n  justify-content: center;\n  padding-top: 10px;\n  height: 20px;\n}\n.builder-menu ul {\n  grid-column: 1;\n  grid-row: 1;\n  width: 180px;\n  display: flex;\n  flex-wrap: wrap;\n  list-style: none;\n  padding-top: 30px;\n  padding-left: 0px;\n  z-index: 1;\n}\n.builder-menu ul li {\n  margin: 15px;\n  width: 60px;\n  height: 60px;\n  border-style: solid;\n  border: 1px solid #A01D26;\n  z-index: 2;\n  cursor: pointer;\n}\n\n.grid {\n  grid-column: 1;\n  grid-row: 1;\n}\n\n.grid > ul {\n  width: 620px;\n  display: flex;\n  flex-wrap: wrap;\n  list-style: none;\n  padding: 0%;\n  margin-top: 10px;\n  margin-left: 10px;\n}\n\n.grid li {\n  width: 60px;\n  height: 60px;\n  justify-content: center;\n  cursor: pointer;\n}\n\nli:hover {\n  background-color: gray;\n}\n\n#circle-canvas {\n  width: 620px;\n  height: 620px;\n  grid-column: 1;\n  grid-row: 1;\n  pointer-events: none;\n}\n\nbutton {\n  cursor: pointer;\n}\n\nbody {\n  background-color: #20232A;\n  font-family: \"Roboto\", sans-serif;\n}", "",{"version":3,"sources":["webpack://./src/styles/main.scss","webpack://./src/styles/base/reset.scss","webpack://./src/styles/components/_main_nav.scss","webpack://./src/styles/components/_resource_bar.scss","webpack://./src/styles/components/_welcome_message.scss","webpack://./src/styles/components/_grid.scss"],"names":[],"mappings":"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","sourcesContent":["@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');\n\n@import \"base/reset.scss\";\n\n@import \"components/_main_nav.scss\";\n@import \"components/resource_bar.scss\";\n@import \"components/_welcome_message.scss\";\n@import \"components/grid.scss\";\n\n$primary-color: #20232A;\n$secondary-color: #ACBEBE;\n$tertiary-color: #F4F4EF;\n$highlights: #A01D26;\n// $box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);\n\n// * {\n//   box-sizing: border-box;\n// }\n\nbutton {\n  cursor: pointer;\n}\n\nbody {\n  background-color: $primary-color;\n  font-family: 'Roboto', sans-serif;\n//   display: flex;\n//   flex-direction: column;\n//   align-items: center;\n//   justify-content: center;\n//   height: 100vh;\n//   overflow: hidden;\n//   margin: 0;\n//   padding: 20px;\n}\n\n// .container {\n//   background-color: $secondary-color;\n//   border-radius: 10px;\n//   box-shadow: $box-shadow;\n//   padding: 50px 20px;\n//   text-align: center;\n//   max-width: 100%;\n//   width: 800px;\n// }\n\n// h2 {\n//   margin: 0;\n//   opacity: 0.5;\n//   letter-spacing: 2px;\n// }\n\n// img {\n//   width: 100px;\n//   margin-bottom: 20px;\n// }\n\n// .joke {\n//   font-size: 30px;\n//   letter-spacing: 1px;\n//   line-height: 40px;\n//   margin: 50px auto;\n//   max-width: 600px;\n// }\n\n// .btn {\n//   background-color: $primary-color;\n//   color: $secondary-color;\n//   border: 0;\n//   border-radius: 10px;\n//   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);\n//   padding: 14px 40px;\n//   font-size: 16px;\n//   cursor: pointer;\n\n//   &:active {\n//     transform: scale(0.98);\n//   }\n\n//   &:focus {\n//     outline: 0;\n//   }\n// }\n\n","/* Box sizing rules */\n*,\n*::before,\n*::after {\n  box-sizing: border-box;\n}\n\n/* Remove default margin */\nbody,\nh1,\nh2,\nh3,\nh4,\np,\nfigure,\nblockquote,\ndl,\ndd {\n  margin: 0;\n}\n\n/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */\nul,\nol {\n  list-style: none;\n}\n\n/* Set core body defaults */\nbody {\n  min-height: 100vh;\n  text-rendering: optimizeSpeed;\n  line-height: 1.5;\n}\n\n/* A elements that don't have a class get default styles */\na:not([class]) {\n  text-decoration-skip-ink: auto;\n}\n\n/* Make images easier to work with */\nimg,\npicture {\n  max-width: 100%;\n  display: block;\n}\n\n/* Inherit fonts for inputs and buttons */\ninput,\nbutton,\ntextarea,\nselect {\n  font: inherit;\n}\n\n/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */\n@media (prefers-reduced-motion: reduce) {\n  html:focus-within {\n   scroll-behavior: auto;\n  }\n  \n  *,\n  *::before,\n  *::after {\n    animation-duration: 0.01ms !important;\n    animation-iteration-count: 1 !important;\n    transition-duration: 0.01ms !important;\n    scroll-behavior: auto !important;\n  }\n}\n","$primary-color: #20232A;\n$secondary-color: #ACBEBE;\n$tertiary-color: #F4F4EF;\n$highlights: #A01D26;\n\n.main-nav {\n    display: flex;\n    justify-content: space-between;\n    margin: 0 auto;\n    background-color: #ACBEBE;\n}\n\n.main-nav > ul {\n    display: flex;\n    flex-direction: row;\n    justify-content: end;\n    align-items: flex-end;\n\n}\n\n.div-box {\n    width: 268px;\n    button {\n        margin: 20px; \n    }\n}\n\n.main-nav li {\n    margin: 10px;\n}\n\n.main-nav h2 {\n    margin: 20px;\n}","$primary-color: #20232A;\n$secondary-color: #ddfafa;\n$tertiary-color: #e4e4da;\n$highlights: #A01D26;\n\n.resources-bar {\n    display: flex;\n    justify-content: space-between;\n    margin: 0 auto;\n    background-image: -moz-linear-gradient($secondary-color,$primary-color);\n    opacity: .7;\n  \n}\n\n.resources-bar > ul {\n    // display: flex;\n    flex-direction: row;\n    justify-content: end;\n    align-items: flex-end;\n\n}\n\n.rss-left {\n    // justify-content: space-between;\n    width: 55%;\n    text-align: center;\n}\n\n.rss-right {\n    // justify-content: end;\n    width: 45%;\n    text-align: center;\n}\n\n.rss-left > ul {\n    display: flex;\n    flex-direction: row;\n\n    li {\n        padding: 10px;\n    }\n\n}\n\n.rss-right > ul {\n    display: flex;\n    flex-direction: row;\n    // justify-content: end;\n\n    li {\n        padding: 10px;\n    }\n\n}\n",".tutorial-holder {\n    display: flex;\n    justify-content: center;\n    grid-column: 1/6;\n    grid-row: 1;\n    z-index: 2;\n    width: 100%;\n    height: 100%;\n    \n    #box-wrap {\n        display: flex;\n        justify-content: space-between;\n        align-items: center;\n        flex-direction: column;\n        padding-top: 10px;\n        height: 20px;\n        min-width: 300px;\n        max-width: 620px;\n        min-height: 250px;\n        background: #fff;\n\n        p {\n            margin: 30px;\n        }\n\n        #tut-button {\n            height: 40px;\n            width: 80px;\n            justify-content: center;\n            margin-bottom: 10px;\n\n        }\n    }\n\n}\n\n.hidden {\n    display: none;\n}\n\n","$primary-color: #20232A;\n$secondary-color: #ACBEBE;\n$tertiary-color: #D4DDe1;\n$highlights: #A01D26;\n\n// Understated and versatile\n// stormy sea   #335252\n// fog          #D4DDe1\n// Rust         #AA4B41\n// Charcoal     #2D3033\n\n// Hazy Grays\n// Blue Green #2c4a52\n// Waterway    #537072\n// Haze    #8E9B97\n// Smog    #F4EBDB\n\n// #20232A Ink\n// #ACBEBE Aluminum\n// #F4F4EF Paper\n// #A01D26 Ruby Red\n\n#game-canvas, #builder-canvas, #info-canvas {\n    background-color: $secondary-color;\n    // display: flex;\n    // grid-template-columns: 65px 1fr 65px;\n    // grid-template-rows: 100px 100px 100px;\n}\n\n.container {\n    display: grid;\n    grid-template-columns: 180px 1fr 620px 1fr 180px;\n    // justify-content: space-between;\n    // position: absolute;\n    // width: 100%;\n    // left: 0;\n    // right: 0;\n    // margin: auto;\n}\n\n.grid-container {\n    display: grid;\n    width: 620px;\n    grid-column: 3;\n    grid-row: 1;\n    // justify-content: center;\n    grid-template-columns: 20% 20% 20% 20% 20%;\n    grid-template-rows: 20% 20% 20% 20% 20%;\n}\n\n#game-canvas {\n    grid-column: 1;\n    grid-row: 1;\n    // grid-column-end: 3;\n    // position: absolute;\n    // width: 620px;\n    // left: 0;\n    // right: 0;\n    // margin: auto;\n}\n\n.info-panel {\n    display: grid;\n    grid-column: 5;\n    grid-row: 1;\n    grid-template-columns: 33% 33% 33%;\n    grid-template-rows: 50px 250px 50px;\n    #info-canvas {\n        grid-column: 1/1;\n        grid-row: 1;\n        width: 180px;\n    }\n    h3 {\n        grid-column: 2;\n        z-index: 1;\n        display: flex;\n        justify-content: center;\n        padding-top: 10px;\n    }\n    .description-holder {\n        grid-column: 1/4;\n        grid-row: 2/2;\n        padding: 30px;\n        padding-left: 10px;\n        padding-right: 10px;\n        background-color: $tertiary-color;\n    }\n    .cost-holder {\n        grid-column: 1/4;\n        grid-row: 3;\n        padding-left: 10px;\n        padding-right: 10px;\n        background-color: $tertiary-color;\n    }\n}\n\n.builder-menu {\n    display: grid;\n    grid-column: 1 / 1;\n    grid-row: 1;\n    grid-template-columns: 33% 33% 33%;\n    #builder-canvas {\n        grid-column: 1 / 1;\n        grid-row: 1;\n        width: 180px;\n    }\n    h3 {\n        grid-column: 2;\n        z-index: 1;\n        // -webkit-text-stroke: 1px;\n        // -webkit-text-stroke-color: white;\n        display: flex;\n        justify-content: center;\n        padding-top: 10px;\n        height: 20px;\n    }\n\n    ul {\n        grid-column: 1;\n        grid-row: 1;\n        width: 180px;\n        display: flex;\n        flex-wrap: wrap;\n        list-style: none;\n        padding-top: 30px;\n        padding-left: 0px;\n        z-index: 1;\n\n        li {\n            margin: 15px;\n            width: 60px;\n            height: 60px;\n            border-style: solid;\n            border: 1px solid #A01D26;\n            z-index: 2;\n            cursor: pointer;\n        }\n    }\n\n}\n\n.grid {\n    // display: flex;\n    // position: relative;\n    // width: 0px;\n    // left: 0;\n    // right: 0;\n    // margin: auto;\n    // margin-top: 0px;\n    grid-column: 1;\n    grid-row: 1;\n    // grid-column-end: 4;\n}\n\n.grid > ul {\n    width: 620px;\n    display: flex;\n    flex-wrap: wrap;\n    list-style: none;\n    padding: 0%;\n    margin-top: 10px;\n    margin-left: 10px;\n    // position: absolute;\n}\n\n.grid li {\n    width: 60px;\n    height: 60px;\n    justify-content: center;\n    cursor: pointer;\n}\n\nli:hover {\n    background-color: gray;\n}\n\n#circle-canvas {\n    width: 620px;\n    height: 620px;\n    grid-column: 1; \n    grid-row: 1;\n    pointer-events: none;\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1901,7 +2062,8 @@ document.addEventListener("DOMContentLoaded", function () {
   var toolsnum = document.getElementById('total-tools');
   var tutbutton = document.getElementById('tut-button');
   var tutbox = document.querySelector('.tutorial-holder');
-  var buildcost = document.getElementById('build-cost'); // let ctx = canvas.getContext("2d")
+  var buildcost = document.getElementById('build-cost');
+  var dots = document.getElementById('circle-canvas'); // let ctx = canvas.getContext("2d")
   // ctx.moveTo(0, 0);
   // ctx.lineTo(200, 100);
   // ctx.stroke();
@@ -1939,7 +2101,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   console.log(music);
-  var gamev = new Game(el, iro, num, bui, info, sell, iroing, steing, music, copOre, copIng, copwire, toolsnum, buildcost); // gamev.map.startingMarket()
+  var gamev = new Game(el, iro, num, bui, info, sell, iroing, steing, music, copOre, copIng, copwire, toolsnum, buildcost, dots); // gamev.map.startingMarket()
   // gamev.updateTotalMoney(num)
 });
 })();

@@ -1,6 +1,8 @@
+const Dot = require("./dot");
+
 class Map {
   constructor(el, iro, num, build) {
-    this.money = 500;
+    this.money = 9000;
     this.num = num;
     this.el = el;
     this.iro = iro;
@@ -30,6 +32,7 @@ class Map {
       Market: "src/assets/Market1.png",
       WindMill: "src/assets/WindMill1.png",
     };
+    this.movingDots = [];
     this.allRSS = {};
     this.grid = this.setupGrid();
     this.setupBoard();
@@ -176,6 +179,12 @@ class Map {
 
   isValidPos(pos) {
     return 0 <= pos[0] && pos[0] < 10 && 0 <= pos[1] && pos[1] < 10;
+  }
+
+  makeDot (pos1, pos2) {
+    let dot = new Dot(pos1, pos2);
+    this.movingDots.push(dot);
+    return dot;
   }
 }
 

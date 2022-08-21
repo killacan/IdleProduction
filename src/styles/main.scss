@@ -17,6 +17,10 @@ $highlights: #A01D26;
 //   box-sizing: border-box;
 // }
 
+button {
+  cursor: pointer;
+}
+
 body {
   background-color: $primary-color;
   font-family: 'Roboto', sans-serif;

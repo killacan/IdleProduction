@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let tutbutton = document.getElementById('tut-button')
     let tutbox = document.querySelector('.tutorial-holder')
     let buildcost = document.getElementById('build-cost');
+    let dots = document.getElementById('circle-canvas')
     // let ctx = canvas.getContext("2d")
 
     // ctx.moveTo(0, 0);
@@ -67,10 +68,12 @@ document.addEventListener("DOMContentLoaded", function () {
         tutbox.classList.add("hidden")
     }
 
+    
+
     // console.log(rss)
 
     console.log(music)
-    let gamev = new Game(el, iro, num, bui, info, sell, iroing, steing, music, copOre, copIng, copwire, toolsnum, buildcost);
+    let gamev = new Game(el, iro, num, bui, info, sell, iroing, steing, music, copOre, copIng, copwire, toolsnum, buildcost, dots);
     // gamev.map.startingMarket()
     // gamev.updateTotalMoney(num)
 
