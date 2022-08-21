@@ -2,7 +2,7 @@ const Dot = require("./dot");
 
 class Map {
   constructor(el, iro, num, build) {
-    this.money = 9000;
+    this.money = 700;
     this.num = num;
     this.el = el;
     this.iro = iro;
