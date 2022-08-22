@@ -1015,6 +1015,7 @@ var Map = /*#__PURE__*/function () {
       this.totalPower = 0;
       this.allBuildings["WindMill"].forEach(function (powerplant) {
         _this.totalPower += powerplant.power;
+        _this.money += Math.floor(powerplant.power / 100);
       });
     }
   }, {
@@ -1392,7 +1393,7 @@ var WindMill = /*#__PURE__*/function (_Node) {
     _this.nodepos = pos;
     _this.name = "WindMill";
     _this.cost = 100;
-    _this.description = "basic power production, does not require a fuel input.";
+    _this.description = "basic power production, does not require a fuel input, provides a very slow, but automatic income of 1 money per second.";
     _this.power = 100;
     return _this;
   }

@@ -129,6 +129,7 @@ class Map {
     this.totalPower = 0;
     this.allBuildings["WindMill"].forEach((powerplant) => {
       this.totalPower += powerplant.power;
+      this.money += Math.floor(powerplant.power / 100);
     });
   }
 

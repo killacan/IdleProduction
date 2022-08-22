@@ -7,7 +7,7 @@ class WindMill extends Node {
         this.nodepos = pos
         this.name = "WindMill"
         this.cost = 100
-        this.description = "basic power production, does not require a fuel input."
+        this.description = "basic power production, does not require a fuel input, provides a very slow, but automatic income of 1 money per second."
         this.power = 100
 
     }
