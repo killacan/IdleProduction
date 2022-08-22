@@ -138,8 +138,8 @@ class Game {
   handleClickGrid(e) {
     const ele = e.target;
     that = this;
-    console.log(ele);
-    console.log(ele.tagName.toLowerCase() === "li");
+    // console.log(ele);
+    // console.log(ele.tagName.toLowerCase() === "li");
     if (ele.tagName.toLowerCase() === "li" && this.map.selectedBuilding) {
       // we have a pos and a name of building. building name is a string.
       let pos = JSON.parse(ele.dataset.pos);
@@ -149,13 +149,13 @@ class Game {
       if (JSON.parse(this.map.selectedBuilding) === "IronMine") {
         this.map.placeBuilding(pos, new IronMine(pos));
         // this.updateParentsAndChildren()
-        console.log(this.map.getBuilding(pos));
-        console.log(this.map.allBuildings);
+        // console.log(this.map.getBuilding(pos));
+        // console.log(this.map.allBuildings);
       } else if (JSON.parse(this.map.selectedBuilding) === "IronSmelter") {
         this.map.placeBuilding(pos, new IronSmelter(pos));
         // this.updateParentsAndChildren()
-        console.log(this.map.getBuilding(pos));
-        console.log(this.map.allBuildings);
+        // console.log(this.map.getBuilding(pos));
+        // console.log(this.map.allBuildings);
       } else if (JSON.parse(this.map.selectedBuilding) === "SteelMill") {
         this.map.placeBuilding(pos, new SteelMill(pos));
       } else if (JSON.parse(this.map.selectedBuilding) === "CopperMine") {
@@ -180,10 +180,10 @@ class Game {
 
   handleClickBuild(e) {
     const ele = e.target;
-    console.log(e.target.parentNode);
+    // console.log(e.target.parentNode);
     if (ele.tagName.toLowerCase() === "img") {
       this.map.selectedBuilding = ele.parentNode.dataset.build;
-      console.log(this.map.selectedBuilding);
+    //   console.log(this.map.selectedBuilding);
     }
   }
 
@@ -213,7 +213,7 @@ class Game {
       this.map.setupBoard();
       // console.log(Object.values(this.map.allBuildings))
       this.map.updatePower();
-      console.log(this.map.totalPower);
+    //   console.log(this.map.totalPower);
       Object.values(this.map.allBuildings)
         .flat()
         .forEach((ele) => ele.updateRSS());
@@ -225,7 +225,7 @@ class Game {
         // this.canvasCircleAnimation();
         
       this.updateTotalMoney(this.map.num, this.map.iro);
-      console.log(this.map.movingDots, "all Dots");
+    //   console.log(this.map.movingDots, "all Dots");
       // console.log(this.map.allRSS)
       //call production
       //call transport

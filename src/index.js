@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // console.log(rss)
 
-    console.log(music)
+    // console.log(music)
     let gamev = new Game(el, iro, num, bui, info, sell, iroing, steing, music, copOre, copIng, copwire, toolsnum, buildcost, dots);
     // gamev.map.startingMarket()
     // gamev.updateTotalMoney(num)

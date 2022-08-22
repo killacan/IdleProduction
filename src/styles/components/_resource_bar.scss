@@ -7,7 +7,7 @@ $highlights: #A01D26;
     display: flex;
     justify-content: space-between;
     margin: 0 auto;
-    background-image: -moz-linear-gradient($secondary-color,$primary-color);
+    background: -webkit-linear-gradient($secondary-color,$primary-color);
     opacity: .7;
   
 }
