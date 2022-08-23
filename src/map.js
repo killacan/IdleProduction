@@ -153,7 +153,7 @@ class Map {
       let type = this.getBuilding(pos);
       this.money += type.cost;
 
-      console.log(this.allBuildings[type.name], "in remove building");
+      // console.log(this.allBuildings[type.name], "in remove building");
       let buildidx = this.allBuildings[type.name].findIndex((ele) => {
         return ele === type;
       });
@@ -162,7 +162,7 @@ class Map {
         .slice(0, buildidx)
         .concat(this.allBuildings[type.name].slice(buildidx + 1));
       this.grid[pos[0]][pos[1]] = null;
-      console.log(this.allBuildings[type.name], "in remove building");
+      // console.log(this.allBuildings[type.name], "in remove building");
     }
   }
 
@@ -191,6 +191,10 @@ class Map {
 
 const BuildError = function (msg) {
   this.meg = msg;
+  console.log("Build Error: " + msg);
+  let err = document.getElementById("error");
+  err.innerHTML = msg;
+  err.style.display = "block";
 };
 
 module.exports = BuildError;

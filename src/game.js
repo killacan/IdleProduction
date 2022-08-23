@@ -172,7 +172,11 @@ class Game {
         // console.log(that.map.allBuildings)
       } else if (JSON.parse(this.map.selectedBuilding) === "WindMill") {
         this.map.placeBuilding(pos, new WindMill(pos));
+      } else if (JSON.parse(this.map.selectedBuilding) === "CoalMine") {
+        
       }
+
+    
     } else if (ele.tagName.toLowerCase() === "img") {
       this.map.removeBuilding(JSON.parse(ele.parentNode.dataset.pos));
     }
@@ -339,7 +343,7 @@ class Game {
             building.resources[requestRSS] = 0;
           }
           let requestAmount = req[1] - building.resources[requestRSS];
-          console.log(parA[i].nodepos, building.nodepos , "requestChecker ")
+          // console.log(parA[i].nodepos, building.nodepos , "requestChecker ")
           // debugger
           
           if (!parA[i].resources[requestRSS]) {

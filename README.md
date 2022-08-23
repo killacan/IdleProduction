@@ -15,7 +15,8 @@ https://github.com/killacan/IdleProduction
 Each building will have its own little icon distinguishing it from other buildings, when you click on it, a line will be drawn between buildings to visualize the transport of resources from one building to the other.
 
 ### UI 
-– Probably going to end up looking like this [ [https://wireframe.cc/IfVjw1](https://wireframe.cc/IfVjw1) ]
+
+
 
 ## 4 core features -
 

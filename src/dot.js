@@ -11,7 +11,7 @@ class Dot {
     }
 
     move () {
-        console.log(this.startPos, this.endPos, "inside the move function")
+        // console.log(this.startPos, this.endPos, "inside the move function")
         this.startPos
         this.endPos
         
@@ -21,7 +21,7 @@ class Dot {
     draw (ctx) {
         // console.log("inside the draw function")
         ctx.beginPath();
-        ctx.arc(this.startPos[1], this.startPos[0], 10, 0, 2 * Math.PI);
+        ctx.arc(this.startPos[1], this.startPos[0], 4, 0, 2 * Math.PI);
         ctx.fillStyle = "grey";
         ctx.fill();
         ctx.closePath();
