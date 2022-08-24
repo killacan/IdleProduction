@@ -8,6 +8,7 @@ const CopperSmelter = require("./copperSmelter");
 const CopperExtruder = require("./copperExtruder");
 const ToolFactory = require("./toolFactory");
 const WindMill = require("./windMill");
+const Utils = require("./utils");
 
 class Game {
   constructor(
@@ -391,6 +392,12 @@ class Game {
         ctx.closePath();
 
     }
+}
+
+function sortByDistance (arr) {
+  return arr.forEach((building) => {
+    
+  }) 
 }
 
 function toGrid (pos) {

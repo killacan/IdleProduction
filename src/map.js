@@ -138,7 +138,8 @@ class Map {
     if (!this.isEmptyPos(pos)) {
       throw new BuildError("Not an empty spot!");
     } else if (this.money < type.cost) {
-      throw new BuildError("Not Enough Money!");
+      alert("Not enough money!")
+      // throw new BuildError("Not Enough Money!");
     } else {
       this.grid[pos[0]][pos[1]] = type;
       this.allBuildings[type.name].push(type);
@@ -148,7 +149,8 @@ class Map {
 
   removeBuilding(pos) {
     if (this.isEmptyPos(pos)) {
-      throw new BuildError("Empty spot!");
+
+      // throw new BuildError("Empty spot!");
     } else {
       let type = this.getBuilding(pos);
       this.money += type.cost;
@@ -172,7 +174,8 @@ class Map {
 
   isEmptyPos(pos) {
     if (!this.isValidPos(pos)) {
-      throw new BuildError("Is not a valid spot!");
+      alert("Not a valid position!");
+      // throw new BuildError("Is not a valid spot!");
     }
 
     return this.grid[pos[0]][pos[1]] === null;

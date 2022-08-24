@@ -337,6 +337,8 @@ var ToolFactory = __webpack_require__(/*! ./toolFactory */ "./src/toolFactory.js
 
 var WindMill = __webpack_require__(/*! ./windMill */ "./src/windMill.js");
 
+var Utils = __webpack_require__(/*! ./utils */ "./src/utils.js");
+
 var Game = /*#__PURE__*/function () {
   function Game(el, iro, num, build, info, sell, iroing, steing, music, copore, coping, copwire, toolsnum, buildcost, dots) {
     _classCallCheck(this, Game);
@@ -717,6 +719,10 @@ var Game = /*#__PURE__*/function () {
   return Game;
 }();
 
+function sortByDistance(arr) {
+  return arr.forEach(function (building) {});
+}
+
 function toGrid(pos) {
   return [(pos[0] + 1) * 60 - 20, (pos[1] + 1) * 60 - 20];
 }
@@ -1025,7 +1031,7 @@ var Map = /*#__PURE__*/function () {
       if (!this.isEmptyPos(pos)) {
         throw new BuildError("Not an empty spot!");
       } else if (this.money < type.cost) {
-        throw new BuildError("Not Enough Money!");
+        alert("Not enough money!"); // throw new BuildError("Not Enough Money!");
       } else {
         this.grid[pos[0]][pos[1]] = type;
         this.allBuildings[type.name].push(type);
@@ -1035,8 +1041,7 @@ var Map = /*#__PURE__*/function () {
   }, {
     key: "removeBuilding",
     value: function removeBuilding(pos) {
-      if (this.isEmptyPos(pos)) {
-        throw new BuildError("Empty spot!");
+      if (this.isEmptyPos(pos)) {// throw new BuildError("Empty spot!");
       } else {
         var type = this.getBuilding(pos);
         this.money += type.cost; // console.log(this.allBuildings[type.name], "in remove building");
@@ -1057,7 +1062,7 @@ var Map = /*#__PURE__*/function () {
     key: "isEmptyPos",
     value: function isEmptyPos(pos) {
       if (!this.isValidPos(pos)) {
-        throw new BuildError("Is not a valid spot!");
+        alert("Not a valid position!"); // throw new BuildError("Is not a valid spot!");
       }
 
       return this.grid[pos[0]][pos[1]] === null;
@@ -1349,6 +1354,26 @@ var ToolFactory = /*#__PURE__*/function (_Node) {
 }(Node);
 
 module.exports = ToolFactory;
+
+/***/ }),
+
+/***/ "./src/utils.js":
+/*!**********************!*\
+  !*** ./src/utils.js ***!
+  \**********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var Util = {
+  distance: function distance(pos1, pos2) {
+    return Math.sqrt(Math.pow(pos2[0] - pos1[0], 2) + Math.pow(pos2[1] - pos1[1], 2));
+  }
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Util);
 
 /***/ }),
 
