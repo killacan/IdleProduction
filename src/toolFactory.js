@@ -12,6 +12,7 @@ class ToolFactory extends Node {
         this.receivable = ["copperIngots", "steelIngots"]
         this.requestTotal = {copperIngots: 10, steelIngots: 10}
         this.loops = 0
+        this.powerCost = 20
     }
 
     updateRSS() {

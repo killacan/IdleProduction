@@ -1,80 +1,93 @@
-import './styles/main.scss'
+import "./styles/main.scss";
 // import laughing from './assets/laughing.svg'
 
-const Game = require("./game.js")
-const IronMine = require("./ironMine.js")
+const Game = require("./game.js");
+const IronMine = require("./ironMine.js");
 // const Node = require("./node.js'")
 
 window.Game = Game;
 window.IronMine = IronMine;
 // window.Node = Node;
 
-
-
 document.addEventListener("DOMContentLoaded", function () {
-    let canvas = document.getElementById('game-canvas');
+  let canvas = document.getElementById("game-canvas");
 
-    let el = document.querySelector(".grid");
-    let iro = document.getElementById('total-iron-ore');
-    let iroing = document.getElementById('total-iron-ingots');
-    let steing = document.getElementById('total-steel-ingots')
-    let num = document.getElementById('total-money');
-    let bui = document.querySelector('.builder-menu');
-    let info = document.getElementById('description');
-    let sell = document.querySelector('.sell');
-    let music = document.querySelector('.music')
-    let copOre = document.getElementById('total-copper-ore');
-    let copIng = document.getElementById('total-copper-ingots');
-    let copwire = document.getElementById('total-copper-wire')
-    let toolsnum = document.getElementById('total-tools')
-    let tutbutton = document.getElementById('tut-button')
-    let tutbox = document.querySelector('.tutorial-holder')
-    let buildcost = document.getElementById('build-cost');
-    let dots = document.getElementById('circle-canvas')
-    // let ctx = canvas.getContext("2d")
+  let el = document.querySelector(".grid");
+  let iro = document.getElementById("total-iron-ore");
+  let iroing = document.getElementById("total-iron-ingots");
+  let steing = document.getElementById("total-steel-ingots");
+  let num = document.getElementById("total-money");
+  let bui = document.querySelector(".builder-menu");
+  let info = document.getElementById("description");
+  let sell = document.querySelector(".sell");
+  let music = document.querySelector(".music");
+  let copOre = document.getElementById("total-copper-ore");
+  let copIng = document.getElementById("total-copper-ingots");
+  let copwire = document.getElementById("total-copper-wire");
+  let toolsnum = document.getElementById("total-tools");
+  let tutbutton = document.getElementById("tut-button");
+  let tutbox = document.querySelector(".tutorial-holder");
+  let buildcost = document.getElementById("build-cost");
+  let dots = document.getElementById("circle-canvas");
+  let unlimitedPOWER = document.getElementById("total-power");
+  // let ctx = canvas.getContext("2d")
 
-    // ctx.moveTo(0, 0);
-    // ctx.lineTo(200, 100);
-    // ctx.stroke();
-    
-    // Box width
-    let bw = 600;
-    // Box height
-    let bh = 600;
-    // Padding
-    let p = 10;
+  // ctx.moveTo(0, 0);
+  // ctx.lineTo(200, 100);
+  // ctx.stroke();
 
-    // let canvas = document.getElementById("canvas");
-    let context = canvas.getContext("2d");
-    function drawBoard(){
-        for (let x = 0; x <= bw; x += 60) {
-            context.moveTo(0.5 + x + p, p);
-            context.lineTo(0.5 + x + p, bh + p);
-        }
+  // Box width
+  let bw = 600;
+  // Box height
+  let bh = 600;
+  // Padding
+  let p = 10;
 
-        for (let x = 0; x <= bh; x += 60) {
-            context.moveTo(p, 0.5 + x + p);
-            context.lineTo(bw + p, 0.5 + x + p);
-        }
-        context.strokeStyle = "#A01D26";
-        context.stroke();
+  // let canvas = document.getElementById("canvas");
+  let context = canvas.getContext("2d");
+  function drawBoard() {
+    for (let x = 0; x <= bw; x += 60) {
+      context.moveTo(0.5 + x + p, p);
+      context.lineTo(0.5 + x + p, bh + p);
     }
 
-    drawBoard();
-
-    tutbutton.addEventListener("click", closeBox)
-
-    function closeBox () {
-        tutbox.classList.add("hidden")
+    for (let x = 0; x <= bh; x += 60) {
+      context.moveTo(p, 0.5 + x + p);
+      context.lineTo(bw + p, 0.5 + x + p);
     }
+    context.strokeStyle = "#A01D26";
+    context.stroke();
+  }
 
-    
+  drawBoard();
 
-    // console.log(rss)
+  tutbutton.addEventListener("click", closeBox);
 
-    // console.log(music)
-    let gamev = new Game(el, iro, num, bui, info, sell, iroing, steing, music, copOre, copIng, copwire, toolsnum, buildcost, dots);
-    // gamev.map.startingMarket()
-    // gamev.updateTotalMoney(num)
+  function closeBox() {
+    tutbox.classList.add("hidden");
+  }
 
-})
+  // console.log(rss)
+
+  // console.log(music)
+  let gamev = new Game(
+    el,
+    iro,
+    num,
+    bui,
+    info,
+    sell,
+    iroing,
+    steing,
+    music,
+    copOre,
+    copIng,
+    copwire,
+    toolsnum,
+    buildcost,
+    dots,
+    unlimitedPOWER
+  );
+  // gamev.map.startingMarket()
+  // gamev.updateTotalMoney(num)
+});

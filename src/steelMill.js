@@ -12,6 +12,7 @@ class SteelMill extends Node {
         this.childNames = ["ToolFactory"]
         this.receivable = ["ironIngots"]
         this.requestTotal = {ironIngots: 10}
+        this.powerCost = 15
     }
 
     updateRSS() {

@@ -22,19 +22,20 @@ $highlights: #A01D26;
 
 .rss-left {
     // justify-content: space-between;
-    width: 55%;
+    width: 50%;
     text-align: center;
 }
 
 .rss-right {
     // justify-content: end;
-    width: 45%;
+    width: 50%;
     text-align: center;
 }
 
 .rss-left > ul {
     display: flex;
     flex-direction: row;
+    justify-content: end;
 
     li {
         padding: 10px;

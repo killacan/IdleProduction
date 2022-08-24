@@ -26,7 +26,8 @@ class Game {
     copwire,
     toolsnum,
     buildcost,
-    dots
+    dots,
+    unlimitedPower
   ) {
     this.map = new Map(el, iro, num, build);
     this.el = el;
@@ -43,6 +44,7 @@ class Game {
     this.toolsnum = toolsnum;
     this.buildcost = buildcost;
     this.dots = dots; 
+    this.unlimitedPower = unlimitedPower
     this.toggle = false;
     this.toggleMusic = false;
     this.descriptions = {
@@ -275,6 +277,7 @@ class Game {
     !this.map.allRSS["tools"]
       ? (this.toolsnum.innerHTML = 0)
       : (this.toolsnum.innerHTML = this.map.allRSS["tools"]);
+    this.unlimitedPower.innerHTML = this.map.totalPower
   }
 
   transferToMarket() {
@@ -295,22 +298,22 @@ class Game {
               this.map.money += Math.floor(sub[1] * marketfactor);
             } else if (sub[0] === "ironIngots") {
               building.resources["ironIngots"] = 0;
-              this.map.money += Math.floor(sub[1] * 6 * marketfactor);
+              this.map.money += Math.floor(sub[1] * 7 * marketfactor);
             } else if (sub[0] === "steelIngots") {
               building.resources["steelIngots"] = 0;
-              this.map.money += Math.floor(sub[1] * 70 * marketfactor);
+              this.map.money += Math.floor(sub[1] * 85 * marketfactor);
             } else if (sub[0] === "copperOre") {
               building.resources["copperOre"] = 0;
-              this.map.money += Math.floor(sub[1] * 8 * marketfactor);
+              this.map.money += Math.floor(sub[1] * 9 * marketfactor);
             } else if (sub[0] === "copperIngots") {
               building.resources["copperIngots"] = 0;
-              this.map.money += Math.floor(sub[1] * 80 * marketfactor);
+              this.map.money += Math.floor(sub[1] * 90 * marketfactor);
             } else if (sub[0] === "copperWire") {
               building.resources["copperWire"] = 0;
-              this.map.money += Math.floor(sub[1] * 480 * marketfactor);
+              this.map.money += Math.floor(sub[1] * 200 * marketfactor);
             } else if (sub[0] === "tools") {
               building.resources["tools"] = 0;
-              this.map.money += Math.floor(sub[1] * 425 * marketfactor);
+              this.map.money += Math.floor(sub[1] * 450 * marketfactor);
             }
           });
           // iterate through building rss, and subtract from total in building.
@@ -396,7 +399,7 @@ class Game {
 
 function sortByDistance (arr) {
   return arr.forEach((building) => {
-    
+
   }) 
 }
 

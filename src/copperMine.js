@@ -11,6 +11,7 @@ class CopperMine extends Node {
         this.childNames = ["CopperSmelter"]
         this.receivable = []
         this.loops = 0
+        this.powerCost = 5
     }
 
 

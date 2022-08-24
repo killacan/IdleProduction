@@ -29,7 +29,7 @@ $highlights: #A01D26;
 
 .container {
     display: grid;
-    grid-template-columns: 180px 1fr 620px 1fr 180px;
+    grid-template-columns: 1fr 180px 1fr 620px 1fr 180px 1fr;
     // justify-content: space-between;
     // position: absolute;
     // width: 100%;
@@ -41,7 +41,7 @@ $highlights: #A01D26;
 .grid-container {
     display: grid;
     width: 620px;
-    grid-column: 3;
+    grid-column: 4;
     grid-row: 1;
     // justify-content: center;
     grid-template-columns: 20% 20% 20% 20% 20%;
@@ -61,7 +61,7 @@ $highlights: #A01D26;
 
 .info-panel {
     display: grid;
-    grid-column: 5;
+    grid-column: 6;
     grid-row: 1;
     grid-template-columns: 33% 33% 33%;
     grid-template-rows: 50px 250px 50px;
@@ -98,7 +98,7 @@ $highlights: #A01D26;
 
 .builder-menu {
     display: grid;
-    grid-column: 1 / 1;
+    grid-column: 2;
     grid-row: 1;
     grid-template-columns: 33% 33% 33%;
     #builder-canvas {
