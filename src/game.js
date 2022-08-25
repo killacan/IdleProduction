@@ -219,21 +219,20 @@ class Game {
     setInterval(() => {
       this.map.setupBoard();
       // console.log(Object.values(this.map.allBuildings))
-      this.map.updatePower();
-    //   console.log(this.map.totalPower);
-      Object.values(this.map.allBuildings)
+      //   console.log(this.map.totalPower);
+      if (this.map.totalPower >= 0) {
+        // console.log("inside the if statement")
+        
+        Object.values(this.map.allBuildings)
         .flat()
         .forEach((ele) => ele.updateRSS());
+      }
+      this.map.updatePower();
       this.map.updateRSS();
       this.transferToMarket();
       this.transferToChildren();
-
-
-        // this.canvasCircleAnimation();
-        
       this.updateTotalMoney(this.map.num, this.map.iro);
     //   console.log(this.map.movingDots, "all Dots");
-      // console.log(this.map.allRSS)
       //call production
       //call transport
       // totals up resources
@@ -258,7 +257,6 @@ class Game {
       this.buildcost.innerHTML =
         this.descriptions[JSON.parse(this.map.selectedBuilding)].cost;
     }
-
     !this.map.allRSS["ironIngots"]
       ? (this.iroing.innerHTML = 0)
       : (this.iroing.innerHTML = this.map.allRSS["ironIngots"]);

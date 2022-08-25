@@ -112,6 +112,8 @@ class Map {
 
     if (Object.values(this.allBuildings).flat().length > 0) {
       for (let i = 0; i < Object.values(this.allBuildings).flat().length; i++) {
+        this.totalPower -= Object.values(this.allBuildings).flat()[i].powerCost //subtract power
+        console.log(Object.values(this.allBuildings).flat())
         let obRSS = Object.entries(
           Object.values(this.allBuildings).flat()[i].resources
         );
@@ -126,12 +128,19 @@ class Map {
   }
 
   updatePower() {
+    if (this.totalPower >= 0) {
+      this.money += Math.floor(this.totalPower / 100)
+    }
     this.totalPower = 0;
     this.allBuildings["WindMill"].forEach((powerplant) => {
       this.totalPower += powerplant.power;
-      this.money += Math.floor(powerplant.power / 100);
     });
   }
+
+  // could set a variable for able to produce based on if there was extra
+  //power when iterating, set to true when rss update.
+
+  // could just do power check when buildings update. rss. 
 
   placeBuilding(pos, type) {
     // take in the type of building. Create the building and place it on the map.

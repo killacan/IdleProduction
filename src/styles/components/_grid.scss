@@ -72,12 +72,12 @@ $highlights: #A01D26;
     }
     h3 {
         width: 180px;
-        grid-column: 1;
+        grid-column: 1/4;
         grid-row: 1;
         z-index: 1;
         display: flex;
         justify-content: center;
-        padding: 10px;
+        padding-top: 10px;
     }
     .description-holder {
         grid-column: 1/4;
