@@ -172,7 +172,7 @@ $highlights: #A01D26;
     cursor: pointer;
 }
 
-li:hover {
+.grid li:hover, .builder-menu li:hover {
     background-color: gray;
 }
 
