@@ -113,7 +113,7 @@ class Map {
     if (Object.values(this.allBuildings).flat().length > 0) {
       for (let i = 0; i < Object.values(this.allBuildings).flat().length; i++) {
         this.totalPower -= Object.values(this.allBuildings).flat()[i].powerCost //subtract power
-        console.log(Object.values(this.allBuildings).flat())
+        // console.log(Object.values(this.allBuildings).flat())
         let obRSS = Object.entries(
           Object.values(this.allBuildings).flat()[i].resources
         );

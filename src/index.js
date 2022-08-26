@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let buildcost = document.getElementById("build-cost");
   let dots = document.getElementById("circle-canvas");
   let unlimitedPOWER = document.getElementById("total-power");
+  let powerCost = document.getElementById("power-cost");
   // let ctx = canvas.getContext("2d")
 
   // ctx.moveTo(0, 0);
@@ -86,7 +87,8 @@ document.addEventListener("DOMContentLoaded", function () {
     toolsnum,
     buildcost,
     dots,
-    unlimitedPOWER
+    unlimitedPOWER,
+    powerCost
   );
   // gamev.map.startingMarket()
   // gamev.updateTotalMoney(num)

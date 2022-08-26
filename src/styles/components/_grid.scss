@@ -64,7 +64,7 @@ $highlights: #A01D26;
     grid-column: 6;
     grid-row: 1;
     grid-template-columns: 33% 33% 33%;
-    grid-template-rows: 50px 250px 50px;
+    grid-template-rows: 50px 250px 50px 50px;
     #info-canvas {
         grid-column: 1/1;
         grid-row: 1;
@@ -88,8 +88,19 @@ $highlights: #A01D26;
         background-color: $tertiary-color;
     }
     .cost-holder {
+        display: flex;
+        // justify-content: center;
         grid-column: 1/4;
         grid-row: 3;
+        padding-left: 10px;
+        padding-right: 10px;
+        background-color: $tertiary-color;
+    }
+    .power-cost-holder {
+        display: flex;
+        // justify-content: center;
+        grid-column: 1/4;
+        grid-row: 4;
         padding-left: 10px;
         padding-right: 10px;
         background-color: $tertiary-color;

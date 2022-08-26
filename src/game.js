@@ -27,7 +27,8 @@ class Game {
     toolsnum,
     buildcost,
     dots,
-    unlimitedPower
+    unlimitedPower,
+    powerCost
   ) {
     this.map = new Map(el, iro, num, build);
     this.el = el;
@@ -45,6 +46,7 @@ class Game {
     this.buildcost = buildcost;
     this.dots = dots; 
     this.unlimitedPower = unlimitedPower
+    this.powerCost = powerCost
     this.toggle = false;
     this.toggleMusic = false;
     this.descriptions = {
@@ -252,11 +254,12 @@ class Game {
     if (!!this.map.selectedBuilding) {
       this.info.innerHTML =
         this.descriptions[JSON.parse(this.map.selectedBuilding)].description;
-    }
-    if (!!this.map.selectedBuilding) {
       this.buildcost.innerHTML =
         this.descriptions[JSON.parse(this.map.selectedBuilding)].cost;
+      this.powerCost.innerHTML =
+        this.descriptions[JSON.parse(this.map.selectedBuilding)].powerCost;
     }
+
     !this.map.allRSS["ironIngots"]
       ? (this.iroing.innerHTML = 0)
       : (this.iroing.innerHTML = this.map.allRSS["ironIngots"]);
@@ -293,7 +296,7 @@ class Game {
           rssArr.forEach((sub) => {
             if (sub[0] === "ironOre") {
               building.resources["ironOre"] = 0;
-              this.map.money += Math.floor(sub[1] * marketfactor);
+              this.map.money += Math.floor((sub[1] * 1.1 ) * marketfactor);
             } else if (sub[0] === "ironIngots") {
               building.resources["ironIngots"] = 0;
               this.map.money += Math.floor(sub[1] * 7 * marketfactor);

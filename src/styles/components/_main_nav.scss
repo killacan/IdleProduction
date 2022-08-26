@@ -3,6 +3,9 @@ $secondary-color: #ACBEBE;
 $tertiary-color: #F4F4EF;
 $highlights: #A01D26;
 
+.nav {
+    min-width: 980px;
+}
 .main-nav {
     display: flex;
     justify-content: space-between;
