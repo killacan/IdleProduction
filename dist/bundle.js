@@ -53,6 +53,7 @@ var CopperExtruder = /*#__PURE__*/function (_Node) {
       copperIngots: 10
     };
     _this.loops = 0;
+    _this.powerCost = 15;
     return _this;
   }
 
@@ -342,7 +343,7 @@ var WindMill = __webpack_require__(/*! ./windMill */ "./src/windMill.js");
 var Utils = __webpack_require__(/*! ./utils */ "./src/utils.js");
 
 var Game = /*#__PURE__*/function () {
-  function Game(el, iro, num, build, info, sell, iroing, steing, music, copore, coping, copwire, toolsnum, buildcost, dots, unlimitedPower, powerCost) {
+  function Game(el, iro, num, build, info, sell, iroing, steing, music, copore, coping, copwire, toolsnum, buildcost, dots, unlimitedPower, powerCost, selebldg) {
     _classCallCheck(this, Game);
 
     this.map = new Map(el, iro, num, build);
@@ -362,6 +363,7 @@ var Game = /*#__PURE__*/function () {
     this.dots = dots;
     this.unlimitedPower = unlimitedPower;
     this.powerCost = powerCost;
+    this.selebldg = selebldg;
     this.toggle = false;
     this.toggleMusic = false;
     this.descriptions = {
@@ -571,6 +573,7 @@ var Game = /*#__PURE__*/function () {
         this.info.innerHTML = this.descriptions[JSON.parse(this.map.selectedBuilding)].description;
         this.buildcost.innerHTML = this.descriptions[JSON.parse(this.map.selectedBuilding)].cost;
         this.powerCost.innerHTML = this.descriptions[JSON.parse(this.map.selectedBuilding)].powerCost;
+        this.selebldg.innerHTML = this.descriptions[JSON.parse(this.map.selectedBuilding)].name;
       }
 
       !this.map.allRSS["ironIngots"] ? this.iroing.innerHTML = 0 : this.iroing.innerHTML = this.map.allRSS["ironIngots"];
@@ -2108,7 +2111,8 @@ document.addEventListener("DOMContentLoaded", function () {
   var buildcost = document.getElementById("build-cost");
   var dots = document.getElementById("circle-canvas");
   var unlimitedPOWER = document.getElementById("total-power");
-  var powerCost = document.getElementById("power-cost"); // let ctx = canvas.getContext("2d")
+  var powerCost = document.getElementById("power-cost");
+  var selebldg = document.getElementById("selected-building"); // let ctx = canvas.getContext("2d")
   // ctx.moveTo(0, 0);
   // ctx.lineTo(200, 100);
   // ctx.stroke();
@@ -2146,7 +2150,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // console.log(music)
 
 
-  var gamev = new Game(el, iro, num, bui, info, sell, iroing, steing, music, copOre, copIng, copwire, toolsnum, buildcost, dots, unlimitedPOWER, powerCost); // gamev.map.startingMarket()
+  var gamev = new Game(el, iro, num, bui, info, sell, iroing, steing, music, copOre, copIng, copwire, toolsnum, buildcost, dots, unlimitedPOWER, powerCost, selebldg); // gamev.map.startingMarket()
   // gamev.updateTotalMoney(num)
 });
 })();

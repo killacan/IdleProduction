@@ -13,6 +13,7 @@ class CopperExtruder extends Node {
         this.receivable = ["copperIngots"]
         this.requestTotal = {copperIngots: 10}
         this.loops = 0
+        this.powerCost = 15
     }
 
     updateRSS() {

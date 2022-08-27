@@ -28,7 +28,8 @@ class Game {
     buildcost,
     dots,
     unlimitedPower,
-    powerCost
+    powerCost,
+    selebldg
   ) {
     this.map = new Map(el, iro, num, build);
     this.el = el;
@@ -47,6 +48,7 @@ class Game {
     this.dots = dots; 
     this.unlimitedPower = unlimitedPower
     this.powerCost = powerCost
+    this.selebldg = selebldg
     this.toggle = false;
     this.toggleMusic = false;
     this.descriptions = {
@@ -258,6 +260,8 @@ class Game {
         this.descriptions[JSON.parse(this.map.selectedBuilding)].cost;
       this.powerCost.innerHTML =
         this.descriptions[JSON.parse(this.map.selectedBuilding)].powerCost;
+      this.selebldg.innerHTML =
+        this.descriptions[JSON.parse(this.map.selectedBuilding)].name;
     }
 
     !this.map.allRSS["ironIngots"]
