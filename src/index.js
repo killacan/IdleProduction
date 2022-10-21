@@ -25,8 +25,14 @@ document.addEventListener("DOMContentLoaded", function () {
   let copIng = document.getElementById("total-copper-ingots");
   let copwire = document.getElementById("total-copper-wire");
   let toolsnum = document.getElementById("total-tools");
-  let tutbutton = document.getElementById("tut-button");
-  let tutbox = document.querySelector(".tutorial-holder");
+  let tutbutton1 = document.getElementById("tut-button1");
+  let tutbox1 = document.querySelector(".tutorial-holder1");
+  let tutbutton2 = document.getElementById("tut-button2");
+  let tutbox2 = document.querySelector(".tutorial-holder2");
+  let tutbutton3 = document.getElementById("tut-button3");
+  let tutbox3 = document.querySelector(".tutorial-holder3");
+  let tutbutton4 = document.getElementById("tut-button4");
+  let tutbox4 = document.querySelector(".tutorial-holder4");
   let buildcost = document.getElementById("build-cost");
   let dots = document.getElementById("circle-canvas");
   let unlimitedPOWER = document.getElementById("total-power");
@@ -63,10 +69,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
   drawBoard();
 
-  tutbutton.addEventListener("click", closeBox);
+  tutbutton1.addEventListener("click", closeBox);
+  tutbutton2.addEventListener("click", closeBox);
+  tutbutton3.addEventListener("click", closeBox);
+  tutbutton4.addEventListener("click", closeBox);
+
+  let closeClick = 0
 
   function closeBox() {
-    tutbox.classList.add("hidden");
+    if (closeClick === 0) {
+      tutbox1.classList.add("hidden");
+      tutbox2.classList.remove("hidden");
+    } else if (closeClick === 1) {
+      tutbox2.classList.add("hidden");
+      tutbox3.classList.remove("hidden");
+    } else if (closeClick === 2) {
+      tutbox3.classList.add("hidden");
+      tutbox4.classList.remove("hidden");
+    } else {
+      tutbox4.classList.add("hidden");
+    }
+    closeClick += 1
   }
 
   // console.log(rss)
