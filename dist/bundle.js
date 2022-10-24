@@ -379,8 +379,7 @@ var Game = /*#__PURE__*/function () {
     };
     this.handleClickGrid = this.handleClickGrid.bind(this);
     this.handleClickBuild = this.handleClickBuild.bind(this);
-    this.handleClickSell = this.handleClickSell.bind(this); // this.handleCanvasBuild = this.handleCanvasBuild.bind(this);
-
+    this.handleClickSell = this.handleClickSell.bind(this);
     this.bindEvents();
     this.tick();
     this.updateTotalMoney(num, this.map.iro);
@@ -393,47 +392,8 @@ var Game = /*#__PURE__*/function () {
     value: function bindEvents() {
       this.el.addEventListener("click", this.handleClickGrid);
       this.build.addEventListener("click", this.handleClickBuild);
-      this.sell.addEventListener("click", this.handleClickSell); // this.dots.addEventListener("click", this.handleCanvasBuild);
-    } //   handleCanvasBuild(e) {
-    //     let context = this.dots.getContext("2d");
-    //     let cRect = this.dots.getBoundingClientRect();
-    //     const elex = Math.floor(((e.clientX - cRect.left) - 10) / 60);
-    //     const eley = Math.floor(((e.clientY - cRect.top) - 10) / 60);
-    //     let pos = [eley, elex];
-    //     console.log(pos)
-    //     if (this.map.selectedBuilding  && !this.map.getBuilding(pos)) {
-    //         if (JSON.parse(this.map.selectedBuilding) === "IronMine") {
-    //             this.map.placeBuilding(pos, new IronMine(pos));
-    //             // this.updateParentsAndChildren()
-    //             console.log(this.map.getBuilding(pos));
-    //             console.log(this.map.allBuildings);
-    //           } else if (JSON.parse(this.map.selectedBuilding) === "IronSmelter") {
-    //             this.map.placeBuilding(pos, new IronSmelter(pos));
-    //             // this.updateParentsAndChildren()
-    //             console.log(this.map.getBuilding(pos));
-    //             console.log(this.map.allBuildings);
-    //           } else if (JSON.parse(this.map.selectedBuilding) === "SteelMill") {
-    //             this.map.placeBuilding(pos, new SteelMill(pos));
-    //           } else if (JSON.parse(this.map.selectedBuilding) === "CopperMine") {
-    //             this.map.placeBuilding(pos, new CopperMine(pos));
-    //           } else if (JSON.parse(this.map.selectedBuilding) === "CopperSmelter") {
-    //             this.map.placeBuilding(pos, new CopperSmelter(pos));
-    //           } else if (JSON.parse(this.map.selectedBuilding) === "CopperExtruder") {
-    //             this.map.placeBuilding(pos, new CopperExtruder(pos));
-    //           } else if (JSON.parse(this.map.selectedBuilding) === "ToolFactory") {
-    //             this.map.placeBuilding(pos, new ToolFactory(pos));
-    //           } else if (JSON.parse(this.map.selectedBuilding) === "Market") {
-    //             this.map.placeBuilding(pos, new Market(pos));
-    //             // console.log(that.map.getBuilding(pos))
-    //             // console.log(that.map.allBuildings)
-    //           } else if (JSON.parse(this.map.selectedBuilding) === "WindMill") {
-    //             this.map.placeBuilding(pos, new WindMill(pos));
-    //           }
-    //         } else if (!!this.map.getBuilding(pos)) {
-    //           this.map.removeBuilding(pos);
-    //         }
-    //     }
-
+      this.sell.addEventListener("click", this.handleClickSell);
+    }
   }, {
     key: "musicHandler",
     value: function musicHandler() {
@@ -451,28 +411,22 @@ var Game = /*#__PURE__*/function () {
           backgroundMusic.pause();
         }
       });
-    }
+    } // this function is what builds the map, when you click on a square, it will build the building that is selected in the build menu
+
   }, {
     key: "handleClickGrid",
     value: function handleClickGrid(e) {
       var ele = e.target;
-      that = this; // console.log(ele);
-      // console.log(ele.tagName.toLowerCase() === "li");
+      that = this;
 
       if (ele.tagName.toLowerCase() === "li" && this.map.selectedBuilding) {
         // we have a pos and a name of building. building name is a string.
-        var pos = JSON.parse(ele.dataset.pos); // this.updateParentsAndChildren()
-        // console.log(JSON.parse(ele.dataset.pos))
-        // console.log(JSON.parse(this.map.selectedBuilding))
+        var pos = JSON.parse(ele.dataset.pos);
 
         if (JSON.parse(this.map.selectedBuilding) === "IronMine") {
-          this.map.placeBuilding(pos, new IronMine(pos)); // this.updateParentsAndChildren()
-          // console.log(this.map.getBuilding(pos));
-          // console.log(this.map.allBuildings);
+          this.map.placeBuilding(pos, new IronMine(pos));
         } else if (JSON.parse(this.map.selectedBuilding) === "IronSmelter") {
-          this.map.placeBuilding(pos, new IronSmelter(pos)); // this.updateParentsAndChildren()
-          // console.log(this.map.getBuilding(pos));
-          // console.log(this.map.allBuildings);
+          this.map.placeBuilding(pos, new IronSmelter(pos));
         } else if (JSON.parse(this.map.selectedBuilding) === "SteelMill") {
           this.map.placeBuilding(pos, new SteelMill(pos));
         } else if (JSON.parse(this.map.selectedBuilding) === "CopperMine") {
@@ -484,8 +438,7 @@ var Game = /*#__PURE__*/function () {
         } else if (JSON.parse(this.map.selectedBuilding) === "ToolFactory") {
           this.map.placeBuilding(pos, new ToolFactory(pos));
         } else if (JSON.parse(this.map.selectedBuilding) === "Market") {
-          this.map.placeBuilding(pos, new Market(pos)); // console.log(that.map.getBuilding(pos))
-          // console.log(that.map.allBuildings)
+          this.map.placeBuilding(pos, new Market(pos));
         } else if (JSON.parse(this.map.selectedBuilding) === "WindMill") {
           this.map.placeBuilding(pos, new WindMill(pos));
         } else if (JSON.parse(this.map.selectedBuilding) === "CoalMine") {}
@@ -496,16 +449,16 @@ var Game = /*#__PURE__*/function () {
   }, {
     key: "handleClickBuild",
     value: function handleClickBuild(e) {
-      var ele = e.target; // console.log(e.target.parentNode);
+      var ele = e.target;
 
       if (ele.tagName.toLowerCase() === "img") {
-        this.map.selectedBuilding = ele.parentNode.dataset.build; //   console.log(this.map.selectedBuilding);
+        this.map.selectedBuilding = ele.parentNode.dataset.build;
       }
     }
   }, {
     key: "handleClickSell",
     value: function handleClickSell(e) {
-      var ele = e.target; // console.log(ele.tagName)
+      var ele = e.target;
 
       if (ele.tagName.toLowerCase() === "button") {
         this.toggle = true;
@@ -523,19 +476,19 @@ var Game = /*#__PURE__*/function () {
       } else {
         this.toggleMusic = true;
       }
-    }
+    } // basic time mechanism of the game, happens about every second and sets the pace of the game
+
   }, {
     key: "tick",
     value: function tick() {
       var _this = this;
 
       setInterval(function () {
-        _this.map.setupBoard(); // console.log(Object.values(this.map.allBuildings))
-        //   console.log(this.map.totalPower);
-
+        // the board gets set up and the buildings are placed every second, this causes some issues when clicking to place a bulding,
+        // ideally when I refactor this it will instead use the canvas to handle building placement.
+        _this.map.setupBoard();
 
         if (_this.map.totalPower >= 0) {
-          // console.log("inside the if statement")
           Object.values(_this.map.allBuildings).flat().forEach(function (ele) {
             return ele.updateRSS();
           });
@@ -549,23 +502,15 @@ var Game = /*#__PURE__*/function () {
 
         _this.transferToChildren();
 
-        _this.updateTotalMoney(_this.map.num, _this.map.iro); //   console.log(this.map.movingDots, "all Dots");
-        //call production
-        //call transport
-        // totals up resources
-        // this.map.money = this.map.money += 1
-
+        _this.updateTotalMoney(_this.map.num, _this.map.iro);
       }, 1000);
     }
   }, {
     key: "updateTotalMoney",
     value: function updateTotalMoney(mon) {
-      var firstMon = mon.innerHTML; // console.log(mon.innerHTML, "first clg");
-
-      mon.innerHTML = this.map.money; // console.log(mon.innerHTML, "second clg");
-
-      var secondMon = mon.innerHTML;
-      console.log(firstMon, secondMon, "first and second clg");
+      var firstMon = mon.innerHTML;
+      mon.innerHTML = this.map.money;
+      var secondMon = mon.innerHTML; // this changes the color of money when it goes up or down
 
       if (firstMon > secondMon) {
         console.log("firstMon is greater than secondMon");
@@ -574,21 +519,22 @@ var Game = /*#__PURE__*/function () {
         mon.style.color = "green";
       } else {
         mon.style.color = "black";
-      }
+      } // this sets the html for the rss iron ore, has a conditional to make sure if none it shows 0
+
 
       if (!this.map.allRSS["ironOre"]) {
         this.map.iro.innerHTML = 0;
       } else {
         this.map.iro.innerHTML = this.map.allRSS["ironOre"];
-      } // console.log(new IronMine().description)
-
+      }
 
       if (!!this.map.selectedBuilding) {
         this.info.innerHTML = this.descriptions[JSON.parse(this.map.selectedBuilding)].description;
         this.buildcost.innerHTML = this.descriptions[JSON.parse(this.map.selectedBuilding)].cost;
         this.powerCost.innerHTML = this.descriptions[JSON.parse(this.map.selectedBuilding)].powerCost;
         this.selebldg.innerHTML = this.descriptions[JSON.parse(this.map.selectedBuilding)].name;
-      }
+      } // this sets the html for all the other rss
+
 
       !this.map.allRSS["ironIngots"] ? this.iroing.innerHTML = 0 : this.iroing.innerHTML = this.map.allRSS["ironIngots"];
       !this.map.allRSS["steelIngots"] ? this.steing.innerHTML = 0 : this.steing.innerHTML = this.map.allRSS["steelIngots"];
@@ -663,10 +609,10 @@ var Game = /*#__PURE__*/function () {
         if (building.parentNames) {
           building.parentNames.forEach(function (par) {
             parents = parents.concat(_this3.map.allBuildings[par]);
-          }); // console.log(parents, building.name)
+          });
         }
 
-        var parA = parents; // console.log(parA, building)
+        var parA = parents;
 
         if (!parA) {
           return;
@@ -681,12 +627,9 @@ var Game = /*#__PURE__*/function () {
               building.resources[requestRSS] = 0;
             }
 
-            var requestAmount = req[1] - building.resources[requestRSS]; // console.log(parA[i].nodepos, building.nodepos , "requestChecker ")
-            // debugger
+            var requestAmount = req[1] - building.resources[requestRSS];
 
-            if (!parA[i].resources[requestRSS]) {// console.log("check1")
-            } else if (parA[i].resources[requestRSS] < requestAmount) {
-              // console.log("check2")
+            if (!parA[i].resources[requestRSS]) {} else if (parA[i].resources[requestRSS] < requestAmount) {
               building.resources[requestRSS] += parA[i].resources[requestRSS];
               parA[i].resources[requestRSS] = 0;
 
@@ -744,11 +687,13 @@ var Game = /*#__PURE__*/function () {
   }]);
 
   return Game;
-}();
+}(); // feature not yet implemented, eventually will be used to determine priority of buildings, and then be used for when fuel cost is a thing.
+
 
 function sortByDistance(arr) {
   return arr.forEach(function (building) {});
-}
+} // translates grid position to canvas position.
+
 
 function toGrid(pos) {
   return [(pos[0] + 1) * 60 - 20, (pos[1] + 1) * 60 - 20];
