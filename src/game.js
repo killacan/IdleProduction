@@ -245,7 +245,20 @@ class Game {
   }
 
   updateTotalMoney(mon) {
+    let firstMon = mon.innerHTML
+    // console.log(mon.innerHTML, "first clg");
     mon.innerHTML = this.map.money;
+    // console.log(mon.innerHTML, "second clg");
+    let secondMon = mon.innerHTML
+    console.log(firstMon, secondMon, "first and second clg");
+    if (firstMon > secondMon) {
+      console.log("firstMon is greater than secondMon")
+      mon.style.color = "red"
+    } else if (firstMon < secondMon) {
+      mon.style.color = "green"
+    } else {
+      mon.style.color = "black"
+    }
     if (!this.map.allRSS["ironOre"]) {
       this.map.iro.innerHTML = 0;
     } else {
@@ -283,6 +296,12 @@ class Game {
       ? (this.toolsnum.innerHTML = 0)
       : (this.toolsnum.innerHTML = this.map.allRSS["tools"]);
     this.unlimitedPower.innerHTML = this.map.totalPower
+
+    if (this.map.totalPower < 0) {
+      this.unlimitedPower.style.color = "red"
+    } else if (this.map.totalPower >= 0) {
+      this.unlimitedPower.style.color = "green"
+    }       
   }
 
   transferToMarket() {

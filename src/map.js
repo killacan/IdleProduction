@@ -11,6 +11,7 @@ class Map {
     this.allBuildings = {};
     this.totalPower = 0;
     this.possibleBuildings = [
+      "WindMill",
       "IronMine",
       "IronSmelter",
       "SteelMill",
@@ -18,10 +19,10 @@ class Map {
       "CopperSmelter",
       "CopperExtruder",
       "ToolFactory",
-      "Market",
-      "WindMill",
+      "Market"
     ];
     this.imgPaths = {
+      WindMill: "src/assets/WindMill1.png",
       IronMine: "src/assets/ironMine3.png",
       IronSmelter: "src/assets/ironIngot2.png",
       SteelMill: "src/assets/Smelter2.png",
@@ -30,7 +31,6 @@ class Map {
       CopperExtruder: "src/assets/CopperWireIHardlyKnonwHer.png",
       ToolFactory: "src/assets/Wrench.png",
       Market: "src/assets/Market1.png",
-      WindMill: "src/assets/WindMill1.png",
     };
     this.movingDots = [];
     this.allRSS = {};
