@@ -6,7 +6,7 @@ class SteelMill extends Node {
         super(pos)
         this.nodepos = pos
         this.name = "SteelMill"
-        this.cost = 1000
+        this.cost = 500
         this.description = "A Steel Mill will turn 10 of your Iron Ingots into valuable Steel!"
         this.parentNames = ["IronSmelter"]
         this.childNames = ["ToolFactory"]

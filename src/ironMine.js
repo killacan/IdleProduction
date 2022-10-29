@@ -6,7 +6,7 @@ class IronMine extends Node {
         super(pos)
         this.nodepos = pos
         this.name = "IronMine"
-        this.cost = 200
+        this.cost = 100
         this.description = "An Iron mine can be placed anywhere, it will continually make 1 Iron Ore per tick."
         this.childNames = ["IronSmelter"]
         this.receivable = []

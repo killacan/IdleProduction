@@ -6,7 +6,7 @@ class CopperMine extends Node {
         super(pos)
         this.nodepos = pos
         this.name = "CopperMine"
-        this.cost = 400
+        this.cost = 200
         this.description = "A copper mine can be placed anywhere, it will continually make 1 Copper Ore per 5 seconds. Copper is much more valuable than Iron."
         this.childNames = ["CopperSmelter"]
         this.receivable = []

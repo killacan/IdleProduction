@@ -6,7 +6,7 @@ class IronSmelter extends Node {
         super(pos)
         this.nodepos = pos
         this.name = "IronSmelter"
-        this.cost = 500
+        this.cost = 250
         this.description = "Iron Smelter will take Iron Ore at 5 iron Ore per tick, and convert it to Iron Ingots"
         this.parentNames = ["IronMine"]
         this.childNames = ["SteelMill"]

@@ -6,7 +6,7 @@ class CopperSmelter extends Node {
         super(pos)
         this.nodepos = pos
         this.name = "CopperSmelter"
-        this.cost = 800
+        this.cost = 400
         this.description = "Copper Smelter will take Copper Ore at 5 copper Ore per 5 ticks, and convert it to Copper Ingots. Copper Ingots are much more valuable than Iron Ingots."
         this.parentNames = ["CopperMine"]
         this.childNames = ["Copper Extruder"]
