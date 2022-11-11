@@ -36,17 +36,7 @@ Each building will have its own little icon distinguishing it from other buildin
 
 - fuel is needed to be burned in order to transport goods from one building to another. (in progress)
 
-## Timeline
 
-- Friday, working web page (not much on it) and core functionality of a game. (classes and the ability to make a new game.)
-
-- Monday, building nodes logic completed.
-
-- Tuesday – basic graphics/icons done and a grid.
-
-- Wednesday – the ability to transport goods between buildings and place buildings.
-
-- Thursday – sale of goods at the market building.
 
 ## Tech notes
 
