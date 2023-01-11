@@ -56,13 +56,13 @@ document.addEventListener("DOMContentLoaded", function () {
   let context = canvas.getContext("2d");
   function drawBoard() {
     for (let x = 0; x <= bw; x += 60) {
-      context.moveTo(0.5 + x + p, p);
-      context.lineTo(0.5 + x + p, bh + p);
+      context.moveTo(0.5 + x + p, p + 45);
+      context.lineTo(0.5 + x + p, bh + p + 45);
     }
 
     for (let x = 0; x <= bh; x += 60) {
-      context.moveTo(p, 0.5 + x + p);
-      context.lineTo(bw + p, 0.5 + x + p);
+      context.moveTo(p, 0.5 + x + p + 45);
+      context.lineTo(bw + p, 0.5 + x + p + 45);
     }
     context.strokeStyle = "#A01D26";
     context.stroke();

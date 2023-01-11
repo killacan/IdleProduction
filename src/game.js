@@ -404,7 +404,7 @@ function sortByDistance (arr) {
 
 // translates grid position to canvas position.
 function toGrid (pos) {
-    return [(((pos[0] + 1) * 60) - 20), (((pos[1] + 1) * 60) - 20)];
+    return [(((pos[0] + 2) * 60) - 20), (((pos[1] + 1) * 60) - 20)];
 }
 
 module.exports = Game;
