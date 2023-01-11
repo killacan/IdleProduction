@@ -42,6 +42,8 @@ document.addEventListener("DOMContentLoaded", function () {
   let tooltip = document.getElementById("tooltip");
   let tooltiptext = document.getElementById("tooltip-text");
   let allImg = document.querySelectorAll("img");
+  let volup = document.querySelector(".volume-up");
+  let voldown = document.querySelector(".volume-down");
   // let ctx = canvas.getContext("2d")
 
   // ctx.moveTo(0, 0);
@@ -121,7 +123,9 @@ document.addEventListener("DOMContentLoaded", function () {
     bldicon,
     tooltip,
     tooltiptext,
-    allImg
+    allImg,
+    volup,
+    voldown
   );
   // gamev.map.startingMarket()
   // gamev.updateTotalMoney(num)

@@ -343,7 +343,7 @@ var WindMill = __webpack_require__(/*! ./windMill */ "./src/windMill.js");
 var Utils = __webpack_require__(/*! ./utils */ "./src/utils.js");
 
 var Game = /*#__PURE__*/function () {
-  function Game(el, iro, num, build, info, sell, iroing, steing, music, copore, coping, copwire, toolsnum, buildcost, dots, unlimitedPower, powerCost, selebldg, bldicon, tooltip, tooltiptext, allImg) {
+  function Game(el, iro, num, build, info, sell, iroing, steing, music, copore, coping, copwire, toolsnum, buildcost, dots, unlimitedPower, powerCost, selebldg, bldicon, tooltip, tooltiptext, allImg, volup, voldown) {
     _classCallCheck(this, Game);
 
     this.map = new Map(el, iro, num, build);
@@ -381,6 +381,8 @@ var Game = /*#__PURE__*/function () {
     this.tooltip = tooltip;
     this.tooltiptext = tooltiptext;
     this.allImg = allImg;
+    this.volup = volup;
+    this.voldown = voldown;
     this.handleClickGrid = this.handleClickGrid.bind(this);
     this.handleClickBuild = this.handleClickBuild.bind(this);
     this.handleClickSell = this.handleClickSell.bind(this);
@@ -405,12 +407,9 @@ var Game = /*#__PURE__*/function () {
       this.build.addEventListener("mousedown", this.handleClickBuild);
       this.build.addEventListener("mouseover", this.handleMouseOver);
       this.build.addEventListener("mouseout", this.handleMouseOut);
-      this.build.addEventListener("mousemove", this.handleMouseMove); // console.log(this.allImg)
-      // this.allImg.forEach(img => {
-      //   img.addEventListener("mouseover", this.handleMouseOver);
-      // });
-
-      this.sell.addEventListener("click", this.handleClickSell);
+      this.build.addEventListener("mousemove", this.handleMouseMove);
+      this.sell.addEventListener("click", this.handleClickSell); // this.volup.addEventListener("click", this.handleVolUp.bind(this))
+      // this.voldown.addEventListener("click", this.handleVolDown.bind(this))
     }
   }, {
     key: "musicHandler",
@@ -418,8 +417,8 @@ var Game = /*#__PURE__*/function () {
       var backgroundMusic = new Audio();
       backgroundMusic.src = "src/assets/4Harris Heller-Not-Enough-Movement.wav";
       backgroundMusic.loop = true;
-      backgroundMusic.volume = 0.5;
       var backgroundOn = false;
+      backgroundMusic.volume = 0.5;
       this.music.addEventListener("click", function () {
         if (backgroundOn === false) {
           backgroundOn = true;
@@ -429,7 +428,31 @@ var Game = /*#__PURE__*/function () {
           backgroundMusic.pause();
         }
       });
-    } // this function is what builds the map, when you click on a square, it will build the building that is selected in the build menu
+      this.volup.addEventListener("click", function () {
+        if (backgroundMusic.volume < 1) {
+          backgroundMusic.volume += 0.1;
+        }
+      });
+      this.voldown.addEventListener("click", function () {
+        if (backgroundMusic.volume > 0) {
+          backgroundMusic.volume -= 0.1;
+        }
+      });
+    } // handleVolUp() {
+    //   this.volume += 0.1
+    //   if (this.volume > 1) {
+    //     this.volume = 1
+    //   }
+    //   this.music.volume = this.volume
+    // }
+    // handleVolDown() {
+    //   this.volume -= 0.1
+    //   if (this.volume < 0) {
+    //     this.volume = 0
+    //   }
+    //   this.music.volume = this.volume
+    // }
+    // this function is what builds the map, when you click on a square, it will build the building that is selected in the build menu
 
   }, {
     key: "handleClickGrid",
@@ -494,8 +517,6 @@ var Game = /*#__PURE__*/function () {
       var ele = e.target;
 
       if (ele.tagName.toLowerCase() === "img") {
-        console.log(this.descriptions[JSON.parse(ele.parentNode.dataset.build)], "descriptions");
-        console.log(ele.parentNode.dataset.build);
         this.tooltiptext.innerText = this.descriptions[JSON.parse(ele.parentNode.dataset.build)].description;
         this.tooltip.style.visibility = "visible";
       }
@@ -2157,7 +2178,9 @@ document.addEventListener("DOMContentLoaded", function () {
   var bldicon = document.querySelector(".buildings");
   var tooltip = document.getElementById("tooltip");
   var tooltiptext = document.getElementById("tooltip-text");
-  var allImg = document.querySelectorAll("img"); // let ctx = canvas.getContext("2d")
+  var allImg = document.querySelectorAll("img");
+  var volup = document.querySelector(".volume-up");
+  var voldown = document.querySelector(".volume-down"); // let ctx = canvas.getContext("2d")
   // ctx.moveTo(0, 0);
   // ctx.lineTo(200, 100);
   // ctx.stroke();
@@ -2212,7 +2235,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // console.log(music)
 
 
-  var gamev = new Game(el, iro, num, bui, info, sell, iroing, steing, music, copOre, copIng, copwire, toolsnum, buildcost, dots, unlimitedPOWER, powerCost, selebldg, bldicon, tooltip, tooltiptext, allImg); // gamev.map.startingMarket()
+  var gamev = new Game(el, iro, num, bui, info, sell, iroing, steing, music, copOre, copIng, copwire, toolsnum, buildcost, dots, unlimitedPOWER, powerCost, selebldg, bldicon, tooltip, tooltiptext, allImg, volup, voldown); // gamev.map.startingMarket()
   // gamev.updateTotalMoney(num)
 });
 })();

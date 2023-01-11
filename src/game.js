@@ -33,7 +33,9 @@ class Game {
     bldicon,
     tooltip,
     tooltiptext,
-    allImg
+    allImg,
+    volup,
+    voldown
   ) {
     this.map = new Map(el, iro, num, build);
     this.el = el;
@@ -70,6 +72,8 @@ class Game {
     this.tooltip = tooltip
     this.tooltiptext = tooltiptext
     this.allImg = allImg
+    this.volup = volup
+    this.voldown = voldown
     this.handleClickGrid = this.handleClickGrid.bind(this);
     this.handleClickBuild = this.handleClickBuild.bind(this);
     this.handleClickSell = this.handleClickSell.bind(this);
@@ -93,19 +97,17 @@ class Game {
     this.build.addEventListener("mouseover", this.handleMouseOver);
     this.build.addEventListener("mouseout", this.handleMouseOut);
     this.build.addEventListener("mousemove", this.handleMouseMove);
-    // console.log(this.allImg)
-    // this.allImg.forEach(img => {
-    //   img.addEventListener("mouseover", this.handleMouseOver);
-    // });
     this.sell.addEventListener("click", this.handleClickSell);
+    // this.volup.addEventListener("click", this.handleVolUp.bind(this))
+    // this.voldown.addEventListener("click", this.handleVolDown.bind(this))
   }
 
   musicHandler() {
     let backgroundMusic = new Audio();
     backgroundMusic.src = "src/assets/4Harris Heller-Not-Enough-Movement.wav";
     backgroundMusic.loop = true;
-    backgroundMusic.volume = 0.5;
     let backgroundOn = false;
+    backgroundMusic.volume = 0.5;
     this.music.addEventListener("click", function () {
       if (backgroundOn === false) {
         backgroundOn = true;
@@ -115,7 +117,35 @@ class Game {
         backgroundMusic.pause();
       }
     });
+    this.volup.addEventListener("click", function () {
+      if (backgroundMusic.volume < 1) {
+        backgroundMusic.volume += 0.1;
+      }
+    });
+    this.voldown.addEventListener("click", function () {
+      if (backgroundMusic.volume > 0) {
+        backgroundMusic.volume -= 0.1;
+      }
+    });
+
   }
+
+  // handleVolUp() {
+  //   this.volume += 0.1
+  //   if (this.volume > 1) {
+  //     this.volume = 1
+  //   }
+  //   this.music.volume = this.volume
+  // }
+
+  // handleVolDown() {
+  //   this.volume -= 0.1
+  //   if (this.volume < 0) {
+  //     this.volume = 0
+  //   }
+  //   this.music.volume = this.volume
+  // }
+
 
   // this function is what builds the map, when you click on a square, it will build the building that is selected in the build menu
   handleClickGrid(e) {
@@ -179,8 +209,6 @@ class Game {
   handleMouseOver(e) {
     const ele = e.target;
     if (ele.tagName.toLowerCase() === "img") {
-      console.log(this.descriptions[JSON.parse(ele.parentNode.dataset.build)], "descriptions")
-      console.log(ele.parentNode.dataset.build)
       this.tooltiptext.innerText = this.descriptions[JSON.parse(ele.parentNode.dataset.build)].description;
       this.tooltip.style.visibility = "visible";
     }
