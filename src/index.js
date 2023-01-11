@@ -39,6 +39,9 @@ document.addEventListener("DOMContentLoaded", function () {
   let powerCost = document.getElementById("power-cost");
   let selebldg = document.getElementById("selected-building");
   let bldicon = document.querySelector(".buildings");
+  let tooltip = document.getElementById("tooltip");
+  let tooltiptext = document.getElementById("tooltip-text");
+  let allImg = document.querySelectorAll("img");
   // let ctx = canvas.getContext("2d")
 
   // ctx.moveTo(0, 0);
@@ -115,7 +118,10 @@ document.addEventListener("DOMContentLoaded", function () {
     unlimitedPOWER,
     powerCost,
     selebldg,
-    bldicon
+    bldicon,
+    tooltip,
+    tooltiptext,
+    allImg
   );
   // gamev.map.startingMarket()
   // gamev.updateTotalMoney(num)

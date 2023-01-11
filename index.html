@@ -14,7 +14,7 @@
 </head>
 <body>
     <!-- <img src="src/assets/ironIngot.png"></img> -->
-        <header class="nav">
+    <header class="nav">
         <nav class="main-nav">
             <div class="div-box" >
                 <button class="music">MUSIC</button>
@@ -106,6 +106,9 @@
         <div class="builder-menu">
             <h3>Build Menu</h3>
             <canvas id="builder-canvas" width="180px" height="675px"></canvas>
+            <div id="tooltip">
+                <p id="tooltip-text"></p>
+            </div>
         </div>
         <div class="grid-container" width="620px"height="675px">
             
@@ -118,11 +121,11 @@
             <div class="grid">
                 
 
-                </div class="circles">
+            </div class="circles">
 
-                <canvas id="circle-canvas" width="620px" height="675px"></canvas>
+                <canvas id="circle-canvas" width="620px" height="620px"></canvas>
 
-            </div>
+        </div>
             <div class="info-panel">
                 <h3 id="selected-building">Selected Building</h3>
                 <canvas id="info-canvas" width="180px" height="675px"></canvas>
@@ -130,7 +133,7 @@
                 <div class="cost-holder"><p>Build Cost:</p><span id="build-cost"></span></div>
                 <div class="power-cost-holder"><p>Power Cost:</p><span id="power-cost"></span></div>
             </div>
-        </div>
+    </div>
 
     
 

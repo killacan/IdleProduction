@@ -222,6 +222,16 @@ $highlights: #A01D26;
     width: 620px;
     height: 620px;
     grid-column: 1; 
-    grid-row: 1;
+    grid-row: 2;
     pointer-events: none;
+}
+
+#tooltip {
+    position: absolute;
+    z-index: 10;
+    padding: 10px;
+    background-color: $tertiary-color;
+    border-radius: 10px;
+    border: 1px solid $highlights;
+    visibility: hidden;
 }

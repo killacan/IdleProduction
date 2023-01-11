@@ -30,7 +30,10 @@ class Game {
     unlimitedPower,
     powerCost,
     selebldg,
-    bldicon
+    bldicon,
+    tooltip,
+    tooltiptext,
+    allImg
   ) {
     this.map = new Map(el, iro, num, build);
     this.el = el;
@@ -64,24 +67,36 @@ class Game {
       WindMill: new WindMill(),
     };
     this.bldicon = bldicon
+    this.tooltip = tooltip
+    this.tooltiptext = tooltiptext
+    this.allImg = allImg
     this.handleClickGrid = this.handleClickGrid.bind(this);
     this.handleClickBuild = this.handleClickBuild.bind(this);
     this.handleClickSell = this.handleClickSell.bind(this);
-    this.handleClickDragStart = this.handleClickDragStart.bind(this)
-    this.handleDrop = this.handleDrop.bind(this)
+    this.handleClickDragStart = this.handleDragStart.bind(this)
+    this.handleMouseOver = this.handleMouseOver.bind(this);
+    this.handleMouseOut = this.handleMouseOut.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
     this.bindEvents();
     this.tick();
     this.updateTotalMoney(num, this.map.iro);
     this.musicHandler();
     this.canvasCircleAnimation();
-
+    this.oldEle = null;
   }
 
   bindEvents() {
     this.el.addEventListener("mouseup", this.handleClickGrid);
-    this.el.addEventListener("drop", this.handleDrop);
-    this.build.addEventListener("dragstart", this.handleClickDragStart)
+    this.el.addEventListener("drop", this.handleClickGrid);
+    this.build.addEventListener("dragstart", this.handleDragStart)
     this.build.addEventListener("mousedown", this.handleClickBuild);
+    this.build.addEventListener("mouseover", this.handleMouseOver);
+    this.build.addEventListener("mouseout", this.handleMouseOut);
+    this.build.addEventListener("mousemove", this.handleMouseMove);
+    // console.log(this.allImg)
+    // this.allImg.forEach(img => {
+    //   img.addEventListener("mouseover", this.handleMouseOver);
+    // });
     this.sell.addEventListener("click", this.handleClickSell);
   }
 
@@ -137,51 +152,57 @@ class Game {
     }
   }
 
-  handleDrop(e) {
-    e.preventDefault();
-    console.log("hit that drop")
-    const ele = e.target;
-    if (ele.tagName.toLowerCase() === "li" && this.map.selectedBuilding) {
-      // we have a pos and a name of building. building name is a string.
-      let pos = JSON.parse(ele.dataset.pos);
-      if (JSON.parse(this.map.selectedBuilding) === "IronMine") {
-        this.map.placeBuilding(pos, new IronMine(pos));
-      } else if (JSON.parse(this.map.selectedBuilding) === "IronSmelter") {
-        this.map.placeBuilding(pos, new IronSmelter(pos));
-      } else if (JSON.parse(this.map.selectedBuilding) === "SteelMill") {
-        this.map.placeBuilding(pos, new SteelMill(pos));
-      } else if (JSON.parse(this.map.selectedBuilding) === "CopperMine") {
-        this.map.placeBuilding(pos, new CopperMine(pos));
-      } else if (JSON.parse(this.map.selectedBuilding) === "CopperSmelter") {
-        this.map.placeBuilding(pos, new CopperSmelter(pos));
-      } else if (JSON.parse(this.map.selectedBuilding) === "CopperExtruder") {
-        this.map.placeBuilding(pos, new CopperExtruder(pos));
-      } else if (JSON.parse(this.map.selectedBuilding) === "ToolFactory") {
-        this.map.placeBuilding(pos, new ToolFactory(pos));
-      } else if (JSON.parse(this.map.selectedBuilding) === "Market") {
-        this.map.placeBuilding(pos, new Market(pos));
-      } else if (JSON.parse(this.map.selectedBuilding) === "WindMill") {
-        this.map.placeBuilding(pos, new WindMill(pos));
-      } else if (JSON.parse(this.map.selectedBuilding) === "CoalMine") {
-        
-      }
-    }
-  }
-
+  // this function is what selects the building in the build menu
   handleClickBuild(e) {
     const ele = e.target;
     if (ele.tagName.toLowerCase() === "img") {
       this.map.selectedBuilding = ele.parentNode.dataset.build;
     }
-    // if (this.map.selectedBuilding) {
-    //   console.log(this.map.selectedBuilding);
-    //   console.log(this.bldicon);
-    // }
 
-    // ele.parentNode.classList.add("selected");
+    // I am doing this here to "select" the current selected building
+    ele.parentNode.classList.add("selected");
+
+    // this is to remove "selected" from the previusly selected building
+    // without removing it from the current selected building
+    if (this.oldEle && ele.tagName.toLowerCase() === "img" && this.oldEle !== ele) {
+      this.oldEle.classList.remove("selected");
+      this.oldEle.parentNode.classList.remove("selected");
+    }
+
+    // I need to save the current selected building so that I can remove it later if needed.
+    if (ele.tagName.toLowerCase() === "img") {
+      this.oldEle = ele;
+    }
+
   }
 
-  handleClickDragStart(e) {
+  handleMouseOver(e) {
+    const ele = e.target;
+    if (ele.tagName.toLowerCase() === "img") {
+      console.log(this.descriptions[JSON.parse(ele.parentNode.dataset.build)], "descriptions")
+      console.log(ele.parentNode.dataset.build)
+      this.tooltiptext.innerText = this.descriptions[JSON.parse(ele.parentNode.dataset.build)].description;
+      this.tooltip.style.visibility = "visible";
+    }
+  }
+
+  handleMouseOut(e) {
+    const ele = e.target;
+    if (ele.tagName.toLowerCase() === "img") {
+      this.tooltip.style.visibility = "hidden";
+    }
+  }
+
+  handleMouseMove(e) {
+    const ele = e.target;
+    if (ele.tagName.toLowerCase() === "img") {
+      this.tooltip.style.top = e.pageY + 10 + "px";
+      this.tooltip.style.left = e.pageX + 10 + "px";
+    }
+  }
+
+  // this function starts the drag, needed for drag to work correctly. 
+  handleDragStart(e) {
     e.preventDefault();
     const ele = e.target;
   }
@@ -401,7 +422,7 @@ function sortByDistance (arr) {
 
 // translates grid position to canvas position.
 function toGrid (pos) {
-    return [(((pos[0] + 2) * 60) - 20), (((pos[1] + 1) * 60) - 20)];
+    return [(((pos[0] + 1) * 60) - 20), (((pos[1] + 1) * 60) - 20)];
 }
 
 module.exports = Game;
