@@ -154,10 +154,14 @@ $highlights: #A01D26;
 
         li:hover {
             background-color: gray;
-            width: 80px;
-            height: 80px;
-            margin: 5px auto;
             transition-duration: 300ms;
+            transform: scale(1.1);
+        }
+
+        .selected {
+            background-color: gray;
+            transition-duration: 300ms;
+            transform: scale(1.1);
         }
     }
 
@@ -196,10 +200,12 @@ $highlights: #A01D26;
 
 .grid li:hover, .builder-menu li:hover {
     background-color: gray;
+    background-color: gray;
+    transition-duration: 300ms;
+    transform: scale(1.1);
+    border: 1px solid $highlights;
 
 }
-
-
 
 #circle-canvas {
     width: 620px;

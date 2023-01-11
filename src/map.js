@@ -98,6 +98,7 @@ class Map {
       li.dataset.build = JSON.stringify(this.possibleBuildings[i]);
       let img = new Image();
       img.src = Object.values(this.imgPaths)[i];
+      li.classList.add("buildings")
       li.append(img);
       ul.append(li);
     }

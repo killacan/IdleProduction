@@ -29,7 +29,8 @@ class Game {
     dots,
     unlimitedPower,
     powerCost,
-    selebldg
+    selebldg,
+    bldicon
   ) {
     this.map = new Map(el, iro, num, build);
     this.el = el;
@@ -62,9 +63,12 @@ class Game {
       Market: new Market(),
       WindMill: new WindMill(),
     };
+    this.bldicon = bldicon
     this.handleClickGrid = this.handleClickGrid.bind(this);
     this.handleClickBuild = this.handleClickBuild.bind(this);
     this.handleClickSell = this.handleClickSell.bind(this);
+    this.handleClickDragStart = this.handleClickDragStart.bind(this)
+    this.handleDrop = this.handleDrop.bind(this)
     this.bindEvents();
     this.tick();
     this.updateTotalMoney(num, this.map.iro);
@@ -74,8 +78,10 @@ class Game {
   }
 
   bindEvents() {
-    this.el.addEventListener("click", this.handleClickGrid);
-    this.build.addEventListener("click", this.handleClickBuild);
+    this.el.addEventListener("mouseup", this.handleClickGrid);
+    this.el.addEventListener("drop", this.handleDrop);
+    this.build.addEventListener("dragstart", this.handleClickDragStart)
+    this.build.addEventListener("mousedown", this.handleClickBuild);
     this.sell.addEventListener("click", this.handleClickSell);
   }
 
@@ -131,11 +137,54 @@ class Game {
     }
   }
 
+  handleDrop(e) {
+    e.preventDefault();
+    console.log("hit that drop")
+    const ele = e.target;
+    if (ele.tagName.toLowerCase() === "li" && this.map.selectedBuilding) {
+      // we have a pos and a name of building. building name is a string.
+      let pos = JSON.parse(ele.dataset.pos);
+      if (JSON.parse(this.map.selectedBuilding) === "IronMine") {
+        this.map.placeBuilding(pos, new IronMine(pos));
+      } else if (JSON.parse(this.map.selectedBuilding) === "IronSmelter") {
+        this.map.placeBuilding(pos, new IronSmelter(pos));
+      } else if (JSON.parse(this.map.selectedBuilding) === "SteelMill") {
+        this.map.placeBuilding(pos, new SteelMill(pos));
+      } else if (JSON.parse(this.map.selectedBuilding) === "CopperMine") {
+        this.map.placeBuilding(pos, new CopperMine(pos));
+      } else if (JSON.parse(this.map.selectedBuilding) === "CopperSmelter") {
+        this.map.placeBuilding(pos, new CopperSmelter(pos));
+      } else if (JSON.parse(this.map.selectedBuilding) === "CopperExtruder") {
+        this.map.placeBuilding(pos, new CopperExtruder(pos));
+      } else if (JSON.parse(this.map.selectedBuilding) === "ToolFactory") {
+        this.map.placeBuilding(pos, new ToolFactory(pos));
+      } else if (JSON.parse(this.map.selectedBuilding) === "Market") {
+        this.map.placeBuilding(pos, new Market(pos));
+      } else if (JSON.parse(this.map.selectedBuilding) === "WindMill") {
+        this.map.placeBuilding(pos, new WindMill(pos));
+      } else if (JSON.parse(this.map.selectedBuilding) === "CoalMine") {
+        
+      }
+    }
+  }
+
   handleClickBuild(e) {
     const ele = e.target;
     if (ele.tagName.toLowerCase() === "img") {
       this.map.selectedBuilding = ele.parentNode.dataset.build;
     }
+    // if (this.map.selectedBuilding) {
+    //   console.log(this.map.selectedBuilding);
+    //   console.log(this.bldicon);
+    // }
+
+    // ele.parentNode.classList.add("selected");
+  }
+
+  handleClickDragStart(e) {
+    e.preventDefault();
+    const ele = e.target;
+    console.log("I am being dragged")
   }
 
   handleClickSell(e) {
