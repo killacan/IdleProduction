@@ -17,14 +17,11 @@ class IronSmelter extends Node {
 
 
     updateRSS () {
-        // console.log(this.resources, "inside RSS update Iron Smelter")
         this.resources["ironIngots"] ||=  this.resources["ironIngots"] = 0
         if (this.resources["ironOre"] >= 5) {
             this.resources["ironOre"] -= 5
             this.resources["ironIngots"] += 1
         }
-        // console.log(this.resources["ironOre"])
-        // console.log(this.map)
     }
 }
 

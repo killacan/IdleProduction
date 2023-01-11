@@ -17,7 +17,6 @@ class CopperExtruder extends Node {
     }
 
     updateRSS() {
-        // console.log(this.resources, "I am inside the steel mill")
         this.loops++
         if (this.loops > 10) {
             this.loops = 0

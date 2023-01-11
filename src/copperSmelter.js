@@ -18,7 +18,6 @@ class CopperSmelter extends Node {
 
 
     updateRSS () {
-        // console.log(this.resources, "inside RSS update Copper Smelter")
         this.loops++
         if (this.loops > 5) {
             this.loops = 0
@@ -28,8 +27,6 @@ class CopperSmelter extends Node {
                 this.resources["copperIngots"] += 1
             }
         }
-        // console.log(this.resources["copperOre"])
-        // console.log(this.map)
     }
 }
 

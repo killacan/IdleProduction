@@ -21,8 +21,6 @@ class CopperMine extends Node {
             this.loops = 0
             this.resources["copperOre"] ||=  this.resources["copperOre"] = 0
             this.resources["copperOre"]++
-            // console.log(this.resources["copperOre"], "working in the mine")
-            // console.log(this.map)
         }
     }
 }

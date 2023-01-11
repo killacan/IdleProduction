@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let tutbox3 = document.querySelector(".tutorial-holder3");
   let tutbutton4 = document.getElementById("tut-button4");
   let tutbox4 = document.querySelector(".tutorial-holder4");
+  let tutbutton5 = document.getElementById("tut-button5");
   let buildcost = document.getElementById("build-cost");
   let dots = document.getElementById("circle-canvas");
   let unlimitedPOWER = document.getElementById("total-power");
@@ -79,6 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
   tutbutton2.addEventListener("click", closeBox);
   tutbutton3.addEventListener("click", closeBox);
   tutbutton4.addEventListener("click", closeBox);
+  tutbutton5.addEventListener("click", skipTut);
 
   let closeClick = 0
 
@@ -98,9 +100,10 @@ document.addEventListener("DOMContentLoaded", function () {
     closeClick += 1
   }
 
-  // console.log(rss)
+  function skipTut() {
+    tutbox1.classList.add("hidden");
+  }
 
-  // console.log(music)
   let gamev = new Game(
     el,
     iro,

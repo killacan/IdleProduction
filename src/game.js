@@ -98,8 +98,9 @@ class Game {
     this.build.addEventListener("mouseout", this.handleMouseOut);
     this.build.addEventListener("mousemove", this.handleMouseMove);
     this.sell.addEventListener("click", this.handleClickSell);
-    // this.volup.addEventListener("click", this.handleVolUp.bind(this))
-    // this.voldown.addEventListener("click", this.handleVolDown.bind(this))
+    this.sell.addEventListener("mouseover", this.handleMouseOver);
+    this.sell.addEventListener("mouseout", this.handleMouseOut);
+    this.sell.addEventListener("mousemove", this.handleMouseMove);
   }
 
   musicHandler() {
@@ -107,7 +108,7 @@ class Game {
     backgroundMusic.src = "src/assets/4Harris Heller-Not-Enough-Movement.wav";
     backgroundMusic.loop = true;
     let backgroundOn = false;
-    backgroundMusic.volume = 0.5;
+    backgroundMusic.volume = 0.3;
     this.music.addEventListener("click", function () {
       if (backgroundOn === false) {
         backgroundOn = true;
@@ -130,26 +131,13 @@ class Game {
 
   }
 
-  // handleVolUp() {
-  //   this.volume += 0.1
-  //   if (this.volume > 1) {
-  //     this.volume = 1
-  //   }
-  //   this.music.volume = this.volume
-  // }
-
-  // handleVolDown() {
-  //   this.volume -= 0.1
-  //   if (this.volume < 0) {
-  //     this.volume = 0
-  //   }
-  //   this.music.volume = this.volume
-  // }
-
-
   // this function is what builds the map, when you click on a square, it will build the building that is selected in the build menu
   handleClickGrid(e) {
     const ele = e.target;
+    let buildSound = new Audio();
+    buildSound.src = "src/assets/Ratchet.wav"
+    buildSound.loop = false;
+    buildSound.volume = 0.2;
     that = this;
     if (ele.tagName.toLowerCase() === "li" && this.map.selectedBuilding) {
       // we have a pos and a name of building. building name is a string.
@@ -176,10 +164,12 @@ class Game {
         
       }
 
-    
+      buildSound.play();
     } else if (ele.tagName.toLowerCase() === "img") {
       this.map.removeBuilding(JSON.parse(ele.parentNode.dataset.pos));
     }
+
+    
   }
 
   // this function is what selects the building in the build menu
@@ -223,10 +213,10 @@ class Game {
 
   handleMouseMove(e) {
     const ele = e.target;
-    if (ele.tagName.toLowerCase() === "img") {
+    // if (ele.tagName.toLowerCase() === "img") {
       this.tooltip.style.top = e.pageY + 10 + "px";
       this.tooltip.style.left = e.pageX + 10 + "px";
-    }
+    // }
   }
 
   // this function starts the drag, needed for drag to work correctly. 
@@ -336,12 +326,10 @@ class Game {
         .flat()
         .forEach((building) => {
           let rssArr = Object.entries(building.resources);
-          // console.log(rssArr, "rssArr");
           let marketfactor = 1;
           if (this.map.allBuildings["Market"]) {
             marketfactor += this.map.allBuildings["Market"].length / 5;
           }
-          // console.log(marketfactor, "marketfactor");
           rssArr.forEach((sub) => {
             if (sub[0] === "ironOre") {
               building.resources["ironOre"] = 0;

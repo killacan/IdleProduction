@@ -54,7 +54,6 @@ class Map {
     for (let i = 0; i < this.possibleBuildings.length; i++) {
       this.allBuildings[this.possibleBuildings[i]] = [];
     }
-    // console.log(this.allBuildings);
     return grid;
   }
 

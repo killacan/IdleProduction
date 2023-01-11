@@ -19,8 +19,6 @@ class CoalMine extends Node {
         
         this.resources["coal"] ||=  this.resources["coal"] = 0
         this.resources["coal"] += 5
-        // console.log(this.resources["copperOre"], "working in the mine")
-        // console.log(this.map)
     
     }
 }
