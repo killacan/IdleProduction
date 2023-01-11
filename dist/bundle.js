@@ -502,7 +502,6 @@ var Game = /*#__PURE__*/function () {
     value: function handleClickDragStart(e) {
       e.preventDefault();
       var ele = e.target;
-      console.log("I am being dragged");
     }
   }, {
     key: "handleClickSell",
@@ -518,7 +517,6 @@ var Game = /*#__PURE__*/function () {
     key: "handleClickMusic",
     value: function handleClickMusic(e) {
       var ele = e.target;
-      console.log(ele.tagName);
 
       if (ele.tagName.toLowerCase() === "button" && this.toggleMusic) {
         this.toggleMusic = false;
@@ -562,7 +560,6 @@ var Game = /*#__PURE__*/function () {
       var secondMon = mon.innerHTML; // this changes the color of money when it goes up or down
 
       if (firstMon > secondMon) {
-        console.log("firstMon is greater than secondMon");
         mon.style.color = "red";
       } else if (firstMon < secondMon) {
         mon.style.color = "green";

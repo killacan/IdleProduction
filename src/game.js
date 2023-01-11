@@ -184,7 +184,6 @@ class Game {
   handleClickDragStart(e) {
     e.preventDefault();
     const ele = e.target;
-    console.log("I am being dragged")
   }
 
   handleClickSell(e) {
@@ -197,7 +196,6 @@ class Game {
 
   handleClickMusic(e) {
     const ele = e.target;
-    console.log(ele.tagName);
 
     if (ele.tagName.toLowerCase() === "button" && this.toggleMusic) {
       this.toggleMusic = false;
@@ -231,7 +229,6 @@ class Game {
     let secondMon = mon.innerHTML
     // this changes the color of money when it goes up or down
     if (firstMon > secondMon) {
-      console.log("firstMon is greater than secondMon")
       mon.style.color = "red"
     } else if (firstMon < secondMon) {
       mon.style.color = "green"
