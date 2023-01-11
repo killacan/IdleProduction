@@ -7,11 +7,17 @@ $highlights: #A01D26;
     min-width: 980px;
 }
 .main-nav {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 180px 1fr 620px 1fr 180px 1fr;
     justify-content: space-between;
     margin: 0 auto;
     background-color: #ACBEBE;
-    padding: 0 70px;
+}
+
+.main-title {
+    display: flex;
+    grid-column: 4;
+    justify-content: center;
 }
 
 .main-nav > ul {
@@ -23,10 +29,16 @@ $highlights: #A01D26;
 }
 
 .div-box {
-    width: 268px;
-    button {
-        margin: 20px; 
-    }
+    grid-column: 2;
+    width: auto;
+    margin: auto;
+    // button {
+    //     margin: auto; 
+    // }
+}
+
+.logo-list {
+    grid-column: 6;
 }
 
 .main-nav li {
