@@ -434,23 +434,17 @@ class Game {
   canvasCircleAnimation() {
       // this function is going to have to draw a circle on the canvas. the circle should be on the pos1 passed in. the circle should move to the pos2 passed in.
       let ctx = this.dots.getContext("2d");
-      let that = this
-          // setInterval(() => {
-          //     ctx.clearRect(0, 0, innerWidth, innerHeight);
-          //     this.map.movingDots.forEach((dot) => {
-          //         dot.draw(ctx);
-          //         dot.move();
-          //         if (dot.startPos[0] === dot.endPos[0] && dot.startPos[1] === dot.endPos[1] || dot.startPos[0] > innerWidth || dot.startPos[0] < 0 || dot.startPos[1] > innerHeight || dot.startPos[1] < 0) {
-          //             this.map.movingDots.splice(this.map.movingDots.indexOf(dot), 1);
-          //         }
-          //     })
-          // }, 16);
-
+      let that = this;
       function animate() {
         ctx.clearRect(0, 0, innerWidth, innerHeight);
         that.map.movingDots.forEach((dot) => {
             dot.draw(ctx);
             dot.move();
+            ctx.beginPath();
+            ctx.moveTo(dot.theRealStartPos[1], dot.theRealStartPos[0]);
+            ctx.lineTo(dot.endPos[1], dot.endPos[0]);
+            ctx.lineWidth = 1;
+            ctx.stroke();
             if (dot.startPos[0] === dot.endPos[0] && dot.startPos[1] === dot.endPos[1] || dot.startPos[0] > innerWidth || dot.startPos[0] < 0 || dot.startPos[1] > innerHeight || dot.startPos[1] < 0) {
                 that.map.movingDots.splice(that.map.movingDots.indexOf(dot), 1);
             }

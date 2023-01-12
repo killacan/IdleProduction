@@ -8,6 +8,7 @@ class Dot {
         this.name = "Dot"
         this.dposX = (this.startPos[0] - this.endPos[0]) / 60;
         this.dposY = (this.startPos[1] - this.endPos[1]) / 60;
+        this.theRealStartPos = pos1
     }
 
     move () {
