@@ -260,8 +260,8 @@ var Dot = /*#__PURE__*/function () {
     this.startPos = pos1;
     this.endPos = pos2;
     this.name = "Dot";
-    this.dposX = (this.startPos[0] - this.endPos[0]) / 20;
-    this.dposY = (this.startPos[1] - this.endPos[1]) / 20;
+    this.dposX = (this.startPos[0] - this.endPos[0]) / 60;
+    this.dposY = (this.startPos[1] - this.endPos[1]) / 60;
   }
 
   _createClass(Dot, [{
@@ -496,7 +496,6 @@ var Game = /*#__PURE__*/function () {
         } else if (JSON.parse(this.map.selectedBuilding) === "CoalMine") {}
 
         if (this.toggleSound) {
-          console.log(this.toggleSound);
           buildSound.play();
         }
       } else if (ele.tagName.toLowerCase() === "img") {
@@ -762,22 +761,33 @@ var Game = /*#__PURE__*/function () {
   }, {
     key: "canvasCircleAnimation",
     value: function canvasCircleAnimation() {
-      var _this5 = this;
-
       // this function is going to have to draw a circle on the canvas. the circle should be on the pos1 passed in. the circle should move to the pos2 passed in.
       var ctx = this.dots.getContext("2d");
-      setInterval(function () {
-        ctx.clearRect(0, 0, innerWidth, innerHeight);
+      var that = this; // setInterval(() => {
+      //     ctx.clearRect(0, 0, innerWidth, innerHeight);
+      //     this.map.movingDots.forEach((dot) => {
+      //         dot.draw(ctx);
+      //         dot.move();
+      //         if (dot.startPos[0] === dot.endPos[0] && dot.startPos[1] === dot.endPos[1] || dot.startPos[0] > innerWidth || dot.startPos[0] < 0 || dot.startPos[1] > innerHeight || dot.startPos[1] < 0) {
+      //             this.map.movingDots.splice(this.map.movingDots.indexOf(dot), 1);
+      //         }
+      //     })
+      // }, 16);
 
-        _this5.map.movingDots.forEach(function (dot) {
+      function animate() {
+        ctx.clearRect(0, 0, innerWidth, innerHeight);
+        that.map.movingDots.forEach(function (dot) {
           dot.draw(ctx);
           dot.move();
 
           if (dot.startPos[0] === dot.endPos[0] && dot.startPos[1] === dot.endPos[1] || dot.startPos[0] > innerWidth || dot.startPos[0] < 0 || dot.startPos[1] > innerHeight || dot.startPos[1] < 0) {
-            _this5.map.movingDots.splice(_this5.map.movingDots.indexOf(dot), 1);
+            that.map.movingDots.splice(that.map.movingDots.indexOf(dot), 1);
           }
         });
-      }, 120);
+        requestAnimationFrame(animate);
+      }
+
+      animate();
     }
   }, {
     key: "canvasLineAnimation",
