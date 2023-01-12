@@ -37,9 +37,10 @@ class Game {
     allImg,
     volup,
     voldown,
-    sound
+    sound,
+    errorTooltip
   ) {
-    this.map = new Map(el, iro, num, build);
+    this.map = new Map(el, iro, num, build, errorTooltip);
     this.el = el;
     this.iro = iro;
     this.build = build;
@@ -184,7 +185,7 @@ class Game {
         
       }
 
-      if (this.toggleSound) {
+      if (this.toggleSound && this.map.money > this.descriptions[JSON.parse(this.map.selectedBuilding)].cost) {
         buildSound.play();
       }
     } else if (ele.tagName.toLowerCase() === "img") {

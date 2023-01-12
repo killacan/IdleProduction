@@ -1,7 +1,7 @@
 const Dot = require("./dot");
 
 class Map {
-  constructor(el, iro, num, build) {
+  constructor(el, iro, num, build, errorTooltip) {
     this.money = 700;
     this.num = num;
     this.el = el;
@@ -38,6 +38,7 @@ class Map {
     this.setupBoard();
     // this.setupRSS()
     this.setupBuild();
+    this.errorTooltip = errorTooltip;
   }
 
   setupGrid() {
@@ -145,9 +146,9 @@ class Map {
   placeBuilding(pos, type) {
     // take in the type of building. Create the building and place it on the map.
     if (!this.isEmptyPos(pos)) {
-      throw new BuildError("Not an empty spot!");
+      
     } else if (this.money < type.cost) {
-      alert("Not enough money!")
+      this.BuildError("Not Enough Money!");
       // throw new BuildError("Not Enough Money!");
     } else {
       this.grid[pos[0]][pos[1]] = type;
@@ -199,15 +200,16 @@ class Map {
     this.movingDots.push(dot);
     return dot;
   }
+  
+  BuildError (msg) {
+    this.errorTooltip.innerText = msg;
+    this.errorTooltip.classList.remove("hidden");
+    setTimeout(() => {
+        this.errorTooltip.classList.add("hidden");
+    }, 5000);
+  };
 }
 
-const BuildError = function (msg) {
-  this.meg = msg;
-  console.log("Build Error: " + msg);
-  let err = document.getElementById("error");
-  err.innerHTML = msg;
-  err.style.display = "block";
-};
 
-module.exports = BuildError;
+// module.exports = BuildError;
 module.exports = Map;

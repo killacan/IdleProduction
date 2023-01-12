@@ -339,10 +339,10 @@ var WindMill = __webpack_require__(/*! ./windMill */ "./src/windMill.js");
 var Utils = __webpack_require__(/*! ./utils */ "./src/utils.js");
 
 var Game = /*#__PURE__*/function () {
-  function Game(el, iro, num, build, info, sell, iroing, steing, music1, music2, copore, coping, copwire, toolsnum, buildcost, dots, unlimitedPower, powerCost, selebldg, bldicon, tooltip, tooltiptext, allImg, volup, voldown, sound) {
+  function Game(el, iro, num, build, info, sell, iroing, steing, music1, music2, copore, coping, copwire, toolsnum, buildcost, dots, unlimitedPower, powerCost, selebldg, bldicon, tooltip, tooltiptext, allImg, volup, voldown, sound, errorTooltip) {
     _classCallCheck(this, Game);
 
-    this.map = new Map(el, iro, num, build);
+    this.map = new Map(el, iro, num, build, errorTooltip);
     this.el = el;
     this.iro = iro;
     this.build = build;
@@ -496,7 +496,7 @@ var Game = /*#__PURE__*/function () {
           this.map.placeBuilding(pos, new WindMill(pos));
         } else if (JSON.parse(this.map.selectedBuilding) === "CoalMine") {}
 
-        if (this.toggleSound) {
+        if (this.toggleSound && this.map.money > this.descriptions[JSON.parse(this.map.selectedBuilding)].cost) {
           buildSound.play();
         }
       } else if (ele.tagName.toLowerCase() === "img") {
@@ -980,7 +980,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var Dot = __webpack_require__(/*! ./dot */ "./src/dot.js");
 
 var Map = /*#__PURE__*/function () {
-  function Map(el, iro, num, build) {
+  function Map(el, iro, num, build, errorTooltip) {
     _classCallCheck(this, Map);
 
     this.money = 700;
@@ -1009,6 +1009,7 @@ var Map = /*#__PURE__*/function () {
     this.setupBoard(); // this.setupRSS()
 
     this.setupBuild();
+    this.errorTooltip = errorTooltip;
   }
 
   _createClass(Map, [{
@@ -1125,10 +1126,8 @@ var Map = /*#__PURE__*/function () {
     key: "placeBuilding",
     value: function placeBuilding(pos, type) {
       // take in the type of building. Create the building and place it on the map.
-      if (!this.isEmptyPos(pos)) {
-        throw new BuildError("Not an empty spot!");
-      } else if (this.money < type.cost) {
-        alert("Not enough money!"); // throw new BuildError("Not Enough Money!");
+      if (!this.isEmptyPos(pos)) {} else if (this.money < type.cost) {
+        this.BuildError("Not Enough Money!"); // throw new BuildError("Not Enough Money!");
       } else {
         this.grid[pos[0]][pos[1]] = type;
         this.allBuildings[type.name].push(type);
@@ -1176,20 +1175,23 @@ var Map = /*#__PURE__*/function () {
       this.movingDots.push(dot);
       return dot;
     }
+  }, {
+    key: "BuildError",
+    value: function BuildError(msg) {
+      var _this2 = this;
+
+      this.errorTooltip.innerText = msg;
+      this.errorTooltip.classList.remove("hidden");
+      setTimeout(function () {
+        _this2.errorTooltip.classList.add("hidden");
+      }, 5000);
+    }
   }]);
 
   return Map;
-}();
+}(); // module.exports = BuildError;
 
-var BuildError = function BuildError(msg) {
-  this.meg = msg;
-  console.log("Build Error: " + msg);
-  var err = document.getElementById("error");
-  err.innerHTML = msg;
-  err.style.display = "block";
-};
 
-module.exports = BuildError;
 module.exports = Map;
 
 /***/ }),
@@ -2264,7 +2266,10 @@ document.addEventListener("DOMContentLoaded", function () {
     tutbox1.classList.add("hidden");
   }
 
-  var gamev = new Game(el, iro, num, bui, info, sell, iroing, steing, music1, music2, copOre, copIng, copwire, toolsnum, buildcost, dots, unlimitedPOWER, powerCost, selebldg, bldicon, tooltip, tooltiptext, allImg, volup, voldown, sound); // gamev.map.startingMarket()
+  var errorTooltip = document.createElement("div");
+  errorTooltip.classList.add("error-tooltip");
+  document.body.appendChild(errorTooltip);
+  var gamev = new Game(el, iro, num, bui, info, sell, iroing, steing, music1, music2, copOre, copIng, copwire, toolsnum, buildcost, dots, unlimitedPOWER, powerCost, selebldg, bldicon, tooltip, tooltiptext, allImg, volup, voldown, sound, errorTooltip); // gamev.map.startingMarket()
   // gamev.updateTotalMoney(num)
 });
 })();

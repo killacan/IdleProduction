@@ -106,6 +106,10 @@ document.addEventListener("DOMContentLoaded", function () {
     tutbox1.classList.add("hidden");
   }
 
+  const errorTooltip = document.createElement("div");
+  errorTooltip.classList.add("error-tooltip");
+  document.body.appendChild(errorTooltip);
+
   let gamev = new Game(
     el,
     iro,
@@ -132,7 +136,8 @@ document.addEventListener("DOMContentLoaded", function () {
     allImg,
     volup,
     voldown,
-    sound
+    sound,
+    errorTooltip
   );
   // gamev.map.startingMarket()
   // gamev.updateTotalMoney(num)
