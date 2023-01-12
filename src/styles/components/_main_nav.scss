@@ -24,17 +24,93 @@ $highlights: #A01D26;
     display: flex;
     flex-direction: row;
     justify-content: end;
-    align-items: flex-end;
+    align-items: center;
 
 }
 
+.grow:hover {
+    transition-duration: 300ms;
+    transform: scale(1.1);
+}
+
 .div-box {
+    display: grid;
+    grid-template-columns: repeat(1fr, 2);
+    grid-template-rows: repeat(1fr, 2);
     grid-column: 2;
-    width: auto;
+    width: 100%;
     margin: auto;
-    // button {
-    //     margin: auto; 
-    // }
+
+    .music1 {
+        grid-column: 1;
+        grid-row: 1;
+        width: 45px;
+        height: 45px;
+        padding: 0;
+        border: none;
+        background: none;
+        margin: auto;
+
+        img {
+            margin: auto auto;
+            width: 24px;
+            height: 24px;
+        }
+    }
+
+    .music2 {
+        grid-column: 1;
+        grid-row: 1;
+        width: 45px;
+        height: 45px;
+        padding: 0;
+        border: none;
+        background: none;
+        margin: auto;
+
+        img {
+            margin: auto auto;
+            width: 33px;
+            height: 33px;
+        }
+    }
+
+    .volume-up {
+        grid-column: 2;
+        grid-row: 1;
+        width: 45px;
+        height: 45px;
+        padding: 0;
+        border: none;
+        background: none;
+
+        img {
+            width: 30px;
+            height: 30px;
+            margin: auto;
+        }
+    }
+
+    .volume-down {
+        grid-column: 2;
+        grid-row: 2;
+        width: 45px;
+        height: 45px;
+        padding: 0;
+        border: none;
+        background: none;
+
+        img {
+            width: 30px;
+            height: 30px;
+            margin: auto;
+        }
+    }
+
+    .sound {
+        grid-column: 1;
+        grid-row: 2;
+    }
 }
 
 .logo-list {
@@ -59,4 +135,15 @@ a {
     width: 34px;
     height: 34px;
     margin-right: 20px;
+}
+
+@media screen and (min-width: 1920px) {
+
+    .main-nav {
+        display: grid;
+        grid-template-columns: 1fr 180px 235px 620px 235px 180px 1fr;
+        justify-content: space-between;
+        margin: 0 auto;
+        background-color: #ACBEBE;
+    }
 }

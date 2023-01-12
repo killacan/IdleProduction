@@ -20,7 +20,8 @@ class Game {
     sell,
     iroing,
     steing,
-    music,
+    music1,
+    music2,
     copore,
     coping,
     copwire,
@@ -35,7 +36,8 @@ class Game {
     tooltiptext,
     allImg,
     volup,
-    voldown
+    voldown,
+    sound
   ) {
     this.map = new Map(el, iro, num, build);
     this.el = el;
@@ -45,7 +47,8 @@ class Game {
     this.iroing = iroing;
     this.steing = steing;
     this.info = info;
-    this.music = music;
+    this.music1 = music1;
+    this.music2 = music2;
     this.copore = copore;
     this.coping = coping;
     this.copwire = copwire;
@@ -74,6 +77,8 @@ class Game {
     this.allImg = allImg
     this.volup = volup
     this.voldown = voldown
+    this.sound = sound
+    this.toggleSound = true
     this.handleClickGrid = this.handleClickGrid.bind(this);
     this.handleClickBuild = this.handleClickBuild.bind(this);
     this.handleClickSell = this.handleClickSell.bind(this);
@@ -81,6 +86,8 @@ class Game {
     this.handleMouseOver = this.handleMouseOver.bind(this);
     this.handleMouseOut = this.handleMouseOut.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleClickSound = this.handleClickSound.bind(this);
+    this.musicHandler = this.musicHandler.bind(this);
     this.bindEvents();
     this.tick();
     this.updateTotalMoney(num, this.map.iro);
@@ -101,6 +108,7 @@ class Game {
     this.sell.addEventListener("mouseover", this.handleMouseOver);
     this.sell.addEventListener("mouseout", this.handleMouseOut);
     this.sell.addEventListener("mousemove", this.handleMouseMove);
+    this.sound.addEventListener("click", this.handleClickSound)
   }
 
   musicHandler() {
@@ -109,26 +117,38 @@ class Game {
     backgroundMusic.loop = true;
     let backgroundOn = false;
     backgroundMusic.volume = 0.3;
-    this.music.addEventListener("click", function () {
-      if (backgroundOn === false) {
-        backgroundOn = true;
-        backgroundMusic.play();
-      } else {
+    this.music1.addEventListener("click", () => {
+      backgroundOn = true;
+      backgroundMusic.play();
+      this.music1.classList.add("hidden");
+      this.music2.classList.remove("hidden");
+
+    });
+    this.music2.addEventListener("click", () => {
         backgroundOn = false;
         backgroundMusic.pause();
-      }
+      this.music2.classList.add("hidden");
+      this.music1.classList.remove("hidden");
     });
-    this.volup.addEventListener("click", function () {
+    this.volup.addEventListener("click", () => {
       if (backgroundMusic.volume < 1) {
         backgroundMusic.volume += 0.1;
       }
     });
-    this.voldown.addEventListener("click", function () {
+    this.voldown.addEventListener("click", () => {
       if (backgroundMusic.volume > 0) {
         backgroundMusic.volume -= 0.1;
       }
     });
 
+  }
+
+  handleClickSound() {
+    if (this.toggleSound) {
+      this.toggleSound = false
+    } else {
+      this.toggleSound = true
+    }
   }
 
   // this function is what builds the map, when you click on a square, it will build the building that is selected in the build menu
@@ -164,7 +184,10 @@ class Game {
         
       }
 
-      buildSound.play();
+      if (this.toggleSound) {
+        console.log(this.toggleSound)
+        buildSound.play();
+      }
     } else if (ele.tagName.toLowerCase() === "img") {
       this.map.removeBuilding(JSON.parse(ele.parentNode.dataset.pos));
     }
@@ -202,6 +225,11 @@ class Game {
       this.tooltiptext.innerText = this.descriptions[JSON.parse(ele.parentNode.dataset.build)].description;
       this.tooltip.style.visibility = "visible";
     }
+
+    if (ele.tagName.toLowerCase() === "button") {
+      this.tooltiptext.innerText = "Click here to sell you goods and make some money!";
+      this.tooltip.style.visibility = "visible";
+    }
   }
 
   handleMouseOut(e) {
@@ -209,6 +237,11 @@ class Game {
     if (ele.tagName.toLowerCase() === "img") {
       this.tooltip.style.visibility = "hidden";
     }
+
+    if (ele.tagName.toLowerCase() === "button") {
+      this.tooltip.style.visibility = "hidden";
+    }
+
   }
 
   handleMouseMove(e) {

@@ -20,7 +20,8 @@ document.addEventListener("DOMContentLoaded", function () {
   let bui = document.querySelector(".builder-menu");
   let info = document.getElementById("description");
   let sell = document.querySelector(".sell");
-  let music = document.querySelector(".music");
+  let music1 = document.querySelector(".music1");
+  let music2 = document.querySelector(".music2");
   let copOre = document.getElementById("total-copper-ore");
   let copIng = document.getElementById("total-copper-ingots");
   let copwire = document.getElementById("total-copper-wire");
@@ -45,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let allImg = document.querySelectorAll("img");
   let volup = document.querySelector(".volume-up");
   let voldown = document.querySelector(".volume-down");
+  let sound = document.querySelector(".sound");
   // let ctx = canvas.getContext("2d")
 
   // ctx.moveTo(0, 0);
@@ -113,7 +115,8 @@ document.addEventListener("DOMContentLoaded", function () {
     sell,
     iroing,
     steing,
-    music,
+    music1,
+    music2,
     copOre,
     copIng,
     copwire,
@@ -128,7 +131,8 @@ document.addEventListener("DOMContentLoaded", function () {
     tooltiptext,
     allImg,
     volup,
-    voldown
+    voldown,
+    sound
   );
   // gamev.map.startingMarket()
   // gamev.updateTotalMoney(num)

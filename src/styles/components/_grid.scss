@@ -235,3 +235,10 @@ $highlights: #A01D26;
     border: 1px solid $highlights;
     visibility: hidden;
 }
+
+@media screen and (min-width: 1920px) {
+    .container {
+        display: grid;
+        grid-template-columns: 1fr 180px 235px 620px 235px 180px 1fr;
+    }
+}
