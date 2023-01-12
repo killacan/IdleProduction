@@ -381,7 +381,7 @@ var Game = /*#__PURE__*/function () {
     this.volup = volup;
     this.voldown = voldown;
     this.sound = sound;
-    this.toggleSound = true;
+    this.toggleSound = false;
     this.handleClickGrid = this.handleClickGrid.bind(this);
     this.handleClickBuild = this.handleClickBuild.bind(this);
     this.handleClickSell = this.handleClickSell.bind(this);
@@ -469,7 +469,7 @@ var Game = /*#__PURE__*/function () {
       var buildSound = new Audio();
       buildSound.src = "src/assets/Ratchet.wav";
       buildSound.loop = false;
-      buildSound.volume = 0.2;
+      buildSound.volume = 0.1;
       that = this;
 
       if (ele.tagName.toLowerCase() === "li" && this.map.selectedBuilding) {

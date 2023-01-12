@@ -79,7 +79,7 @@ class Game {
     this.volup = volup
     this.voldown = voldown
     this.sound = sound
-    this.toggleSound = true
+    this.toggleSound = false
     this.handleClickGrid = this.handleClickGrid.bind(this);
     this.handleClickBuild = this.handleClickBuild.bind(this);
     this.handleClickSell = this.handleClickSell.bind(this);
@@ -158,7 +158,7 @@ class Game {
     let buildSound = new Audio();
     buildSound.src = "src/assets/Ratchet.wav"
     buildSound.loop = false;
-    buildSound.volume = 0.2;
+    buildSound.volume = 0.1;
     that = this;
     if (ele.tagName.toLowerCase() === "li" && this.map.selectedBuilding) {
       // we have a pos and a name of building. building name is a string.
