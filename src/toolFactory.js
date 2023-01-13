@@ -10,7 +10,7 @@ class ToolFactory extends Node {
         this.description = "The Tool Factory will take in Copper Ingots and Steel and turn it into tools. Tools are very valuable, but take a long time to make."
         this.parentNames = ["CopperSmelter", "SteelMill"]
         this.receivable = ["copperIngots", "steelIngots"]
-        this.requestTotal = {copperIngots: 10, steelIngots: 10}
+        this.requestTotal = {copperIngots: 20, steelIngots: 20}
         this.loops = 0
         this.powerCost = 20
     }

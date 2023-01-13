@@ -11,7 +11,7 @@ class CopperSmelter extends Node {
         this.parentNames = ["CopperMine"]
         this.childNames = ["Copper Extruder"]
         this.receivable = ["copperOre"]
-        this.requestTotal = {copperOre: 5}
+        this.requestTotal = {copperOre: 10}
         this.loops = 0
         this.powerCost = 10
     }
