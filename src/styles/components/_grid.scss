@@ -236,6 +236,21 @@ $highlights: #A01D26;
     visibility: hidden;
 }
 
+.error-tooltip {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 100px;
+    background-color: $tertiary-color;
+    border-radius: 10px;
+    border: 1px solid $highlights;
+    position: absolute;
+    top: 50%;
+    left: 45vw;
+    visibility: hidden;
+}
+
 @media screen and (min-width: 1920px) {
     .container {
         display: grid;

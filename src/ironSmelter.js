@@ -11,7 +11,7 @@ class IronSmelter extends Node {
         this.parentNames = ["IronMine"]
         this.childNames = ["SteelMill"]
         this.receivable = ["ironOre"]
-        this.requestTotal = {ironOre: 5}
+        this.requestTotal = {ironOre: 10}
         this.powerCost = 10
     }
 

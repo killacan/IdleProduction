@@ -137,8 +137,10 @@ class Game {
       }
     });
     this.voldown.addEventListener("click", () => {
-      if (backgroundMusic.volume > 0) {
+      if (backgroundMusic.volume >= 0.1) {
         backgroundMusic.volume -= 0.1;
+      } else {
+        backgroundMusic.volume = 0;
       }
     });
 
@@ -394,8 +396,45 @@ class Game {
     this.toggle = false;
   }
 
+  // transferToChildren() {
+  //   // iterate through buildings(buildArr). check parents (parA) (later in order of proximity) and subtract resources until requirements met.
+  //   let bldgArr = Object.values(this.map.allBuildings).flat();
+  //   bldgArr.forEach((building) => {
+  //     let parents = [];
+  //     if (building.parentNames) {
+  //       building.parentNames.forEach((par) => {
+  //         parents = parents.concat(this.map.allBuildings[par]);
+  //       });
+  //     }
+  //     let parA = parents;
+  //     if (!parA) {
+  //       return;
+  //     }
+  //     for (let i = 0; i < parA.length; i++) {
+  //       let requestTotal = Object.entries(building.requestTotal);
+  //       requestTotal.forEach((req) => {
+  //         let requestRSS = req[0];
+  //         if (!building.resources[requestRSS]) {
+  //           building.resources[requestRSS] = 0;
+  //         }
+  //         let requestAmount = req[1] - building.resources[requestRSS];
+          
+  //         if (!parA[i].resources[requestRSS]) {
+  //         } else if (parA[i].resources[requestRSS] < requestAmount) {
+  //           building.resources[requestRSS] += parA[i].resources[requestRSS];
+  //           parA[i].resources[requestRSS] = 0;
+  //           this.map.makeDot(toGrid(parA[i].nodepos), toGrid(building.nodepos));
+  //         } else if (parA[i].resources[requestRSS] > requestAmount) {
+  //           building.resources[requestRSS] += requestAmount;
+  //           parA[i].resources[requestRSS] -= requestAmount;
+  //           this.map.makeDot(toGrid(parA[i].nodepos), toGrid(building.nodepos));
+  //         }
+  //       });
+  //     }
+  //   });
+  // }
+
   transferToChildren() {
-    // iterate through buildings(buildArr). check parents (parA) (later in order of proximity) and subtract resources until requirements met.
     let bldgArr = Object.values(this.map.allBuildings).flat();
     bldgArr.forEach((building) => {
       let parents = [];
@@ -408,6 +447,10 @@ class Game {
       if (!parA) {
         return;
       }
+      // sort the parent buildings based on distance to the current building
+      parA.sort((a, b) => {
+        return dist(a.nodepos, building.nodepos) - dist(b.nodepos, building.nodepos);
+      });
       for (let i = 0; i < parA.length; i++) {
         let requestTotal = Object.entries(building.requestTotal);
         requestTotal.forEach((req) => {
@@ -470,15 +513,19 @@ class Game {
 }
 
 // feature not yet implemented, eventually will be used to determine priority of buildings, and then be used for when fuel cost is a thing.
-function sortByDistance (arr) {
-  return arr.forEach((building) => {
+// function sortByDistance (arr) {
+//   return arr.forEach((building) => {
 
-  }) 
-}
+//   }) 
+// }
 
 // translates grid position to canvas position.
 function toGrid (pos) {
     return [(((pos[0] + 1) * 60) - 20), (((pos[1] + 1) * 60) - 20)];
+}
+
+function dist (pos1, pos2) {
+  return Math.sqrt(((pos2[0] - pos1[0]) ** 2) + ((pos2[1] - pos1[1]) ** 2 ))
 }
 
 module.exports = Game;

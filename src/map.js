@@ -203,10 +203,13 @@ class Map {
   
   BuildError (msg) {
     this.errorTooltip.innerText = msg;
-    this.errorTooltip.classList.remove("hidden");
+    this.errorTooltip.style.visibility = "visible";
     setTimeout(() => {
-        this.errorTooltip.classList.add("hidden");
+        this.errorTooltip.style.visibility = "hidden";
     }, 5000);
+    this.errorTooltip.addEventListener("click", () => {
+        this.errorTooltip.style.visibility = "hidden";
+    });
   };
 }
 
