@@ -7,7 +7,7 @@ class CopperExtruder extends Node {
         this.nodepos = pos
         this.name = "CopperExtruder"
         this.cost = 1000
-        this.description = "A Copper Extruder will turn 5 of your Iron Ingots into 3 Copper Wire every 10 ticks!"
+        this.description = "A Copper Extruder will turn 5 of your Copper Ingots into 3 Copper Wire every 10 ticks!"
         this.parentNames = ["CopperSmelter"]
         this.childNames = ["ToolFactory"]
         this.receivable = ["copperIngots"]

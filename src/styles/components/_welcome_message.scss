@@ -175,8 +175,16 @@
 
 }
 
+#box-wrap {
+    border-radius: 10px;
+}
+
 .tut-button {
     cursor: pointer;
+}
+
+.tut-hold {
+    background: rgb(0, 0, 0, .3);
 }
 
 .hidden {
