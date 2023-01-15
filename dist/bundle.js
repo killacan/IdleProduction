@@ -203,7 +203,7 @@ var CopperSmelter = /*#__PURE__*/function (_Node) {
     _this.cost = 400;
     _this.description = "Copper Smelter will take Copper Ore at 5 copper Ore per 5 ticks, and convert it to Copper Ingots. Copper Ingots are much more valuable than Iron Ingots.";
     _this.parentNames = ["CopperMine"];
-    _this.childNames = ["Copper Extruder"];
+    _this.childNames = ["CopperExtruder"];
     _this.receivable = ["copperOre"];
     _this.requestTotal = {
       copperOre: 10
