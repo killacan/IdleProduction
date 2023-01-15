@@ -435,40 +435,46 @@ class Game {
   // }
 
   transferToChildren() {
+    // console.log("I am called to transfer")
     let bldgArr = Object.values(this.map.allBuildings).flat();
+    console.log(bldgArr)
     bldgArr.forEach((building) => {
-      let parents = [];
-      if (building.parentNames) {
-        building.parentNames.forEach((par) => {
-          parents = parents.concat(this.map.allBuildings[par]);
-        });
-      }
-      let parA = parents;
-      if (!parA) {
-        return;
-      }
-      // sort the parent buildings based on distance to the current building
-      parA.sort((a, b) => {
-        return dist(a.nodepos, building.nodepos) - dist(b.nodepos, building.nodepos);
-      });
-      for (let i = 0; i < parA.length; i++) {
-        let requestTotal = Object.entries(building.requestTotal);
+      // console.log(building)
+      // let parents = [];
+      // if (building.parentNames) {
+      //   building.parentNames.forEach((par) => {
+      //     parents = parents.concat(this.map.allBuildings[par]);
+      //   });
+      // }
+      // let parA = parents;
+      // if (!parA) {
+      //   return;
+      // }
+      // // sort the parent buildings based on distance to the current building
+      // parA.sort((a, b) => {
+      //   // console.log(a.nodepos, building.nodepos, b.nodepos, building.nodepos,"inside sort")
+      //   return dist(a.nodepos, building.nodepos) - dist(b.nodepos, building.nodepos);
+      // });
+      bldChild = building.sortedChildren;
+      for (let i = 0; i < bldChild.length; i++) {
+        currChild = bldChild[i];
+        let requestTotal = Object.entries(currChild.requestTotal);
         requestTotal.forEach((req) => {
           let requestRSS = req[0];
-          if (!building.resources[requestRSS]) {
-            building.resources[requestRSS] = 0;
+          if (!currChild.resources[requestRSS]) {
+            currChild.resources[requestRSS] = 0;
           }
-          let requestAmount = req[1] - building.resources[requestRSS];
+          let requestAmount = req[1] - currChild.resources[requestRSS];
           
-          if (!parA[i].resources[requestRSS]) {
-          } else if (parA[i].resources[requestRSS] < requestAmount) {
-            building.resources[requestRSS] += parA[i].resources[requestRSS];
-            parA[i].resources[requestRSS] = 0;
-            this.map.makeDot(toGrid(parA[i].nodepos), toGrid(building.nodepos));
-          } else if (parA[i].resources[requestRSS] > requestAmount) {
-            building.resources[requestRSS] += requestAmount;
-            parA[i].resources[requestRSS] -= requestAmount;
-            this.map.makeDot(toGrid(parA[i].nodepos), toGrid(building.nodepos));
+          if (!building.resources[requestRSS]) {
+          } else if (building.resources[requestRSS] < requestAmount) {
+            currChild.resources[requestRSS] += building.resources[requestRSS];
+            building.resources[requestRSS] = 0;
+            this.map.makeDot(toGrid(building.nodepos), toGrid(currChild.nodepos));
+          } else if (building.resources[requestRSS] > requestAmount) {
+            currChild.resources[requestRSS] += requestAmount;
+            building.resources[requestRSS] -= requestAmount;
+            this.map.makeDot(toGrid(building.nodepos), toGrid(currChild.nodepos));
           }
         });
       }

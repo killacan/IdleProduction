@@ -1,8 +1,8 @@
-const Dot = require("./dot");
+const Dot = require("./dot"); 
 
 class Map {
   constructor(el, iro, num, build, errorTooltip) {
-    this.money = 700;
+    this.money = 1400;
     this.num = num;
     this.el = el;
     this.iro = iro;
@@ -145,6 +145,7 @@ class Map {
 
   placeBuilding(pos, type) {
     // take in the type of building. Create the building and place it on the map.
+    console.log(type, "type")
     if (!this.isEmptyPos(pos)) {
       
     } else if (this.money < type.cost) {
@@ -154,6 +155,37 @@ class Map {
       this.grid[pos[0]][pos[1]] = type;
       this.allBuildings[type.name].push(type);
       this.money -= type.cost;
+      // here is where we need to save a sorted array of all the children by distance on the parent buildings. 
+      if (type.parentNames) {
+        let allParents = [];
+        type.parentNames.forEach((parent) => {
+          console.log(this.allBuildings[parent], "parent")
+          allParents = allParents.concat(this.allBuildings[parent]);
+        });
+        console.log(allParents, "allParents")
+        allParents.forEach((parent) => {
+          console.log(parent.sortedChildren, parent.sortedChildren.concat(type), "parent.sortedChildren")
+          parent.sortedChildren = parent.sortedChildren.concat(type);
+          parent.sortedChildren.sort((a, b) => {
+            // console.log(a.nodepos, building.nodepos, b.nodepos, building.nodepos,"inside sort")
+            return dist(a.nodepos, parent.nodepos) - dist(b.nodepos, parent.nodepos);
+          });
+          console.log(parent.sortedChildren, "firstParent.sortedChildren")
+        });
+      } 
+      if (type.childNames) {
+        // this needs to create a sorted array of all the children by distance on the parent buildings.
+        // we need to make an array of all the children of the building. then sort.
+        let allChildren = [];
+        type.childNames.forEach((child) => {
+          allChildren = allChildren.concat(this.allBuildings[child]);
+        });
+        console.log(allChildren, "allChildren")
+        allChildren.sort((a, b) => {
+          return dist(a.nodepos, type.nodepos) - dist(b.nodepos, type.nodepos);
+        });
+        type.sortedChildren = allChildren;
+      }
     }
   }
 
@@ -175,6 +207,21 @@ class Map {
         .concat(this.allBuildings[type.name].slice(buildidx + 1));
       this.grid[pos[0]][pos[1]] = null;
       // console.log(this.allBuildings[type.name], "in remove building");
+
+      if (type.parentNames) {
+        let allParents = [];
+        type.parentNames.forEach((parent) => {
+          allParents = allParents.concat(this.allBuildings[parent]);
+        });
+        allParents.forEach((parent) => {
+          let childidx = parent.sortedChildren.findIndex((ele) => {
+            return ele === type;
+          });
+          parent.sortedChildren = parent.sortedChildren
+            .slice(0, childidx)
+            .concat(parent.sortedChildren.slice(childidx + 1));
+        });
+      }
     }
   }
 
@@ -213,6 +260,9 @@ class Map {
   };
 }
 
+function dist (pos1, pos2) {
+  return Math.sqrt(((pos2[0] - pos1[0]) ** 2) + ((pos2[1] - pos1[1]) ** 2 ))
+}
 
 // module.exports = BuildError;
 module.exports = Map;

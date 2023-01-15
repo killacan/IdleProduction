@@ -206,7 +206,7 @@ var CopperSmelter = /*#__PURE__*/function (_Node) {
     _this.childNames = ["Copper Extruder"];
     _this.receivable = ["copperOre"];
     _this.requestTotal = {
-      copperOre: 5
+      copperOre: 10
     };
     _this.loops = 0;
     _this.powerCost = 10;
@@ -750,54 +750,52 @@ var Game = /*#__PURE__*/function () {
     value: function transferToChildren() {
       var _this4 = this;
 
+      // console.log("I am called to transfer")
       var bldgArr = Object.values(this.map.allBuildings).flat();
+      console.log(bldgArr);
       bldgArr.forEach(function (building) {
-        var parents = [];
+        // console.log(building)
+        // let parents = [];
+        // if (building.parentNames) {
+        //   building.parentNames.forEach((par) => {
+        //     parents = parents.concat(this.map.allBuildings[par]);
+        //   });
+        // }
+        // let parA = parents;
+        // if (!parA) {
+        //   return;
+        // }
+        // // sort the parent buildings based on distance to the current building
+        // parA.sort((a, b) => {
+        //   // console.log(a.nodepos, building.nodepos, b.nodepos, building.nodepos,"inside sort")
+        //   return dist(a.nodepos, building.nodepos) - dist(b.nodepos, building.nodepos);
+        // });
+        bldChild = building.sortedChildren;
 
-        if (building.parentNames) {
-          building.parentNames.forEach(function (par) {
-            parents = parents.concat(_this4.map.allBuildings[par]);
-          });
-        }
-
-        var parA = parents;
-
-        if (!parA) {
-          return;
-        } // sort the parent buildings based on distance to the current building
-
-
-        parA.sort(function (a, b) {
-          return dist(a.nodepos, building.nodepos) - dist(b.nodepos, building.nodepos);
-        });
-
-        var _loop = function _loop(i) {
-          var requestTotal = Object.entries(building.requestTotal);
+        for (var i = 0; i < bldChild.length; i++) {
+          currChild = bldChild[i];
+          var requestTotal = Object.entries(currChild.requestTotal);
           requestTotal.forEach(function (req) {
             var requestRSS = req[0];
 
-            if (!building.resources[requestRSS]) {
-              building.resources[requestRSS] = 0;
+            if (!currChild.resources[requestRSS]) {
+              currChild.resources[requestRSS] = 0;
             }
 
-            var requestAmount = req[1] - building.resources[requestRSS];
+            var requestAmount = req[1] - currChild.resources[requestRSS];
 
-            if (!parA[i].resources[requestRSS]) {} else if (parA[i].resources[requestRSS] < requestAmount) {
-              building.resources[requestRSS] += parA[i].resources[requestRSS];
-              parA[i].resources[requestRSS] = 0;
+            if (!building.resources[requestRSS]) {} else if (building.resources[requestRSS] < requestAmount) {
+              currChild.resources[requestRSS] += building.resources[requestRSS];
+              building.resources[requestRSS] = 0;
 
-              _this4.map.makeDot(toGrid(parA[i].nodepos), toGrid(building.nodepos));
-            } else if (parA[i].resources[requestRSS] > requestAmount) {
-              building.resources[requestRSS] += requestAmount;
-              parA[i].resources[requestRSS] -= requestAmount;
+              _this4.map.makeDot(toGrid(building.nodepos), toGrid(currChild.nodepos));
+            } else if (building.resources[requestRSS] > requestAmount) {
+              currChild.resources[requestRSS] += requestAmount;
+              building.resources[requestRSS] -= requestAmount;
 
-              _this4.map.makeDot(toGrid(parA[i].nodepos), toGrid(building.nodepos));
+              _this4.map.makeDot(toGrid(building.nodepos), toGrid(currChild.nodepos));
             }
           });
-        };
-
-        for (var i = 0; i < parA.length; i++) {
-          _loop(i);
         }
       });
     }
@@ -1029,7 +1027,7 @@ var Map = /*#__PURE__*/function () {
   function Map(el, iro, num, build, errorTooltip) {
     _classCallCheck(this, Map);
 
-    this.money = 700;
+    this.money = 1400;
     this.num = num;
     this.el = el;
     this.iro = iro;
@@ -1171,18 +1169,56 @@ var Map = /*#__PURE__*/function () {
   }, {
     key: "placeBuilding",
     value: function placeBuilding(pos, type) {
+      var _this2 = this;
+
       // take in the type of building. Create the building and place it on the map.
+      console.log(type, "type");
+
       if (!this.isEmptyPos(pos)) {} else if (this.money < type.cost) {
         this.BuildError("Not Enough Money!"); // throw new BuildError("Not Enough Money!");
       } else {
         this.grid[pos[0]][pos[1]] = type;
         this.allBuildings[type.name].push(type);
-        this.money -= type.cost;
+        this.money -= type.cost; // here is where we need to save a sorted array of all the children by distance on the parent buildings. 
+
+        if (type.parentNames) {
+          var allParents = [];
+          type.parentNames.forEach(function (parent) {
+            console.log(_this2.allBuildings[parent], "parent");
+            allParents = allParents.concat(_this2.allBuildings[parent]);
+          });
+          console.log(allParents, "allParents");
+          allParents.forEach(function (parent) {
+            console.log(parent.sortedChildren, parent.sortedChildren.concat(type), "parent.sortedChildren");
+            parent.sortedChildren = parent.sortedChildren.concat(type);
+            parent.sortedChildren.sort(function (a, b) {
+              // console.log(a.nodepos, building.nodepos, b.nodepos, building.nodepos,"inside sort")
+              return dist(a.nodepos, parent.nodepos) - dist(b.nodepos, parent.nodepos);
+            });
+            console.log(parent.sortedChildren, "firstParent.sortedChildren");
+          });
+        }
+
+        if (type.childNames) {
+          // this needs to create a sorted array of all the children by distance on the parent buildings.
+          // we need to make an array of all the children of the building. then sort.
+          var allChildren = [];
+          type.childNames.forEach(function (child) {
+            allChildren = allChildren.concat(_this2.allBuildings[child]);
+          });
+          console.log(allChildren, "allChildren");
+          allChildren.sort(function (a, b) {
+            return dist(a.nodepos, type.nodepos) - dist(b.nodepos, type.nodepos);
+          });
+          type.sortedChildren = allChildren;
+        }
       }
     }
   }, {
     key: "removeBuilding",
     value: function removeBuilding(pos) {
+      var _this3 = this;
+
       if (this.isEmptyPos(pos)) {// throw new BuildError("Empty spot!");
       } else {
         var type = this.getBuilding(pos);
@@ -1193,6 +1229,19 @@ var Map = /*#__PURE__*/function () {
         });
         this.allBuildings[type.name] = this.allBuildings[type.name].slice(0, buildidx).concat(this.allBuildings[type.name].slice(buildidx + 1));
         this.grid[pos[0]][pos[1]] = null; // console.log(this.allBuildings[type.name], "in remove building");
+
+        if (type.parentNames) {
+          var allParents = [];
+          type.parentNames.forEach(function (parent) {
+            allParents = allParents.concat(_this3.allBuildings[parent]);
+          });
+          allParents.forEach(function (parent) {
+            var childidx = parent.sortedChildren.findIndex(function (ele) {
+              return ele === type;
+            });
+            parent.sortedChildren = parent.sortedChildren.slice(0, childidx).concat(parent.sortedChildren.slice(childidx + 1));
+          });
+        }
       }
     }
   }, {
@@ -1224,21 +1273,25 @@ var Map = /*#__PURE__*/function () {
   }, {
     key: "BuildError",
     value: function BuildError(msg) {
-      var _this2 = this;
+      var _this4 = this;
 
       this.errorTooltip.innerText = msg;
       this.errorTooltip.style.visibility = "visible";
       setTimeout(function () {
-        _this2.errorTooltip.style.visibility = "hidden";
+        _this4.errorTooltip.style.visibility = "hidden";
       }, 5000);
       this.errorTooltip.addEventListener("click", function () {
-        _this2.errorTooltip.style.visibility = "hidden";
+        _this4.errorTooltip.style.visibility = "hidden";
       });
     }
   }]);
 
   return Map;
-}(); // module.exports = BuildError;
+}();
+
+function dist(pos1, pos2) {
+  return Math.sqrt(Math.pow(pos2[0] - pos1[0], 2) + Math.pow(pos2[1] - pos1[1], 2));
+} // module.exports = BuildError;
 
 
 module.exports = Map;
@@ -1329,7 +1382,8 @@ var Node = /*#__PURE__*/function () {
     // this.pos = pos
     // save a list of distances from parents and children?
     // description
-    this.resources = {}; // this.map = map
+    this.resources = {};
+    this.sortedChildren = []; // this.map = map
     // this.tuna = "tuna"
   }
 
@@ -1396,7 +1450,7 @@ var SteelMill = /*#__PURE__*/function (_Node) {
     _this.childNames = ["ToolFactory"];
     _this.receivable = ["ironIngots"];
     _this.requestTotal = {
-      ironIngots: 10
+      ironIngots: 20
     };
     _this.powerCost = 15;
     return _this;
@@ -1472,8 +1526,8 @@ var ToolFactory = /*#__PURE__*/function (_Node) {
     _this.parentNames = ["CopperSmelter", "SteelMill"];
     _this.receivable = ["copperIngots", "steelIngots"];
     _this.requestTotal = {
-      copperIngots: 10,
-      steelIngots: 10
+      copperIngots: 20,
+      steelIngots: 20
     };
     _this.loops = 0;
     _this.powerCost = 20;
