@@ -2,7 +2,7 @@ const Dot = require("./dot");
 
 class Map {
   constructor(el, iro, num, build, errorTooltip) {
-    this.money = 1400;
+    this.money = 800;
     this.num = num;
     this.el = el;
     this.iro = iro;
@@ -245,9 +245,11 @@ class Map {
   BuildError (msg) {
     this.errorTooltip.innerText = msg;
     this.errorTooltip.style.visibility = "visible";
-    setTimeout(() => {
-        this.errorTooltip.style.visibility = "hidden";
-    }, 5000);
+    if (msg === "Not Enough Money!") {
+      setTimeout(() => {
+          this.errorTooltip.style.visibility = "hidden";
+      }, 5000);
+    }
     this.errorTooltip.addEventListener("click", () => {
         this.errorTooltip.style.visibility = "hidden";
     });

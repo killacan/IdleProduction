@@ -80,6 +80,7 @@ class Game {
     this.voldown = voldown
     this.sound = sound
     this.toggleSound = false
+    this.hit = false
     this.handleClickGrid = this.handleClickGrid.bind(this);
     this.handleClickBuild = this.handleClickBuild.bind(this);
     this.handleClickSell = this.handleClickSell.bind(this);
@@ -285,13 +286,17 @@ class Game {
       // ideally when I refactor this it will instead use the canvas to handle building placement.
       this.map.setupBoard();
       if (this.map.totalPower >= 0) {
+        this.hit = false;
         Object.values(this.map.allBuildings)
         .flat()
         .forEach((ele) => ele.updateRSS());
       } 
-      // else {
-      //   this.map.BuildError("Not enough power!");
-      // }
+      else {
+        if (!this.hit) {
+          this.hit = true;
+          this.map.BuildError("Not enough power! \n (click to close)");
+        }
+      }
       this.map.updatePower();
       this.map.updateRSS();
       this.transferToMarket();

@@ -382,6 +382,7 @@ var Game = /*#__PURE__*/function () {
     this.voldown = voldown;
     this.sound = sound;
     this.toggleSound = false;
+    this.hit = false;
     this.handleClickGrid = this.handleClickGrid.bind(this);
     this.handleClickBuild = this.handleClickBuild.bind(this);
     this.handleClickSell = this.handleClickSell.bind(this);
@@ -605,13 +606,17 @@ var Game = /*#__PURE__*/function () {
         _this2.map.setupBoard();
 
         if (_this2.map.totalPower >= 0) {
+          _this2.hit = false;
           Object.values(_this2.map.allBuildings).flat().forEach(function (ele) {
             return ele.updateRSS();
           });
-        } // else {
-        //   this.map.BuildError("Not enough power!");
-        // }
+        } else {
+          if (!_this2.hit) {
+            _this2.hit = true;
 
+            _this2.map.BuildError("Not enough power! \n (click to close)");
+          }
+        }
 
         _this2.map.updatePower();
 
@@ -1013,7 +1018,7 @@ var Map = /*#__PURE__*/function () {
   function Map(el, iro, num, build, errorTooltip) {
     _classCallCheck(this, Map);
 
-    this.money = 1400;
+    this.money = 800;
     this.num = num;
     this.el = el;
     this.iro = iro;
@@ -1256,9 +1261,13 @@ var Map = /*#__PURE__*/function () {
 
       this.errorTooltip.innerText = msg;
       this.errorTooltip.style.visibility = "visible";
-      setTimeout(function () {
-        _this4.errorTooltip.style.visibility = "hidden";
-      }, 5000);
+
+      if (msg === "Not Enough Money!") {
+        setTimeout(function () {
+          _this4.errorTooltip.style.visibility = "hidden";
+        }, 5000);
+      }
+
       this.errorTooltip.addEventListener("click", function () {
         _this4.errorTooltip.style.visibility = "hidden";
       });
