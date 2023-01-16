@@ -608,7 +608,10 @@ var Game = /*#__PURE__*/function () {
           Object.values(_this2.map.allBuildings).flat().forEach(function (ele) {
             return ele.updateRSS();
           });
-        }
+        } // else {
+        //   this.map.BuildError("Not enough power!");
+        // }
+
 
         _this2.map.updatePower();
 
@@ -752,24 +755,7 @@ var Game = /*#__PURE__*/function () {
 
       // console.log("I am called to transfer")
       var bldgArr = Object.values(this.map.allBuildings).flat();
-      console.log(bldgArr);
       bldgArr.forEach(function (building) {
-        // console.log(building)
-        // let parents = [];
-        // if (building.parentNames) {
-        //   building.parentNames.forEach((par) => {
-        //     parents = parents.concat(this.map.allBuildings[par]);
-        //   });
-        // }
-        // let parA = parents;
-        // if (!parA) {
-        //   return;
-        // }
-        // // sort the parent buildings based on distance to the current building
-        // parA.sort((a, b) => {
-        //   // console.log(a.nodepos, building.nodepos, b.nodepos, building.nodepos,"inside sort")
-        //   return dist(a.nodepos, building.nodepos) - dist(b.nodepos, building.nodepos);
-        // });
         bldChild = building.sortedChildren;
 
         for (var i = 0; i < bldChild.length; i++) {
@@ -1154,7 +1140,7 @@ var Map = /*#__PURE__*/function () {
     value: function updatePower() {
       var _this = this;
 
-      if (this.totalPower >= 0) {
+      if (this.totalPower >= 100) {
         this.money += Math.floor(this.totalPower / 100);
       }
 
@@ -1172,8 +1158,6 @@ var Map = /*#__PURE__*/function () {
       var _this2 = this;
 
       // take in the type of building. Create the building and place it on the map.
-      console.log(type, "type");
-
       if (!this.isEmptyPos(pos)) {} else if (this.money < type.cost) {
         this.BuildError("Not Enough Money!"); // throw new BuildError("Not Enough Money!");
       } else {
@@ -1184,18 +1168,14 @@ var Map = /*#__PURE__*/function () {
         if (type.parentNames) {
           var allParents = [];
           type.parentNames.forEach(function (parent) {
-            console.log(_this2.allBuildings[parent], "parent");
             allParents = allParents.concat(_this2.allBuildings[parent]);
           });
-          console.log(allParents, "allParents");
           allParents.forEach(function (parent) {
-            console.log(parent.sortedChildren, parent.sortedChildren.concat(type), "parent.sortedChildren");
             parent.sortedChildren = parent.sortedChildren.concat(type);
             parent.sortedChildren.sort(function (a, b) {
               // console.log(a.nodepos, building.nodepos, b.nodepos, building.nodepos,"inside sort")
               return dist(a.nodepos, parent.nodepos) - dist(b.nodepos, parent.nodepos);
             });
-            console.log(parent.sortedChildren, "firstParent.sortedChildren");
           });
         }
 
@@ -1206,7 +1186,6 @@ var Map = /*#__PURE__*/function () {
           type.childNames.forEach(function (child) {
             allChildren = allChildren.concat(_this2.allBuildings[child]);
           });
-          console.log(allChildren, "allChildren");
           allChildren.sort(function (a, b) {
             return dist(a.nodepos, type.nodepos) - dist(b.nodepos, type.nodepos);
           });

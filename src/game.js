@@ -288,7 +288,10 @@ class Game {
         Object.values(this.map.allBuildings)
         .flat()
         .forEach((ele) => ele.updateRSS());
-      }
+      } 
+      // else {
+      //   this.map.BuildError("Not enough power!");
+      // }
       this.map.updatePower();
       this.map.updateRSS();
       this.transferToMarket();
@@ -437,24 +440,7 @@ class Game {
   transferToChildren() {
     // console.log("I am called to transfer")
     let bldgArr = Object.values(this.map.allBuildings).flat();
-    console.log(bldgArr)
     bldgArr.forEach((building) => {
-      // console.log(building)
-      // let parents = [];
-      // if (building.parentNames) {
-      //   building.parentNames.forEach((par) => {
-      //     parents = parents.concat(this.map.allBuildings[par]);
-      //   });
-      // }
-      // let parA = parents;
-      // if (!parA) {
-      //   return;
-      // }
-      // // sort the parent buildings based on distance to the current building
-      // parA.sort((a, b) => {
-      //   // console.log(a.nodepos, building.nodepos, b.nodepos, building.nodepos,"inside sort")
-      //   return dist(a.nodepos, building.nodepos) - dist(b.nodepos, building.nodepos);
-      // });
       bldChild = building.sortedChildren;
       for (let i = 0; i < bldChild.length; i++) {
         currChild = bldChild[i];

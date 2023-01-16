@@ -129,7 +129,7 @@ class Map {
   }
 
   updatePower() {
-    if (this.totalPower >= 0) {
+    if (this.totalPower >= 100) {
       this.money += Math.floor(this.totalPower / 100)
     }
     this.totalPower = 0;
@@ -145,7 +145,6 @@ class Map {
 
   placeBuilding(pos, type) {
     // take in the type of building. Create the building and place it on the map.
-    console.log(type, "type")
     if (!this.isEmptyPos(pos)) {
       
     } else if (this.money < type.cost) {
@@ -159,18 +158,14 @@ class Map {
       if (type.parentNames) {
         let allParents = [];
         type.parentNames.forEach((parent) => {
-          console.log(this.allBuildings[parent], "parent")
           allParents = allParents.concat(this.allBuildings[parent]);
         });
-        console.log(allParents, "allParents")
         allParents.forEach((parent) => {
-          console.log(parent.sortedChildren, parent.sortedChildren.concat(type), "parent.sortedChildren")
           parent.sortedChildren = parent.sortedChildren.concat(type);
           parent.sortedChildren.sort((a, b) => {
             // console.log(a.nodepos, building.nodepos, b.nodepos, building.nodepos,"inside sort")
             return dist(a.nodepos, parent.nodepos) - dist(b.nodepos, parent.nodepos);
           });
-          console.log(parent.sortedChildren, "firstParent.sortedChildren")
         });
       } 
       if (type.childNames) {
@@ -180,7 +175,6 @@ class Map {
         type.childNames.forEach((child) => {
           allChildren = allChildren.concat(this.allBuildings[child]);
         });
-        console.log(allChildren, "allChildren")
         allChildren.sort((a, b) => {
           return dist(a.nodepos, type.nodepos) - dist(b.nodepos, type.nodepos);
         });
