@@ -34,6 +34,9 @@ class Game {
     bldicon,
     tooltip,
     tooltiptext,
+    tooltiptext2,
+    tooltiptext3,
+    tooltiptext4,
     allImg,
     volup,
     voldown,
@@ -75,6 +78,9 @@ class Game {
     this.bldicon = bldicon
     this.tooltip = tooltip
     this.tooltiptext = tooltiptext
+    this.tooltiptext2 = tooltiptext2
+    this.tooltiptext3 = tooltiptext3
+    this.tooltiptext4 = tooltiptext4
     this.allImg = allImg
     this.volup = volup
     this.voldown = voldown
@@ -225,12 +231,39 @@ class Game {
   handleMouseOver(e) {
     const ele = e.target;
     if (ele.tagName.toLowerCase() === "img") {
-      this.tooltiptext.innerText = this.descriptions[JSON.parse(ele.parentNode.dataset.build)].description;
+      if (this.descriptions[JSON.parse(ele.parentNode.dataset.build)].name === "IronMine") {
+        this.tooltiptext.innerText = "Iron Mine";
+      } else if (this.descriptions[JSON.parse(ele.parentNode.dataset.build)].name === "IronSmelter") {
+        this.tooltiptext.innerText = "Iron Smelter";
+      } else if (this.descriptions[JSON.parse(ele.parentNode.dataset.build)].name === "SteelMill") {
+        this.tooltiptext.innerText = "Steel Mill";
+      } else if (this.descriptions[JSON.parse(ele.parentNode.dataset.build)].name === "CopperMine") {
+        this.tooltiptext.innerText = "Copper Mine";
+      } else if (this.descriptions[JSON.parse(ele.parentNode.dataset.build)].name === "CopperSmelter") {
+        this.tooltiptext.innerText = "Copper Smelter";
+      } else if (this.descriptions[JSON.parse(ele.parentNode.dataset.build)].name === "CopperExtruder") {
+        this.tooltiptext.innerText = "Copper Extruder";
+      } else if (this.descriptions[JSON.parse(ele.parentNode.dataset.build)].name === "ToolFactory") {
+        this.tooltiptext.innerText = "Tool Factory";
+      } else if (this.descriptions[JSON.parse(ele.parentNode.dataset.build)].name === "Market") {
+        this.tooltiptext.innerText = "Market";
+      } else if (this.descriptions[JSON.parse(ele.parentNode.dataset.build)].name === "WindMill") {
+        this.tooltiptext.innerText = "Wind Mill";
+      } else if (this.descriptions[JSON.parse(ele.parentNode.dataset.build)].name === "CoalMine") {
+        this.tooltiptext.innerText = "Coal Mine";
+      }
+      // this.tooltiptext.innerText = this.descriptions[JSON.parse(ele.parentNode.dataset.build)].name;
+      this.tooltiptext2.innerText = this.descriptions[JSON.parse(ele.parentNode.dataset.build)].description;
+      this.tooltiptext3.innerText = "cost: " + this.descriptions[JSON.parse(ele.parentNode.dataset.build)].cost;
+      this.tooltiptext4.innerText = "Power Required: " + this.descriptions[JSON.parse(ele.parentNode.dataset.build)].powerCost;
       this.tooltip.style.visibility = "visible";
     }
 
     if (ele.tagName.toLowerCase() === "button") {
       this.tooltiptext.innerText = "Click here to sell you goods and make some money!";
+      this.tooltiptext2.innerText = "";
+      this.tooltiptext3.innerText = "";
+      this.tooltiptext4.innerText = "";
       this.tooltip.style.visibility = "visible";
     }
   }
@@ -377,22 +410,28 @@ class Game {
             if (sub[0] === "ironOre") {
               building.resources["ironOre"] = 0;
               this.map.money += Math.floor((sub[1] * 1.1 ) * marketfactor);
-            } else if (sub[0] === "ironIngots") {
+            } 
+            if (sub[0] === "ironIngots") {
               building.resources["ironIngots"] = 0;
               this.map.money += Math.floor(sub[1] * 7 * marketfactor);
-            } else if (sub[0] === "steelIngots") {
+            } 
+            if (sub[0] === "steelIngots") {
               building.resources["steelIngots"] = 0;
               this.map.money += Math.floor(sub[1] * 85 * marketfactor);
-            } else if (sub[0] === "copperOre") {
+            } 
+            if (sub[0] === "copperOre") {
               building.resources["copperOre"] = 0;
               this.map.money += Math.floor(sub[1] * 9 * marketfactor);
-            } else if (sub[0] === "copperIngots") {
+            } 
+            if (sub[0] === "copperIngots") {
               building.resources["copperIngots"] = 0;
               this.map.money += Math.floor(sub[1] * 90 * marketfactor);
-            } else if (sub[0] === "copperWire") {
+            } 
+            if (sub[0] === "copperWire") {
               building.resources["copperWire"] = 0;
               this.map.money += Math.floor(sub[1] * 200 * marketfactor);
-            } else if (sub[0] === "tools") {
+            } 
+            if (sub[0] === "tools") {
               building.resources["tools"] = 0;
               this.map.money += Math.floor(sub[1] * 450 * marketfactor);
             }

@@ -130,7 +130,7 @@ class Map {
 
   updatePower() {
     if (this.totalPower >= 100) {
-      this.money += Math.floor(this.totalPower / 100)
+      this.money += Math.floor(this.totalPower / 200)
     }
     this.totalPower = 0;
     this.allBuildings["WindMill"].forEach((powerplant) => {

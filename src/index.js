@@ -43,6 +43,9 @@ document.addEventListener("DOMContentLoaded", function () {
   let bldicon = document.querySelector(".buildings");
   let tooltip = document.getElementById("tooltip");
   let tooltiptext = document.getElementById("tooltip-text");
+  let tooltiptext2 = document.getElementById("tooltip-text2");
+  let tooltiptext3 = document.getElementById("tooltip-text3");
+  let tooltiptext4 = document.getElementById("tooltip-text4");
   let allImg = document.querySelectorAll("img");
   let volup = document.querySelector(".volume-up");
   let voldown = document.querySelector(".volume-down");
@@ -133,6 +136,9 @@ document.addEventListener("DOMContentLoaded", function () {
     bldicon,
     tooltip,
     tooltiptext,
+    tooltiptext2,
+    tooltiptext3,
+    tooltiptext4,
     allImg,
     volup,
     voldown,

@@ -339,7 +339,7 @@ var WindMill = __webpack_require__(/*! ./windMill */ "./src/windMill.js");
 var Utils = __webpack_require__(/*! ./utils */ "./src/utils.js");
 
 var Game = /*#__PURE__*/function () {
-  function Game(el, iro, num, build, info, sell, iroing, steing, music1, music2, copore, coping, copwire, toolsnum, buildcost, dots, unlimitedPower, powerCost, selebldg, bldicon, tooltip, tooltiptext, allImg, volup, voldown, sound, errorTooltip) {
+  function Game(el, iro, num, build, info, sell, iroing, steing, music1, music2, copore, coping, copwire, toolsnum, buildcost, dots, unlimitedPower, powerCost, selebldg, bldicon, tooltip, tooltiptext, tooltiptext2, tooltiptext3, tooltiptext4, allImg, volup, voldown, sound, errorTooltip) {
     _classCallCheck(this, Game);
 
     this.map = new Map(el, iro, num, build, errorTooltip);
@@ -377,6 +377,9 @@ var Game = /*#__PURE__*/function () {
     this.bldicon = bldicon;
     this.tooltip = tooltip;
     this.tooltiptext = tooltiptext;
+    this.tooltiptext2 = tooltiptext2;
+    this.tooltiptext3 = tooltiptext3;
+    this.tooltiptext4 = tooltiptext4;
     this.allImg = allImg;
     this.volup = volup;
     this.voldown = voldown;
@@ -536,12 +539,40 @@ var Game = /*#__PURE__*/function () {
       var ele = e.target;
 
       if (ele.tagName.toLowerCase() === "img") {
-        this.tooltiptext.innerText = this.descriptions[JSON.parse(ele.parentNode.dataset.build)].description;
+        if (this.descriptions[JSON.parse(ele.parentNode.dataset.build)].name === "IronMine") {
+          this.tooltiptext.innerText = "Iron Mine";
+        } else if (this.descriptions[JSON.parse(ele.parentNode.dataset.build)].name === "IronSmelter") {
+          this.tooltiptext.innerText = "Iron Smelter";
+        } else if (this.descriptions[JSON.parse(ele.parentNode.dataset.build)].name === "SteelMill") {
+          this.tooltiptext.innerText = "Steel Mill";
+        } else if (this.descriptions[JSON.parse(ele.parentNode.dataset.build)].name === "CopperMine") {
+          this.tooltiptext.innerText = "Copper Mine";
+        } else if (this.descriptions[JSON.parse(ele.parentNode.dataset.build)].name === "CopperSmelter") {
+          this.tooltiptext.innerText = "Copper Smelter";
+        } else if (this.descriptions[JSON.parse(ele.parentNode.dataset.build)].name === "CopperExtruder") {
+          this.tooltiptext.innerText = "Copper Extruder";
+        } else if (this.descriptions[JSON.parse(ele.parentNode.dataset.build)].name === "ToolFactory") {
+          this.tooltiptext.innerText = "Tool Factory";
+        } else if (this.descriptions[JSON.parse(ele.parentNode.dataset.build)].name === "Market") {
+          this.tooltiptext.innerText = "Market";
+        } else if (this.descriptions[JSON.parse(ele.parentNode.dataset.build)].name === "WindMill") {
+          this.tooltiptext.innerText = "Wind Mill";
+        } else if (this.descriptions[JSON.parse(ele.parentNode.dataset.build)].name === "CoalMine") {
+          this.tooltiptext.innerText = "Coal Mine";
+        } // this.tooltiptext.innerText = this.descriptions[JSON.parse(ele.parentNode.dataset.build)].name;
+
+
+        this.tooltiptext2.innerText = this.descriptions[JSON.parse(ele.parentNode.dataset.build)].description;
+        this.tooltiptext3.innerText = "cost: " + this.descriptions[JSON.parse(ele.parentNode.dataset.build)].cost;
+        this.tooltiptext4.innerText = "Power Required: " + this.descriptions[JSON.parse(ele.parentNode.dataset.build)].powerCost;
         this.tooltip.style.visibility = "visible";
       }
 
       if (ele.tagName.toLowerCase() === "button") {
         this.tooltiptext.innerText = "Click here to sell you goods and make some money!";
+        this.tooltiptext2.innerText = "";
+        this.tooltiptext3.innerText = "";
+        this.tooltiptext4.innerText = "";
         this.tooltip.style.visibility = "visible";
       }
     }
@@ -691,22 +722,34 @@ var Game = /*#__PURE__*/function () {
             if (sub[0] === "ironOre") {
               building.resources["ironOre"] = 0;
               _this3.map.money += Math.floor(sub[1] * 1.1 * marketfactor);
-            } else if (sub[0] === "ironIngots") {
+            }
+
+            if (sub[0] === "ironIngots") {
               building.resources["ironIngots"] = 0;
               _this3.map.money += Math.floor(sub[1] * 7 * marketfactor);
-            } else if (sub[0] === "steelIngots") {
+            }
+
+            if (sub[0] === "steelIngots") {
               building.resources["steelIngots"] = 0;
               _this3.map.money += Math.floor(sub[1] * 85 * marketfactor);
-            } else if (sub[0] === "copperOre") {
+            }
+
+            if (sub[0] === "copperOre") {
               building.resources["copperOre"] = 0;
               _this3.map.money += Math.floor(sub[1] * 9 * marketfactor);
-            } else if (sub[0] === "copperIngots") {
+            }
+
+            if (sub[0] === "copperIngots") {
               building.resources["copperIngots"] = 0;
               _this3.map.money += Math.floor(sub[1] * 90 * marketfactor);
-            } else if (sub[0] === "copperWire") {
+            }
+
+            if (sub[0] === "copperWire") {
               building.resources["copperWire"] = 0;
               _this3.map.money += Math.floor(sub[1] * 200 * marketfactor);
-            } else if (sub[0] === "tools") {
+            }
+
+            if (sub[0] === "tools") {
               building.resources["tools"] = 0;
               _this3.map.money += Math.floor(sub[1] * 450 * marketfactor);
             }
@@ -1146,7 +1189,7 @@ var Map = /*#__PURE__*/function () {
       var _this = this;
 
       if (this.totalPower >= 100) {
-        this.money += Math.floor(this.totalPower / 100);
+        this.money += Math.floor(this.totalPower / 200);
       }
 
       this.totalPower = 0;
@@ -1614,8 +1657,8 @@ var WindMill = /*#__PURE__*/function (_Node) {
     _this.nodepos = pos;
     _this.name = "WindMill";
     _this.cost = 50;
-    _this.description = "Basic power production, does not require a fuel input. Power is needed to run machines. Every extra 100 power provides 1 income per tick";
-    _this.power = 100;
+    _this.description = "Basic power production, does not require a fuel input. Power is needed to run machines. Every extra 200 power provides 1 income per tick";
+    _this.power = 50;
     _this.powerCost = 0;
     return _this;
   }
@@ -2296,6 +2339,9 @@ document.addEventListener("DOMContentLoaded", function () {
   var bldicon = document.querySelector(".buildings");
   var tooltip = document.getElementById("tooltip");
   var tooltiptext = document.getElementById("tooltip-text");
+  var tooltiptext2 = document.getElementById("tooltip-text2");
+  var tooltiptext3 = document.getElementById("tooltip-text3");
+  var tooltiptext4 = document.getElementById("tooltip-text4");
   var allImg = document.querySelectorAll("img");
   var volup = document.querySelector(".volume-up");
   var voldown = document.querySelector(".volume-down");
@@ -2360,7 +2406,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var errorTooltip = document.createElement("div");
   errorTooltip.classList.add("error-tooltip");
   document.body.appendChild(errorTooltip);
-  var gamev = new Game(el, iro, num, bui, info, sell, iroing, steing, music1, music2, copOre, copIng, copwire, toolsnum, buildcost, dots, unlimitedPOWER, powerCost, selebldg, bldicon, tooltip, tooltiptext, allImg, volup, voldown, sound, errorTooltip); // gamev.map.startingMarket()
+  var gamev = new Game(el, iro, num, bui, info, sell, iroing, steing, music1, music2, copOre, copIng, copwire, toolsnum, buildcost, dots, unlimitedPOWER, powerCost, selebldg, bldicon, tooltip, tooltiptext, tooltiptext2, tooltiptext3, tooltiptext4, allImg, volup, voldown, sound, errorTooltip); // gamev.map.startingMarket()
   // gamev.updateTotalMoney(num)
 });
 })();
