@@ -1,4 +1,5 @@
 import "./styles/main.scss";
+// import "./styles/cssMain.css";
 // import laughing from './assets/laughing.svg'
 
 const Game = require("./game.js");
